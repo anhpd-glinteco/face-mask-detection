@@ -1,0 +1,36 @@
+# Node.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+*.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# ML/data artifacts
+data/
+datasets/
+weights/
+runs/
+uploads/
+*.pt
+*.pth
+*.onnx
+*.engine
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
