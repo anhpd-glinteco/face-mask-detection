@@ -1,0 +1,2 @@
+"""Face-mask inference service."""
+
