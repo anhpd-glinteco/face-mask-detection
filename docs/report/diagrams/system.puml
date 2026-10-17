@@ -1,0 +1,208 @@
+@startuml use-cases
+!pragma layout smetana
+title Use case MVP — thiết kế mục tiêu P1
+left to right direction
+actor "Người sử dụng" as User
+rectangle "Ứng dụng phát hiện trạng thái khẩu trang" {
+  usecase "UC01: Phân tích ảnh" as Image
+  usecase "UC02: Phân tích video" as Video
+  usecase "UC03: Phân tích webcam" as Camera
+  usecase "Xem kết quả và\nthống kê theo frame" as Result
+  usecase "Dừng / đổi nguồn" as Stop
+}
+User --> Image
+User --> Video
+User --> Camera
+User --> Result
+User --> Stop
+footer Không nhận diện danh tính; không đếm người duy nhất qua nhiều frame.
+@enduml
+
+@startuml activity-image
+title Activity ảnh — thiết kế mục tiêu P1
+start
+:Chọn ảnh, vô hiệu hóa request trước;
+if (Type/size hợp lệ?) then (có)
+  :Preview và POST multipart image;
+  if (Decode + model sẵn sàng?) then (có)
+    :Preprocess → inference → bbox ảnh gốc;
+    if (Response đúng contract và request còn hiện hành?) then (có)
+      :Overlay / danh sách hoặc kết quả không phát hiện;
+    else (không)
+      :Bỏ response cũ hoặc báo dữ liệu không hợp lệ;
+    endif
+  else (không)
+    :Hiển thị lỗi decode/model/mạng/timeout;
+  endif
+else (không)
+  :Thông báo lỗi, không gửi request;
+endif
+stop
+@enduml
+
+@startuml activity-stream
+title Activity video/webcam — thiết kế mục tiêu P1
+start
+:Mở nguồn và tạo session ID;
+while (Nguồn đang chạy?) is (có)
+  if (Request cũ đã kết thúc?) then (có)
+    :Capture frame + timestamp + session ID;
+    :POST ảnh và chờ kết thúc;
+    if (Lỗi/timeout?) then (có)
+      :Dừng sampling và thông báo retry;
+      break
+    else (không)
+      if (Đúng session/frame?) then (có)
+        :Snapshot kết quả + overlay + thống kê;
+      else (không)
+        :Loại response;
+      endif
+    endif
+  else (không)
+    :Bỏ lượt capture, không queue;
+  endif
+endwhile (không)
+:Hủy lịch, vô hiệu hóa kết quả, abort;
+:Stop camera tracks / thu hồi URL khi kết thúc nguồn;
+stop
+@enduml
+
+@startuml sequence-image
+title Sequence ảnh — thiết kế mục tiêu P1
+actor User
+participant "Browser / Next.js" as Browser
+participant "FastAPI" as API
+participant "Model adapter" as Model
+User -> Browser: Chọn ảnh
+Browser -> Browser: Validate + preview + request ID
+Browser -> API: POST /api/v1/detect (image)
+API -> API: Limit/type/decode/readiness
+alt Model/ảnh không khả dụng
+  API --> Browser: 413 / 415 / 422 / 503
+  Browser --> User: Lỗi rõ ràng, retry khi phù hợp
+else Hợp lệ
+  API -> Model: RGB + ảnh gốc
+  Model --> API: Bbox / nhãn / confidence / timing
+  API --> Browser: DetectionResponse schema 1.0
+  Browser -> Browser: Validate contract + request hiện hành
+  Browser --> User: Overlay + danh sách / không phát hiện
+end
+@enduml
+
+@startuml sequence-stream
+title Sequence sampling và cancellation — thiết kế mục tiêu P1
+actor User
+participant "Media preview" as Media
+participant "Sampler" as Sampler
+participant "Detect API" as API
+participant "Snapshot kết quả" as Result
+User -> Media: Play video / bật webcam
+Media -> Sampler: Nguồn + session ID
+loop Khi đang chạy, tối đa một request đang chờ
+  Sampler -> Media: Capture khi không bận
+  Media --> Sampler: Frame + timestamp
+  Sampler -> API: POST image
+  alt Dừng / pause / seek / đổi nguồn trong lúc chờ
+    User -> Media: Thao tác điều khiển
+    Media -> Sampler: Invalidate session + abort
+    API --> Sampler: Response hoặc kết thúc abort
+    Sampler -> Sampler: Bỏ response cũ; đợi settle trước vòng mới
+  else Request hiện hành hoàn tất
+    API --> Sampler: DetectionResponse
+    Sampler -> Result: Snapshot cùng frame + bbox + timing
+    Result --> User: Kết quả frame có timestamp
+  end
+end
+User -> Media: Dừng / rời nguồn
+Media -> Media: Stop tracks / revoke URL
+@enduml
+
+@startuml media-state
+title Vòng đời media — thiết kế mục tiêu P1
+[*] --> Idle
+Idle --> Opening: Chọn nguồn / bật camera
+Opening --> Ready: Metadata/stream sẵn sàng
+Opening --> Error: File/codec/quyền/thiết bị lỗi
+Opening --> Idle: Hủy; stream đến muộn phải stop
+Ready --> Running: Play / bắt đầu sampling
+Running --> Paused: Pause/seek; invalidate + abort
+Paused --> Running: Resume sau request cũ settle
+Running --> Error: API timeout / track ended
+Running --> Idle: Stop/end/đổi nguồn + cleanup
+Paused --> Idle: Stop/đổi nguồn + cleanup
+Ready --> Idle: Đổi nguồn / rời trang
+Error --> Opening: Retry chủ động
+Error --> Idle: Dừng / rời trang
+Idle --> [*]: Unmount
+@enduml
+
+@startuml components
+!pragma layout smetana
+title Component — thiết kế mục tiêu, chưa tích hợp model thật
+package "Browser / Next.js client" {
+  [Nguồn ảnh/video/webcam] as Media
+  [Sampler single-flight] as Sampler
+  [API client + validation] as Client
+  [Snapshot / overlay / thống kê] as UI
+}
+package "FastAPI" {
+  [Input validation / decode] as Validation
+  [Model adapter load một lần] as Adapter
+}
+artifact "Weights + class map\nversion + SHA-256" as Weights
+Media --> Sampler: Frame video/webcam
+Media --> Client: Ảnh
+Sampler --> Client: Frame ảnh + session ID
+Client --> Validation: HTTPS multipart image
+Validation --> Adapter
+Weights --> Adapter: Load khi startup
+Adapter --> Client: JSON schema 1.0
+Client --> UI: Chỉ response hiện hành
+note bottom of Validation
+Không lưu media, không log payload.
+Health khác model readiness.
+end note
+@enduml
+
+@startuml deployment
+!pragma layout smetana
+title Deployment — mục tiêu P10, host chưa được nghiệm thu
+node "Máy người sử dụng" {
+  node "Browser\nHTTPS / localhost" as Browser
+}
+cloud "Web hosting" {
+  node "Next.js web" as Web
+}
+cloud "Inference hosting — chốt sau benchmark" {
+  node "FastAPI process" as API
+  artifact "Model artifact\nkhông commit vào repo" as Model
+}
+Browser --> Web: Tải ứng dụng HTTPS
+Browser --> API: Frame ảnh qua HTTPS\nCORS allowlist
+Model --> API: Load + kiểm tra checksum
+note bottom of Web
+NEXT_PUBLIC_INFERENCE_API_URL
+phải đúng tại build web.
+end note
+note bottom of API
+Fallback: Docker Compose trên localhost.
+Không coi fallback là URL public đã đạt.
+end note
+@enduml
+@startuml training-pipeline
+title Pipeline dữ liệu và thực nghiệm — thiết kế P2–P4
+start
+:Audit nguồn / license / quyền dùng / annotation;
+if (Đủ điều kiện sử dụng?) then (có)
+  :Gắn nguồn/scene, kiểm tra duplicate và phân bố lớp;
+  :Manifest split theo group, seed và dataset version;
+  :Train split → baseline train;
+  :Validation split → đánh giá checkpoint / chọn threshold;
+  :Chốt config, seed, code SHA và checkpoint;
+  :Test split độc lập → metrics theo lớp / mAP / error analysis;
+  :Model card + weights checksum + license + limitations;
+else (không)
+  :Ghi blocker, không train hoặc deploy dữ liệu chưa được duyệt;
+endif
+stop
+@enduml

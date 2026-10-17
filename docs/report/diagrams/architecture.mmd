@@ -1,0 +1,8 @@
+flowchart LR
+    A[Ảnh / video local / webcam] --> B[Browser: validate / capture frame]
+    B --> C[API client: single-flight với video/webcam]
+    C -->|multipart image, HTTPS| D[FastAPI: decode / readiness]
+    D --> E[Model adapter: weights có version và checksum]
+    E -->|bbox ảnh gốc, nhãn, confidence, timing| F[JSON schema 1.0]
+    F --> G[Browser: validate / loại response cũ]
+    G --> H[Snapshot đã phân tích + overlay + thống kê]

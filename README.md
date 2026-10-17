@@ -92,6 +92,11 @@ Schema chuẩn nằm tại `packages/contracts/detection.schema.json`. API hiệ
 
 ## Milestones
 
+Kế hoạch theo phiên đến 27/10/2026: [docs/plan.md](docs/plan.md).
+Trước khi tiếp tục công việc, đọc [bàn giao gần nhất](docs/handoffs/README.md).
+Bộ [yêu cầu, use case và báo cáo nguồn](docs/report/README.md) phân biệt thiết kế
+mục tiêu với tính năng đã kiểm chứng; không coi sơ đồ là bằng chứng hoàn thành.
+
 - Sprint 1: scope, contract, dataset và baseline/mocks.
 - Sprint 2: model, API, ba input flow và integration.
 - Sprint 3: deploy, benchmark, QA, docs và demo.
