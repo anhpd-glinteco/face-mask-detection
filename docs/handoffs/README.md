@@ -8,7 +8,8 @@ phần trăm hoàn thành sản phẩm.
 | P0 | Đã kiểm tra nền; Docker runtime và browser→API smoke chưa xác minh | [Hiện trạng và checks](2026-10-17-baseline.md) |
 | P1 | Bộ phân tích/thiết kế ban đầu đã soạn; chưa là thiết kế nghiệm thu | [Bàn giao P1](2026-10-17-p1.md) |
 | P2 | Khôi phục công bố MakeML; curated pass kỹ thuật, còn quyền từng ảnh và scene grouping | [Provenance mới nhất](2026-10-17-p2-provenance.md), [review curated](2026-10-17-p2-review.md), [audit gốc](2026-10-17-p2.md) |
-| P3–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| Chuẩn bị P3 | Trainer synthetic + checkpoint/resume đã kiểm thử; chưa train baseline hoặc đạt gate P3 | [Bàn giao synthetic](2026-10-17-p3-synthetic.md) |
+| P3–P13 | Chưa thực hiện trên dữ liệu thật | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
 Phiên kế tiếp: **hoàn tất gate P2 — quyền dùng và scene/source grouping**; bản
 curated đã xử lý bbox vượt biên và duplicate conflicts. Còn 562 ảnh chưa rõ nhóm
@@ -17,6 +18,11 @@ gốc hoặc sửa lại bbox đã có bằng chứng nếu không xuất hiện
 Đã khôi phục trang MakeML qua Wayback; metadata toàn bộ PNG/XML không cung cấp
 mapping scene/source, CSV không đổi. Bước tiếp cần bằng chứng từng nguồn hoặc
 quyết định có ghi rõ giới hạn của nhóm phụ trách, không lặp lại tra cứu đã lưu.
+
+"Gate P2" ở đây là các mục dữ liệu chưa xác minh (#2/#3), không phải thiếu
+quyền thao tác repo từ người dùng. Phần chọn kiến trúc/config (#7) và phần trainer
+synthetic đã có đầu ra riêng; việc nghiệm thu chúng không đồng nghĩa dataset đã
+được xác minh hoặc baseline dữ liệu thật (#8) đã train xong.
 
 Khi chuyển chat, gửi:
 
