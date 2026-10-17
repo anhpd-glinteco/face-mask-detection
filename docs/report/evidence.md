@@ -34,6 +34,16 @@ khác nhau; manifest ứng viên tái lập nhưng chưa được duyệt. Chưa
 scene review đầy đủ, train logs/checkpoint hoặc model metrics. Không đánh dấu
 E01–E03 hoàn tất bằng việc có source/config.
 
+Tiếp P2, 17/10/2026: E02 bổ sung [curated audit](../../ml/reports/p2-curated-audit.json),
+[quyết định review](../../ml/reviews/p2-curation.json) và
+[bàn giao review](../handoffs/2026-10-17-p2-review.md). Rà 853 ảnh bằng contact sheet;
+sửa 12 bbox trong 11 ảnh, loại 10 ảnh conflict, còn 843 ảnh/3,970 bbox. Audit
+curated hai lần exit 0, manifest giống từng byte; 12 ML tests pass; 1,706 file nguồn
+không đổi và khớp archive. CSV gom 281 ảnh vào 38 nhóm, còn 562 ảnh unresolved.
+Không coi review bằng contact sheet là kiểm định mọi nhãn hoặc scene independence.
+E01 chưa được duyệt quyền dùng, E02 còn thiếu scene evidence/người review độc lập;
+E03 vẫn chỉ ở mức ADR/config, chưa có model artifact hoặc metric.
+
 ## Bảng đóng góp thực tế (điền từ bằng chứng)
 
 | Thành viên | Dự kiến | Đã thực hiện + PR/commit/review | Hạn chế |

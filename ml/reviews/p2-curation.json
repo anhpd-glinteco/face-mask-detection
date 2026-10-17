@@ -1,0 +1,890 @@
+{
+  "review_date": "2026-10-17",
+  "reviewer": "Codex visual review; no independent human sign-off",
+  "review_method": "24 contact sheets cover all 853 source images; 21 enlarged annotated overlays for 11 invalid images and 5 duplicate pairs. Scene triage is not exhaustive per-object annotation validation.",
+  "decisions": {
+    "maksssksksss110": {
+      "action": "fix_bbox",
+      "images_sha256": "2e4059c5fc8dda1423e6f1e8730444b9a0fa7ca09303dc8dc51cfdd3173be9cc",
+      "annotations_sha256": "a1fe830bdada7c6439eacd437b40b909bca0aa3b454266591bf8d06ec28c01e1",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 24,
+          "before": [
+            381,
+            14,
+            401,
+            34
+          ],
+          "after": [
+            381,
+            14,
+            400,
+            34
+          ]
+        }
+      ]
+    },
+    "maksssksksss231": {
+      "action": "fix_bbox",
+      "images_sha256": "ddba16a4815a2e69952474bc2688d4241d69ab658e5049550c53cae25a1c42d1",
+      "annotations_sha256": "5b1911e581fe5836f185a5e84f9fe2cee6ad12e5774b4bb3377be433106148c7",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 14,
+          "before": [
+            392,
+            86,
+            401,
+            106
+          ],
+          "after": [
+            392,
+            86,
+            400,
+            106
+          ]
+        }
+      ]
+    },
+    "maksssksksss251": {
+      "action": "fix_bbox",
+      "images_sha256": "bccfcc18d4f06ea1c8071260abb8171c36807a4e438a30d6ec4c5bf9f489640d",
+      "annotations_sha256": "e62837ea935f8c1b0ec0412cfd3c0e19e2f072de9172cc84bfa31c03ed8baa6b",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 19,
+          "before": [
+            373,
+            76,
+            401,
+            114
+          ],
+          "after": [
+            373,
+            76,
+            400,
+            114
+          ]
+        }
+      ]
+    },
+    "maksssksksss457": {
+      "action": "fix_bbox",
+      "images_sha256": "09b18b389ba8046e364e55ee50ba9ddf7d1c66f7e7e12b627debb6be1caee6d1",
+      "annotations_sha256": "6fa360eab148a02ea1ab5c38d5011e032c7cf5feeca978e1e7017f1bab535e82",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 5,
+          "before": [
+            389,
+            56,
+            401,
+            83
+          ],
+          "after": [
+            389,
+            56,
+            400,
+            83
+          ]
+        }
+      ]
+    },
+    "maksssksksss5": {
+      "action": "fix_bbox",
+      "images_sha256": "6953a12545dd20afd44a4581fd1d8c1f07296aeeee7fba2351e59a5e4ad5a11b",
+      "annotations_sha256": "6567da9fc8656deff932180c414de69f19e5fc815ac512583b35bf5836ee1e60",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 1,
+          "before": [
+            364,
+            30,
+            401,
+            66
+          ],
+          "after": [
+            364,
+            30,
+            400,
+            66
+          ]
+        }
+      ]
+    },
+    "maksssksksss501": {
+      "action": "fix_bbox",
+      "images_sha256": "d0cfbacc63f23d9a75ae92f68852df0e527f56d1544980ee6a73b5bb4334af98",
+      "annotations_sha256": "08048743756407bf278c8e5d29ac8bb64538ebfa066d5b7615dd7fc01c05e77a",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 5,
+          "before": [
+            357,
+            65,
+            401,
+            132
+          ],
+          "after": [
+            357,
+            65,
+            400,
+            132
+          ]
+        }
+      ]
+    },
+    "maksssksksss603": {
+      "action": "fix_bbox",
+      "images_sha256": "07f02fe2e7eb5a7260bb0d39566473f1feef6678679ca4b4cf1ef46e68ef9a58",
+      "annotations_sha256": "f6c2fb7943c8e163ec8a51ff3c7f5cda9269fae487ad52ad2a15e4bf204c4302",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 98,
+          "before": [
+            397,
+            132,
+            401,
+            142
+          ],
+          "after": [
+            397,
+            132,
+            400,
+            142
+          ]
+        },
+        {
+          "object_index": 114,
+          "before": [
+            396,
+            18,
+            401,
+            23
+          ],
+          "after": [
+            396,
+            18,
+            400,
+            23
+          ]
+        }
+      ]
+    },
+    "maksssksksss616": {
+      "action": "fix_bbox",
+      "images_sha256": "2dc56931bc11159602361434e060e7dd640aec12ca2abc6f6ddc5625bef529e5",
+      "annotations_sha256": "4c8337923069b6664c07058de10235c763235fbe24618586320b4c52c6178879",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 10,
+          "before": [
+            394,
+            92,
+            401,
+            111
+          ],
+          "after": [
+            394,
+            92,
+            400,
+            111
+          ]
+        }
+      ]
+    },
+    "maksssksksss706": {
+      "action": "fix_bbox",
+      "images_sha256": "104e9bf5a8e9a8de14b659aea66b3196b0738a8b5a4b01d44c2feb36f2e3bfcd",
+      "annotations_sha256": "c98c960a33d9a32a6b1036a9751dc7722397ddef8290b05773f66db0d79b40d6",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 14,
+          "before": [
+            368,
+            162,
+            401,
+            219
+          ],
+          "after": [
+            368,
+            162,
+            400,
+            219
+          ]
+        }
+      ]
+    },
+    "maksssksksss787": {
+      "action": "fix_bbox",
+      "images_sha256": "de9b6271a85014cde0c80e6bf55562df52c279deb0a22820465b16908dd955bd",
+      "annotations_sha256": "412549f7fbaed371cd92369742f3983beda0495e6ca0c89647f4ee0e649be856",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 7,
+          "before": [
+            360,
+            79,
+            401,
+            139
+          ],
+          "after": [
+            360,
+            79,
+            400,
+            139
+          ]
+        }
+      ]
+    },
+    "maksssksksss93": {
+      "action": "fix_bbox",
+      "images_sha256": "aa28f74c45cb6d1fbe54f7aaee90f7572f87779380e6430d0e44630022822130",
+      "annotations_sha256": "40692699792d079dc6bf49471871e77f04ae7786ee92cad02955e47b6efdba78",
+      "reason": "Reviewed overlay: face is truncated at right image edge; xmax=401 exceeds the 400px image by one pixel. Set only this reviewed right edge to 400; preserve other coordinates and labels.",
+      "bbox_updates": [
+        {
+          "object_index": 8,
+          "before": [
+            388,
+            72,
+            401,
+            92
+          ],
+          "after": [
+            388,
+            72,
+            400,
+            92
+          ]
+        }
+      ]
+    },
+    "maksssksksss13": {
+      "action": "exclude",
+      "images_sha256": "fc1c5e72c5362f0f1ea703728f51df89ee0715c6c4d33ef03cb143724db6fd56",
+      "annotations_sha256": "3b64c7076a8b4bd0117f956d0bf34610ad49acb3fb8e2615af1e8cd6dc75b957",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss13.png, images/maksssksksss737.png"
+    },
+    "maksssksksss737": {
+      "action": "exclude",
+      "images_sha256": "fc1c5e72c5362f0f1ea703728f51df89ee0715c6c4d33ef03cb143724db6fd56",
+      "annotations_sha256": "6ea3e1c0b4787e72c4aafe777952c4fcf254d6dd05d2b25debe1718e67ead118",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss13.png, images/maksssksksss737.png"
+    },
+    "maksssksksss146": {
+      "action": "exclude",
+      "images_sha256": "cf0a8ba14436bf9cf8de1b575aad46606f7404a961333a3ef8e48062edce4624",
+      "annotations_sha256": "cdec596ab1556225770e7301ac307af130e3aaf3966b0caa897c44c1cf65d2c6",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss146.png, images/maksssksksss219.png"
+    },
+    "maksssksksss219": {
+      "action": "exclude",
+      "images_sha256": "cf0a8ba14436bf9cf8de1b575aad46606f7404a961333a3ef8e48062edce4624",
+      "annotations_sha256": "2432bd82e765c23c0bf87c33ca17f62ee6091deefc40f67dc040936f9517b714",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss146.png, images/maksssksksss219.png"
+    },
+    "maksssksksss410": {
+      "action": "exclude",
+      "images_sha256": "6da704412b28779a67df00e894a562700b78e13db0a4b529feb68a1e1374f7f6",
+      "annotations_sha256": "48d1bfe57b5dca74f85378251aa730f2c8df7dc6b7a1a26e5b895a3a969d6ab7",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss410.png, images/maksssksksss428.png"
+    },
+    "maksssksksss428": {
+      "action": "exclude",
+      "images_sha256": "6da704412b28779a67df00e894a562700b78e13db0a4b529feb68a1e1374f7f6",
+      "annotations_sha256": "99360719eccaaa8c557ce646a8955f2073babb458770268d2836795b05568539",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss410.png, images/maksssksksss428.png"
+    },
+    "maksssksksss653": {
+      "action": "exclude",
+      "images_sha256": "d2c015e032ec3604790b2476ed3adca234b8aea06e8d0112b8970073fda74a35",
+      "annotations_sha256": "545de5f0ccef07a7fa0a587bbe333d71894cab37c6094d8edce25b2c74986786",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss653.png, images/maksssksksss775.png"
+    },
+    "maksssksksss775": {
+      "action": "exclude",
+      "images_sha256": "d2c015e032ec3604790b2476ed3adca234b8aea06e8d0112b8970073fda74a35",
+      "annotations_sha256": "b83106a92257b7ec9d0bebf7b5f679784303cd6b433353297cdb25e1388eb747",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss653.png, images/maksssksksss775.png"
+    },
+    "maksssksksss656": {
+      "action": "exclude",
+      "images_sha256": "6d97276b701fcbe5f4ebd81c4cf3d1309939a5aa5f1538454e1238b07a438a54",
+      "annotations_sha256": "05f9a90e06771e1812bd2eb26e3fb99b71cdf14824a0797b7c770bd3b8fac489",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss656.png, images/maksssksksss690.png"
+    },
+    "maksssksksss690": {
+      "action": "exclude",
+      "images_sha256": "6d97276b701fcbe5f4ebd81c4cf3d1309939a5aa5f1538454e1238b07a438a54",
+      "annotations_sha256": "94d0d3c99d1a58cb528484904d15d79b225f8139f2e5f9b0057977e66808ba00",
+      "reason": "Exclude both exact-pixel duplicate members: overlays differ in box placement/extent and no authoritative annotation selects a canonical member. Pair: images/maksssksksss656.png, images/maksssksksss690.png"
+    }
+  },
+  "scene_groups": [
+    {
+      "group": "home-photo-series",
+      "status": "candidate_source_family",
+      "basis": "Conservative union of recurring yellow-brick house, timber porch, garden/fence, stairwell, geometric/floral walls and indoor recording setups. Settings and wardrobe connect candidate subseries; source is unverified. May over-group; not an identity assertion.",
+      "images": [
+        "images/maksssksksss8.png",
+        "images/maksssksksss10.png",
+        "images/maksssksksss14.png",
+        "images/maksssksksss16.png",
+        "images/maksssksksss17.png",
+        "images/maksssksksss37.png",
+        "images/maksssksksss48.png",
+        "images/maksssksksss51.png",
+        "images/maksssksksss55.png",
+        "images/maksssksksss57.png",
+        "images/maksssksksss60.png",
+        "images/maksssksksss62.png",
+        "images/maksssksksss68.png",
+        "images/maksssksksss72.png",
+        "images/maksssksksss78.png",
+        "images/maksssksksss87.png",
+        "images/maksssksksss88.png",
+        "images/maksssksksss95.png",
+        "images/maksssksksss101.png",
+        "images/maksssksksss107.png",
+        "images/maksssksksss117.png",
+        "images/maksssksksss120.png",
+        "images/maksssksksss125.png",
+        "images/maksssksksss128.png",
+        "images/maksssksksss133.png",
+        "images/maksssksksss143.png",
+        "images/maksssksksss150.png",
+        "images/maksssksksss154.png",
+        "images/maksssksksss161.png",
+        "images/maksssksksss162.png",
+        "images/maksssksksss169.png",
+        "images/maksssksksss172.png",
+        "images/maksssksksss180.png",
+        "images/maksssksksss188.png",
+        "images/maksssksksss196.png",
+        "images/maksssksksss205.png",
+        "images/maksssksksss210.png",
+        "images/maksssksksss213.png",
+        "images/maksssksksss217.png",
+        "images/maksssksksss218.png",
+        "images/maksssksksss225.png",
+        "images/maksssksksss228.png",
+        "images/maksssksksss236.png",
+        "images/maksssksksss239.png",
+        "images/maksssksksss243.png",
+        "images/maksssksksss248.png",
+        "images/maksssksksss259.png",
+        "images/maksssksksss262.png",
+        "images/maksssksksss266.png",
+        "images/maksssksksss271.png",
+        "images/maksssksksss273.png",
+        "images/maksssksksss281.png",
+        "images/maksssksksss283.png",
+        "images/maksssksksss291.png",
+        "images/maksssksksss299.png",
+        "images/maksssksksss300.png",
+        "images/maksssksksss306.png",
+        "images/maksssksksss322.png",
+        "images/maksssksksss328.png",
+        "images/maksssksksss332.png",
+        "images/maksssksksss333.png",
+        "images/maksssksksss335.png",
+        "images/maksssksksss341.png",
+        "images/maksssksksss343.png",
+        "images/maksssksksss348.png",
+        "images/maksssksksss355.png",
+        "images/maksssksksss356.png",
+        "images/maksssksksss369.png",
+        "images/maksssksksss370.png",
+        "images/maksssksksss379.png",
+        "images/maksssksksss380.png",
+        "images/maksssksksss383.png",
+        "images/maksssksksss402.png",
+        "images/maksssksksss403.png",
+        "images/maksssksksss404.png",
+        "images/maksssksksss405.png",
+        "images/maksssksksss407.png",
+        "images/maksssksksss409.png",
+        "images/maksssksksss415.png",
+        "images/maksssksksss417.png",
+        "images/maksssksksss420.png",
+        "images/maksssksksss433.png",
+        "images/maksssksksss442.png",
+        "images/maksssksksss443.png",
+        "images/maksssksksss455.png",
+        "images/maksssksksss468.png",
+        "images/maksssksksss479.png",
+        "images/maksssksksss480.png",
+        "images/maksssksksss482.png",
+        "images/maksssksksss485.png",
+        "images/maksssksksss490.png",
+        "images/maksssksksss491.png",
+        "images/maksssksksss492.png",
+        "images/maksssksksss493.png",
+        "images/maksssksksss497.png",
+        "images/maksssksksss500.png",
+        "images/maksssksksss504.png",
+        "images/maksssksksss515.png",
+        "images/maksssksksss520.png",
+        "images/maksssksksss528.png",
+        "images/maksssksksss530.png",
+        "images/maksssksksss531.png",
+        "images/maksssksksss532.png",
+        "images/maksssksksss533.png",
+        "images/maksssksksss536.png",
+        "images/maksssksksss537.png",
+        "images/maksssksksss540.png",
+        "images/maksssksksss541.png",
+        "images/maksssksksss544.png",
+        "images/maksssksksss546.png",
+        "images/maksssksksss553.png",
+        "images/maksssksksss557.png",
+        "images/maksssksksss561.png",
+        "images/maksssksksss565.png",
+        "images/maksssksksss568.png",
+        "images/maksssksksss571.png",
+        "images/maksssksksss581.png",
+        "images/maksssksksss590.png",
+        "images/maksssksksss596.png",
+        "images/maksssksksss598.png",
+        "images/maksssksksss599.png",
+        "images/maksssksksss601.png",
+        "images/maksssksksss608.png",
+        "images/maksssksksss609.png",
+        "images/maksssksksss614.png",
+        "images/maksssksksss615.png",
+        "images/maksssksksss618.png",
+        "images/maksssksksss624.png",
+        "images/maksssksksss629.png",
+        "images/maksssksksss630.png",
+        "images/maksssksksss635.png",
+        "images/maksssksksss644.png",
+        "images/maksssksksss645.png",
+        "images/maksssksksss646.png",
+        "images/maksssksksss649.png",
+        "images/maksssksksss652.png",
+        "images/maksssksksss655.png",
+        "images/maksssksksss660.png",
+        "images/maksssksksss663.png",
+        "images/maksssksksss668.png",
+        "images/maksssksksss671.png",
+        "images/maksssksksss675.png",
+        "images/maksssksksss681.png",
+        "images/maksssksksss686.png",
+        "images/maksssksksss687.png",
+        "images/maksssksksss692.png",
+        "images/maksssksksss701.png",
+        "images/maksssksksss707.png",
+        "images/maksssksksss709.png",
+        "images/maksssksksss712.png",
+        "images/maksssksksss716.png",
+        "images/maksssksksss721.png",
+        "images/maksssksksss725.png",
+        "images/maksssksksss727.png",
+        "images/maksssksksss729.png",
+        "images/maksssksksss742.png",
+        "images/maksssksksss743.png",
+        "images/maksssksksss745.png",
+        "images/maksssksksss746.png",
+        "images/maksssksksss747.png",
+        "images/maksssksksss757.png",
+        "images/maksssksksss762.png",
+        "images/maksssksksss764.png",
+        "images/maksssksksss765.png",
+        "images/maksssksksss766.png",
+        "images/maksssksksss781.png",
+        "images/maksssksksss790.png",
+        "images/maksssksksss791.png",
+        "images/maksssksksss793.png",
+        "images/maksssksksss808.png",
+        "images/maksssksksss810.png",
+        "images/maksssksksss814.png",
+        "images/maksssksksss817.png",
+        "images/maksssksksss818.png",
+        "images/maksssksksss827.png",
+        "images/maksssksksss828.png",
+        "images/maksssksksss837.png",
+        "images/maksssksksss838.png",
+        "images/maksssksksss841.png",
+        "images/maksssksksss845.png",
+        "images/maksssksksss851.png"
+      ]
+    },
+    {
+      "group": "striped-airport-seats",
+      "status": "visual_scene",
+      "basis": "Black cap, striped top, red/grey terminal seats and display; changed crop/pose.",
+      "images": [
+        "images/maksssksksss9.png",
+        "images/maksssksksss24.png",
+        "images/maksssksksss112.png",
+        "images/maksssksksss126.png",
+        "images/maksssksksss258.png",
+        "images/maksssksksss484.png",
+        "images/maksssksksss761.png",
+        "images/maksssksksss815.png",
+        "images/maksssksksss830.png"
+      ]
+    },
+    {
+      "group": "terminal-red-vest",
+      "status": "visual_scene",
+      "basis": "Same terminal crowd composition and red quilted vest; crops.",
+      "images": [
+        "images/maksssksksss1.png",
+        "images/maksssksksss157.png",
+        "images/maksssksksss411.png"
+      ]
+    },
+    {
+      "group": "street-plaid-scarf",
+      "status": "visual_scene",
+      "basis": "Same plaid face covering and background composition; crop.",
+      "images": [
+        "images/maksssksksss21.png",
+        "images/maksssksksss71.png"
+      ]
+    },
+    {
+      "group": "crowded-terminal-red-coat",
+      "status": "visual_scene",
+      "basis": "Same terminal hall, red coat and luggage composition; crop.",
+      "images": [
+        "images/maksssksksss74.png",
+        "images/maksssksksss354.png"
+      ]
+    },
+    {
+      "group": "street-crossing-family",
+      "status": "visual_scene",
+      "basis": "Same street crossing composition and coat/bag pattern; removed 656/690 excluded.",
+      "images": [
+        "images/maksssksksss222.png",
+        "images/maksssksksss359.png",
+        "images/maksssksksss674.png"
+      ]
+    },
+    {
+      "group": "crowd-queue",
+      "status": "visual_scene",
+      "basis": "Same queue, column and patterned clothing composition; crop.",
+      "images": [
+        "images/maksssksksss11.png",
+        "images/maksssksksss431.png"
+      ]
+    },
+    {
+      "group": "supermarket-carts",
+      "status": "candidate_scene",
+      "basis": "Similar carts, produce layout and shoppers; conservative scene candidate.",
+      "images": [
+        "images/maksssksksss36.png",
+        "images/maksssksksss232.png",
+        "images/maksssksksss277.png"
+      ]
+    },
+    {
+      "group": "denim-airport",
+      "status": "candidate_scene",
+      "basis": "Recurring denim jacket, backpack and terminal event; conservative candidate.",
+      "images": [
+        "images/maksssksksss130.png",
+        "images/maksssksksss132.png",
+        "images/maksssksksss276.png",
+        "images/maksssksksss496.png",
+        "images/maksssksksss832.png"
+      ]
+    },
+    {
+      "group": "airport-orange-shirt",
+      "status": "candidate_scene",
+      "basis": "Recurring orange print shirt, dark jacket, chain and terminal event; conservative candidate.",
+      "images": [
+        "images/maksssksksss127.png",
+        "images/maksssksksss212.png",
+        "images/maksssksksss347.png",
+        "images/maksssksksss494.png"
+      ]
+    },
+    {
+      "group": "airport-news-walk",
+      "status": "visual_scene",
+      "basis": "Same walking crowd composition/clothing; crop.",
+      "images": [
+        "images/maksssksksss156.png",
+        "images/maksssksksss545.png"
+      ]
+    },
+    {
+      "group": "airport-temperature-lane",
+      "status": "visual_scene",
+      "basis": "Same thermometer lane, staff, trolley and barrier; crop.",
+      "images": [
+        "images/maksssksksss67.png",
+        "images/maksssksksss438.png"
+      ]
+    },
+    {
+      "group": "escalator-crowd",
+      "status": "candidate_scene",
+      "basis": "Red escalator advertising and recurring clothing/crowd composition; conservative scene family.",
+      "images": [
+        "images/maksssksksss61.png",
+        "images/maksssksksss451.png",
+        "images/maksssksksss559.png"
+      ]
+    },
+    {
+      "group": "family-queue",
+      "status": "visual_scene",
+      "basis": "Same adults/child, luggage and queue composition; crop.",
+      "images": [
+        "images/maksssksksss293.png",
+        "images/maksssksksss466.png"
+      ]
+    },
+    {
+      "group": "father-child-terminal",
+      "status": "visual_scene",
+      "basis": "Same carried child, stroller and terminal composition; crop.",
+      "images": [
+        "images/maksssksksss435.png",
+        "images/maksssksksss554.png"
+      ]
+    },
+    {
+      "group": "pair-product-portrait",
+      "status": "visual_scene",
+      "basis": "Same two-person product portrait on white background; crop.",
+      "images": [
+        "images/maksssksksss287.png",
+        "images/maksssksksss478.png"
+      ]
+    },
+    {
+      "group": "airport-hooded",
+      "status": "visual_scene",
+      "basis": "Same hooded jacket and terminal corridor composition; crops.",
+      "images": [
+        "images/maksssksksss309.png",
+        "images/maksssksksss658.png",
+        "images/maksssksksss741.png"
+      ]
+    },
+    {
+      "group": "crowd-respirator",
+      "status": "visual_scene",
+      "basis": "Same crowd/respirator composition; watermark/crop variant.",
+      "images": [
+        "images/maksssksksss327.png",
+        "images/maksssksksss699.png"
+      ]
+    },
+    {
+      "group": "crowd-overhead",
+      "status": "visual_scene",
+      "basis": "Same overhead crowd composition; margins/crops differ.",
+      "images": [
+        "images/maksssksksss623.png",
+        "images/maksssksksss795.png",
+        "images/maksssksksss847.png"
+      ]
+    },
+    {
+      "group": "crowd-shopping-street",
+      "status": "candidate_scene",
+      "basis": "Matching crowded shopping street arrangement; conservative scene candidate.",
+      "images": [
+        "images/maksssksksss518.png",
+        "images/maksssksksss603.png"
+      ]
+    },
+    {
+      "group": "airport-trolley-orange-wall",
+      "status": "visual_scene",
+      "basis": "Same orange wall, luggage and walking composition; crop.",
+      "images": [
+        "images/maksssksksss514.png",
+        "images/maksssksksss680.png"
+      ]
+    },
+    {
+      "group": "terminal-pink-wall",
+      "status": "visual_scene",
+      "basis": "Same pink terminal wall and walking composition; crops.",
+      "images": [
+        "images/maksssksksss662.png",
+        "images/maksssksksss839.png",
+        "images/maksssksksss849.png"
+      ]
+    },
+    {
+      "group": "street-phone-group",
+      "status": "visual_scene",
+      "basis": "Same phone-using group, striped top and sidewalk composition; crops.",
+      "images": [
+        "images/maksssksksss636.png",
+        "images/maksssksksss770.png",
+        "images/maksssksksss801.png"
+      ]
+    },
+    {
+      "group": "crowd-blue-masks",
+      "status": "visual_scene",
+      "basis": "Same foreground crowd composition; crop.",
+      "images": [
+        "images/maksssksksss665.png",
+        "images/maksssksksss704.png"
+      ]
+    },
+    {
+      "group": "family-red-stroller",
+      "status": "visual_scene",
+      "basis": "Same stroller, red jackets and building; crop.",
+      "images": [
+        "images/maksssksksss637.png",
+        "images/maksssksksss711.png"
+      ]
+    },
+    {
+      "group": "airport-grey-puffer",
+      "status": "visual_scene",
+      "basis": "Same puffer jacket, dark cap and terminal windows; crop.",
+      "images": [
+        "images/maksssksksss529.png",
+        "images/maksssksksss719.png"
+      ]
+    },
+    {
+      "group": "airport-red-top",
+      "status": "candidate_scene",
+      "basis": "Bright red top, sunglasses and terminal event setting; conservative candidate.",
+      "images": [
+        "images/maksssksksss289.png",
+        "images/maksssksksss641.png",
+        "images/maksssksksss772.png"
+      ]
+    },
+    {
+      "group": "terminal-two-caps",
+      "status": "visual_scene",
+      "basis": "Same two cap-wearing travellers and bag; crop.",
+      "images": [
+        "images/maksssksksss459.png",
+        "images/maksssksksss693.png"
+      ]
+    },
+    {
+      "group": "trolley-tall-display",
+      "status": "candidate_scene",
+      "basis": "Matching trolley/red luggage and terminal composition; conservative crop candidate.",
+      "images": [
+        "images/maksssksksss308.png",
+        "images/maksssksksss840.png"
+      ]
+    },
+    {
+      "group": "instruction-plush-background",
+      "status": "candidate_source_family",
+      "basis": "Recurring plush toys, green frog and instruction-room wall; conservative source family.",
+      "images": [
+        "images/maksssksksss6.png",
+        "images/maksssksksss432.png",
+        "images/maksssksksss785.png",
+        "images/maksssksksss833.png"
+      ]
+    },
+    {
+      "group": "blue-glasses-shirt",
+      "status": "candidate_scene",
+      "basis": "Matching dark shirt and bus/event backdrop; conservative source family.",
+      "images": [
+        "images/maksssksksss85.png",
+        "images/maksssksksss505.png",
+        "images/maksssksksss632.png",
+        "images/maksssksksss654.png"
+      ]
+    },
+    {
+      "group": "temple-crowd",
+      "status": "candidate_scene",
+      "basis": "Matching temple setting and clothing arrangements; conservative related-view candidate.",
+      "images": [
+        "images/maksssksksss396.png",
+        "images/maksssksksss735.png"
+      ]
+    },
+    {
+      "group": "terminal-red-jacket-cap",
+      "status": "candidate_scene",
+      "basis": "Red jacket/white top and terminal setting; conservative event candidate.",
+      "images": [
+        "images/maksssksksss178.png",
+        "images/maksssksksss650.png",
+        "images/maksssksksss736.png"
+      ]
+    },
+    {
+      "group": "school-uniform-terminal",
+      "status": "visual_scene",
+      "basis": "Same white/grey shirts and terminal steps composition; crop.",
+      "images": [
+        "images/maksssksksss186.png",
+        "images/maksssksksss513.png"
+      ]
+    },
+    {
+      "group": "night-parent-child",
+      "status": "visual_scene",
+      "basis": "Same parent/child and night-market composition; crop.",
+      "images": [
+        "images/maksssksksss302.png",
+        "images/maksssksksss579.png"
+      ]
+    },
+    {
+      "group": "street-walk-yellow-coat",
+      "status": "candidate_scene",
+      "basis": "Matching yellow coat/patterned outerwear and walking setting; conservative candidate.",
+      "images": [
+        "images/maksssksksss330.png",
+        "images/maksssksksss519.png"
+      ]
+    },
+    {
+      "group": "green-sign-mask-event",
+      "status": "candidate_scene",
+      "basis": "Green sign and indoor event backdrop; conservative candidate.",
+      "images": [
+        "images/maksssksksss202.png",
+        "images/maksssksksss667.png"
+      ]
+    },
+    {
+      "group": "instruction-shop-shelves",
+      "status": "candidate_source_family",
+      "basis": "Similar mask demonstration and retail shelf setup; conservative source candidate.",
+      "images": [
+        "images/maksssksksss371.png",
+        "images/maksssksksss626.png"
+      ]
+    }
+  ],
+  "scene_leakage_verified": false,
+  "limitations": [
+    "No trustworthy scene/source metadata. Visual groups are conservative candidates, not provenance or identity verification.",
+    "Unmatched images remain unresolved; singleton/different hash is not evidence of a distinct scene.",
+    "Visible stock-photo watermarks and mixed source material remain; train/deploy rights are not approved."
+  ]
+}

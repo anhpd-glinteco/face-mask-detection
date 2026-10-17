@@ -1,6 +1,6 @@
 # Dataset Card
 
-Status: **ứng viên đã audit; chưa duyệt train/deploy** — P2, 17/10/2026.
+Status: **bản curated pass audit kỹ thuật; chưa duyệt train/deploy hoặc scene independence** — P2, 17/10/2026.
 
 ## Nguồn, phiên bản và quyền sử dụng
 
@@ -78,4 +78,55 @@ quyết định có bằng chứng về giới hạn split; nhóm xác nhận qu
 lại và pin checksum manifest được duyệt. Model/config: [ADR 0002](adr/0002-cpu-baseline.md).
 
 Không commit dataset lớn hoặc hình ảnh khuôn mặt vào repository.
+
+## Review tiếp P2 — curated v1, 17/10/2026
+
+Các số liệu ở trên mô tả **bản gốc và manifest P2 ban đầu**, được giữ làm lịch sử.
+Bản curated mới không thay thế hay chỉnh sửa dataset gốc.
+
+- Rà 24 contact sheet của toàn bộ 853 ảnh; xem 21 overlay phóng lớn cho 11 ảnh
+  vượt biên và 5 cặp duplicate conflict. Đây là scene triage của Codex, chưa có
+  người review độc lập và không phải kiểm định toàn bộ annotation ở mức từng bbox.
+- Sửa đúng **12 bbox trong 11 XML**, chỉ `xmax: 401 → 400` tại mép phải bị cắt
+  trong ảnh width=400. Không chuyển hệ tọa độ VOC, không sửa nhãn hoặc clip hàng loạt.
+- Loại **cả 10 ảnh của 5 cặp conflict** cùng XML tương ứng: overlay khác vị trí/
+  độ rộng bbox nhưng không có annotation chuẩn để chọn. Loại 102 bbox; quyết định
+  bảo thủ này có thể bỏ dữ liệu hữu ích. Các ảnh được giữ không thay byte ảnh.
+- Có 843 ảnh, 3,970 bbox; 600 nhóm cuối sau union scene/pixel/dHash. Quyết định
+  từng ảnh, hash nguồn, bbox trước/sau và cơ sở grouping ở
+  [review đã pin](../ml/reviews/p2-curation.json),
+  [CSV nhóm](../ml/reviews/p2-scene-groups.csv).
+
+| Tập curated | Ảnh | with_mask | without_mask | mask_worn_incorrectly |
+|---|---:|---:|---:|---:|
+| Train | 670 | 2,358 | 594 | 93 |
+| Validation | 98 | 479 | 72 | 14 |
+| Test | 75 | 299 | 49 | 12 |
+
+Giữ seed 42 và cách chia bucket cũ; không chỉnh nhóm/seed để ép tỷ lệ hay metric.
+CSV gom 281/843 ảnh (33.3%) vào 38 nhóm: 23 nhóm cảnh trùng quan sát được,
+12 nhóm cảnh ứng viên và 3 nhóm nguồn ứng viên. Có một nhóm home-photo-series
+lớn, gom bảo thủ các chuỗi ảnh với bối cảnh/đạo cụ lặp lại; có thể over-group.
+**562 ảnh còn unresolved**, không gán singleton rồi coi là độc lập. 16 nhóm review
+cắt qua split ban đầu; ở manifest mới không nhóm review nào cắt qua split.
+Không có metadata cảnh/nguồn đáng tin nên `scene_leakage_verified=false` vẫn giữ.
+
+Hai lần audit curated exit 0 và manifest giống từng byte. Không còn bbox lỗi,
+orphan, duplicate annotation conflict hoặc split thiếu lớp. Đã assert 0 vi phạm
+cross-split cho exact pixel, dHash <=4 và các nhóm CSV. Kiểm tra 1,706 file nguồn
+trước/sau khớp nhau **và khớp từng file trong archive đã pin**, không chỉ dựa vào
+công cụ copy báo thành công. Báo cáo: [curated audit](../ml/reports/p2-curated-audit.json).
+
+Artifact ngoài repo:
+
+- Curated: `D:\Codex\work\face-mask-detection\p2\dataset-curated-v1`.
+- Manifest, log hash trước/sau, scene-review CSV cho từng ảnh, contact sheets,
+  overlay trước/sau và verification: `D:\Codex\outputs\face-mask-detection\p2-review`.
+- Manifest SHA-256: `a2236fd6bd445de1aa9ea9e52547b01bf2a8ab7e25ba87008e59795c3130a3b3`.
+
+**P2 chưa đạt gate train**: quyền dùng/provenance/consent vẫn chưa được duyệt;
+contact sheets có ảnh mang watermark stock nên không được suy ra quyền dùng từ
+CC0 của uploader. Cần nhóm review các nhóm ứng viên và 562 ảnh unresolved, có
+bằng chứng hoặc quyết định được ghi rõ về giới hạn scene split; rà chất lượng nhãn
+còn lại. Bản curated là ứng viên kỹ thuật, chưa phải manifest được duyệt cho P3.
 
