@@ -24,7 +24,7 @@ failures exit 2 without replacing an earlier output: always check the exit code.
 The current raw dataset intentionally fails audit: 11 invalid annotations and 5
 conflicting duplicate pairs. `configs/baseline.json` specifies the P3 experiment,
 not a measured model. The preparatory trainer below accepts synthetic data only;
-P2 approval is still required before real-data training can be implemented/enabled.
+The default config remains unapproved; the separately scoped internal experiment below is user-authorized.
 Read `docs/dataset-card.md` and `docs/adr/0002-cpu-baseline.md` before proceeding.
 
 ## Reviewed curated candidate (P2 continuation)
@@ -61,12 +61,12 @@ The existing CI discovery also runs three synthetic curation tests (12 ML tests
 total at that handoff). That curation change included no trainer, API, frontend,
 baseline or dependency changes.
 
-## Synthetic trainer preparation (P2 remains blocked)
+## Synthetic trainer preparation (full P2 verification remains incomplete)
 
 `src/train.py` exercises the scratch SSDLite320 training loop, SGD/StepLR and
 epoch-boundary checkpoint/resume using generated RGB images, never dataset files.
 Both pretrained-weight arguments are explicitly `None`; there is no weight
-download, real-data CLI option, approval override, mAP or best-model selection.
+download, mAP or best-model selection in synthetic mode. Real-data inputs are rejected in synthetic mode.
 Synthetic results are not model-quality measurements or P3 completion.
 
 Use a **separate Python 3.12 CPU environment**; do not install Torch in the backend
@@ -131,3 +131,41 @@ There is no dataset path argument and omitting `--synthetic-smoke` fails. Existi
 nonempty output directories cannot be reused without explicit `--resume`.
 See [the synthetic handoff](../docs/handoffs/2026-10-17-p3-synthetic.md).
 
+
+## Internal real-data baseline — 17/10/2026
+
+The user chose an internal experiment on the current curated dataset, acknowledging
+unverified image rights and possible scene leakage. This changes the execution
+scope, not the evidence: P2 rights/scene verification remains incomplete and
+`p3_ready=false`. Do not publish media or weights or deploy this checkpoint.
+The default `baseline.json` remains unchanged; `configs/internal-baseline.json`
+pins manifest SHA-256 `a2236fd6bd445de1aa9ea9e52547b01bf2a8ab7e25ba87008e59795c3130a3b3`.
+
+Use the existing P3 Python environment and set `OMP_NUM_THREADS=2` and
+`MKL_NUM_THREADS=2` as above. From the repository root:
+
+```powershell
+& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/train.py --real-smoke --config ml/configs/internal-baseline.json --dataset D:\Codex\work\face-mask-detection\p2\dataset-curated-v1 --manifest D:\Codex\outputs\face-mask-detection\p2-review\manifest.json --output D:\Codex\outputs\face-mask-detection\p3-internal\smoke-v2
+& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/train.py --real-train --config ml/configs/internal-baseline.json --dataset D:\Codex\work\face-mask-detection\p2\dataset-curated-v1 --manifest D:\Codex\outputs\face-mask-detection\p2-review\manifest.json --output D:\Codex\outputs\face-mask-detection\p3-internal\baseline-v1
+```
+
+Run smoke successfully before baseline. Use new output directories for replay;
+resume uses the exact same command plus `--resume <output>\checkpoint.pt`.
+The manifest, mode, config, runtime/thread count and trainer source must match.
+No synthetic checkpoint can be resumed in real mode. An interrupted epoch reruns.
+
+Before training, verify train/validation image and XML hashes, dimensions, targets,
+unique records and group separation. Images become RGB float tensors in [0,1];
+manifest pixel xyxy boxes are unchanged, with resize handled by the detector.
+Train shuffles reproducibly; batch size 2 drops an odd singleton tail for BatchNorm
+(the current 670-image train split has no tail). Validation is ordered and uses
+inference mode. Test media is never opened by this trainer.
+
+Real smoke runs 5 train batches and 2 validation prediction checks for one epoch.
+Baseline runs all 670 train images / 335 batches and all 98 validation images per
+epoch for 30 epochs, using the existing scratch CPU SGD/StepLR settings. Validation
+checks finite outputs and coordinates only: it does not compute loss, mAP or select
+a best model. `checkpoint.pt` retains the final completed epoch, optimizer/scheduler,
+RNG, config, manifest identity and per-batch loss/timing history. `real-report.json`
+contains its checksum, split counts and limitations. Logs/weights stay on D outside
+Git; artifacts are for internal use only. P4 evaluation and deployment are separate.

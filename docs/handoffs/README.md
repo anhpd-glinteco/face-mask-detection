@@ -11,6 +11,11 @@ phần trăm hoàn thành sản phẩm.
 | Chuẩn bị P3 | Trainer synthetic + checkpoint/resume đã kiểm thử; chưa train baseline hoặc đạt gate P3 | [Bàn giao synthetic](2026-10-17-p3-synthetic.md) |
 | P3–P13 | Chưa thực hiện trên dữ liệu thật | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
+Next authorized session: internal real-data baseline, with unverified image rights
+and unresolved scene leakage recorded explicitly. See [internal baseline handoff](2026-10-17-p3-internal.md).
+Full P2 verification remains incomplete; this user decision permits the internal
+experiment without changing verification flags or claiming deployment readiness.
+
 Phiên kế tiếp: **hoàn tất gate P2 — quyền dùng và scene/source grouping**; bản
 curated đã xử lý bbox vượt biên và duplicate conflicts. Còn 562 ảnh chưa rõ nhóm
 cảnh và các nhóm ứng viên cần xác nhận. Chưa bắt đầu P3/train; không làm lại audit
