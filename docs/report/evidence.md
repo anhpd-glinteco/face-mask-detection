@@ -44,6 +44,15 @@ Không coi review bằng contact sheet là kiểm định mọi nhãn hoặc sce
 E01 chưa được duyệt quyền dùng, E02 còn thiếu scene evidence/người review độc lập;
 E03 vẫn chỉ ở mức ADR/config, chưa có model artifact hoặc metric.
 
+P2 provenance, 17/10/2026: E01 bổ sung bản lưu MakeML 26/05/2020 và 28/02/2022,
+công bố Public Domain/PDM và metadata Kaggle CC0; chưa chứng minh quyền từng ảnh
+hoặc consent. E02 bổ sung inventory ZIP và kiểm tra metadata toàn bộ 853 PNG/XML,
+đánh giá 38 nhóm/562 ảnh unresolved theo bằng chứng mới; không tìm được mapping
+scene/source nên CSV giữ nguyên. Xem [bàn giao provenance](../handoffs/2026-10-17-p2-provenance.md)
+và [dataset card](../dataset-card.md). Raw responses/checksum/metadata lưu ngoài
+repo tại `D:\Codex\outputs\face-mask-detection\p2-provenance`; E01/E02 chưa hoàn tất,
+`p3_ready=false`. Không chạy lại train hoặc audit split vì đầu vào không đổi.
+
 ## Bảng đóng góp thực tế (điền từ bằng chứng)
 
 | Thành viên | Dự kiến | Đã thực hiện + PR/commit/review | Hạn chế |

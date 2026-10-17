@@ -13,7 +13,8 @@ Status: **bản curated pass audit kỹ thuật; chưa duyệt train/deploy ho�
   [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) cho phép tái sử dụng
   quyền tác giả do người cấp từ bỏ, nhưng không loại bỏ quyền riêng tư/hình ảnh.
 - Uploader dẫn nguồn MakeML: `https://makeml.app/datasets/mask`. Khi kiểm tra URL
-  này hiện là trang domain rao bán, không xác minh được chuỗi quyền từ nguồn gốc.
+  này hiện là trang domain rao bán. Đã khôi phục trang công bố qua Wayback trong
+  phiên provenance bên dưới; chuỗi quyền từng ảnh vẫn chưa xác minh.
   Không lấy license code của bản tải lại làm license ảnh.
 - Consent từng người, tác giả từng ảnh, tuổi, địa lý và quy trình thu thập: **không
   được cung cấp/xác minh**. Không tuyên bố CC0 là bằng chứng consent.
@@ -129,4 +130,43 @@ contact sheets có ảnh mang watermark stock nên không được suy ra quyề
 CC0 của uploader. Cần nhóm review các nhóm ứng viên và 562 ảnh unresolved, có
 bằng chứng hoặc quyết định được ghi rõ về giới hạn scene split; rà chất lượng nhãn
 còn lại. Bản curated là ứng viên kỹ thuật, chưa phải manifest được duyệt cho P3.
+
+## Xác minh provenance và metadata — 17/10/2026
+
+- [Kaggle view API](https://www.kaggle.com/api/v1/datasets/view/andrewmvd/face-mask-detection)
+  kiểm tra lại: version 1, 853 ảnh, uploader Larxel, metadata ghi CC0; mô tả dẫn
+  MakeML. Đây là công bố của uploader, không là mapping tác giả/consent từng ảnh.
+- [MakeML lưu ngày 26/05/2020](https://web.archive.org/web/20200526043320/https://makeml.app/datasets/mask)
+  và [28/02/2022](https://web.archive.org/web/20220228032333/https://makeml.app/datasets/mask)
+  tải thành công qua URL replay `id_`, nội dung HTML cùng SHA-256
+  `df28777c71c3b2225ea5a1b74a5a2739aecc89cd7d5f24059331675a13d39ba0`.
+  Trang ghi ngày 18/05/2020, 853 ảnh, ba lớp và Public Domain; JSON-LD tự ghi
+  creator là K&K Technologies, Inc. Không có mapping tác giả, nguồn ảnh, scene
+  hoặc consent từng ảnh trong HTML được khôi phục.
+- License link của MakeML trỏ đến **Public Domain Mark**, không phải CC0.
+  [PDM](https://creativecommons.org/public-domain/pdm/) đánh dấu tình trạng quyền
+  được công bố; [CC0](https://creativecommons.org/publicdomain/zero/1.0/) là công
+  cụ từ bỏ quyền của người áp dụng. Không coi hai nhãn là bằng chứng chuỗi quyền
+  giống nhau. [PDM deed](https://creativecommons.org/publicdomain/mark/1.0/)
+  cũng nêu các quyền privacy/publicity có thể còn áp dụng. Chưa có xác nhận nhóm.
+- ZIP được trang lưu dẫn tới
+  `https://arcraftimages.s3-accelerate.amazonaws.com/Datasets/Mask/MaskPascalVOC.zip?region=us-east-2`
+  trả **404 cho HEAD**; chưa đối chiếu byte bản MakeML với Kaggle. Hai bản trang
+  trùng nội dung không chứng minh hai archive trùng nhau. API Wayback availability
+  trả rỗng cho truy vấn gần 22/05/2020, nhưng CDX tìm được các bản lưu trên;
+  không kết luận không có bản lưu từ kết quả availability.
+- Đọc inventory ZIP Kaggle và metadata toàn bộ 853 PNG/XML, đối chiếu từng dòng
+  hồ sơ review: ZIP chỉ chứa 853 PNG + 853 XML, không sidecar mapping. PNG có
+  EXIF pointer/sub-IFD chỉ chứa kích thước và đôi khi ColorSpace; sRGB/ICC là thông
+  tin màu. XML chỉ có cấu trúc annotation, không source/owner/scene/video/license.
+  Không dùng kích thước, profile màu hoặc thứ tự filename để gán cảnh.
+- Đánh giá metadata mới cho cả 38 nhóm và 562 ảnh retained unresolved không tìm
+  được mapping đã xác minh. **CSV không đổi**, 281/843 ảnh vẫn thuộc 38 nhóm ứng
+  viên; chưa có review độc lập hoặc visual review mới để nâng độ tin cậy nhóm.
+  `scene_leakage_verified=false`, `p3_ready=false` tiếp tục giữ nguyên.
+
+Bằng chứng/raw responses, inventory, metadata từng ảnh, quyết định từng nhóm,
+checksum và kiểm tra nằm tại `D:\Codex\outputs\face-mask-detection\p2-provenance`.
+Chi tiết tái lập, giới hạn và việc nhóm cần xác nhận ở
+[bàn giao provenance](handoffs/2026-10-17-p2-provenance.md).
 
