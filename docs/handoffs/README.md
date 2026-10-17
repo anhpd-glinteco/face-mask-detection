@@ -7,10 +7,11 @@ phần trăm hoàn thành sản phẩm.
 |---|---|---|
 | P0 | Đã kiểm tra nền; Docker runtime và browser→API smoke chưa xác minh | [Hiện trạng và checks](2026-10-17-baseline.md) |
 | P1 | Bộ phân tích/thiết kế ban đầu đã soạn; chưa là thiết kế nghiệm thu | [Bàn giao P1](2026-10-17-p1.md) |
-| P2–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| P2 | Đã audit dữ liệu, có manifest ứng viên và ADR/config; chưa đạt gate train | [Bàn giao P2](2026-10-17-p2.md) |
+| P3–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
-Phiên kế tiếp: **P2 — dữ liệu và baseline**. Không bắt đầu train trước khi ghi được
-nguồn/license và kiểm tra annotation. Không viết lại web/API khung đã có.
+Phiên kế tiếp: **hoàn tất gate P2 — review quyền dùng, bbox lỗi, duplicate conflicts
+và scene grouping**. Chưa bắt đầu P3/train. Không viết lại web/API khung đã có.
 
 Khi chuyển chat, gửi:
 

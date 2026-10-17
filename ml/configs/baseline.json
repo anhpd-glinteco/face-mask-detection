@@ -1,0 +1,28 @@
+{
+  "experiment": "ssdlite320-scratch-baseline",
+  "status": "blocked-by-P2-data-review",
+  "seed": 42,
+  "runtime": {"python": "3.12", "torch": "2.9.0", "torchvision": "0.24.0"},
+  "model": {
+    "builder": "torchvision.models.detection.ssdlite320_mobilenet_v3_large",
+    "weights": null,
+    "weights_backbone": null,
+    "num_classes": 4,
+    "input_size": [320, 320]
+  },
+  "class_map": {"0": "__background__", "1": "with_mask", "2": "without_mask", "3": "mask_worn_incorrectly"},
+  "training": {
+    "device": "cpu",
+    "batch_size": 2,
+    "num_workers": 0,
+    "epochs": 30,
+    "optimizer": "SGD",
+    "learning_rate": 0.005,
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "scheduler": {"name": "StepLR", "step_size": 20, "gamma": 0.1}
+  },
+  "smoke": {"epochs": 1, "max_train_batches": 5, "max_validation_batches": 2},
+  "evaluation": {"select_checkpoint_on": "validation_mAP_50_95", "test_after_selection_only": true},
+  "data": {"dataset": "andrewmvd/face-mask-detection", "version": 1, "manifest": "manifest.json", "require_technical_checks_passed": true, "require_manual_data_approval": true}
+}

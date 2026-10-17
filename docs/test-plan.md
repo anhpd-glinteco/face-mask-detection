@@ -9,3 +9,9 @@
 - Dataset leakage check by video/source/scene.
 - Cold/warm latency, error rate and memory recorded before deployment gate.
 
+P2 data checks: `python -m unittest discover -s ml/tests -v` from repo root.
+Covers invalid/out-of-bounds/degenerate bbox, malformed XML, corrupt images,
+dimensions, path traversal, class alias, scene CSV validation, exact/conflicting/
+near duplicates, transitive grouping, orphan images, split counts and repeatability.
+Real dataset audit intentionally exits 2; see `docs/handoffs/2026-10-17-p2.md`.
+

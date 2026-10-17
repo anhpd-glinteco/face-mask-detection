@@ -26,6 +26,14 @@ kết quả mong đợi/thực tế, nơi lưu và checksum khi phù hợp.
 Tránh đưa media khuôn mặt vào repo; dùng dữ liệu có quyền sử dụng, lưu ngoài repo
 và chỉ đưa hình minh họa vào bản nộp khi quyền sử dụng cho phép.
 
+P2, 17/10/2026: E01–E03 có **bằng chứng một phần** trong
+[bàn giao P2](../handoffs/2026-10-17-p2.md), [dataset card](../dataset-card.md),
+[ADR 0002](../adr/0002-cpu-baseline.md) và `ml/reports/p2-audit.json`.
+Audit 853 ảnh phát hiện 11 annotation vượt biên và 5 cặp duplicate có annotation
+khác nhau; manifest ứng viên tái lập nhưng chưa được duyệt. Chưa có consent/
+scene review đầy đủ, train logs/checkpoint hoặc model metrics. Không đánh dấu
+E01–E03 hoàn tất bằng việc có source/config.
+
 ## Bảng đóng góp thực tế (điền từ bằng chứng)
 
 | Thành viên | Dự kiến | Đã thực hiện + PR/commit/review | Hạn chế |
