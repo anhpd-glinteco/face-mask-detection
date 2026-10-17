@@ -190,6 +190,7 @@ def train_epoch(model, optimizer, batches):
 
 
 def check_predictions(model, batches):
+    counts = {"images": 0, "valid_boxes": 0, "discarded_zero_area_boxes": 0}
     model.eval()
     with torch.inference_mode():
         source = (synthetic_batch() for _ in range(batches)) if isinstance(batches, int) else batches
@@ -207,8 +208,14 @@ def check_predictions(model, batches):
                         or not ((scores >= 0) & (scores <= 1)).all()
                         or not ((boxes[:, 0] >= 0) & (boxes[:, 1] >= 0)
                                 & (boxes[:, 2] <= width) & (boxes[:, 3] <= height)
-                                & (boxes[:, 0] < boxes[:, 2]) & (boxes[:, 1] < boxes[:, 3])).all()):
+                                & (boxes[:, 0] <= boxes[:, 2]) & (boxes[:, 1] <= boxes[:, 3])).all()):
                     raise ValueError("invalid predictions in original image coordinates")
+                # TorchVision SSD clips to image bounds without removing zero-area boxes.
+                positive = (boxes[:, 0] < boxes[:, 2]) & (boxes[:, 1] < boxes[:, 3])
+                counts["images"] += 1
+                counts["valid_boxes"] += int(positive.sum())
+                counts["discarded_zero_area_boxes"] += int((~positive).sum())
+    return counts
 
 
 def provenance():
@@ -280,9 +287,9 @@ def run(config, output, resume=None, model_factory=ssdlite320_mobilenet_v3_large
         train_batches = data.batches("train", 5 if real_smoke else None) if data else config["smoke"]["max_train_batches"]
         validation_batches = data.batches("validation", 2 if real_smoke else None) if data else config["smoke"]["max_validation_batches"]
         losses = train_epoch(model, optimizer, train_batches)
-        check_predictions(model, validation_batches)
+        prediction_checks = check_predictions(model, validation_batches)
         scheduler.step()
-        history.append({"epoch": epoch, "batch_losses": losses,
+        history.append({"epoch": epoch, "batch_losses": losses, "prediction_checks": prediction_checks,
                         "seconds": time.perf_counter() - started,
                         "next_learning_rate": scheduler.get_last_lr()})
         checkpoint = {"schema_version": 1, "mode": mode, identity_key: identity,

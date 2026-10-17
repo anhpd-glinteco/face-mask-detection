@@ -110,6 +110,17 @@ class RealTrainerTests(unittest.TestCase):
         self.assertEqual(report['split_counts'], {'train': 4, 'validation': 1})
         self.assertFalse(report['p3_ready'])
 
+    def test_clipped_zero_area_boxes_are_counted_but_inverted_boxes_fail(self):
+        model = TinyDetector(weights=None, weights_backbone=None, num_classes=4)
+        prediction = {"boxes": torch.tensor([[0., 64., 20., 64.], [1., 2., 20., 30.]]),
+                      "labels": torch.tensor([1, 2]), "scores": torch.tensor([0.5, 0.4])}
+        with patch.object(model, "forward", return_value=[prediction] * 2):
+            counts = train.check_predictions(model, 1)
+            self.assertEqual(counts, {"images": 2, "valid_boxes": 2, "discarded_zero_area_boxes": 2})
+            prediction["boxes"][0] = torch.tensor([10., 2., 5., 20.])
+            with self.assertRaisesRegex(ValueError, "invalid predictions"):
+                train.check_predictions(model, 1)
+
     def test_real_detector_accepts_fixture_manifest(self):
         previous = torch.get_num_threads()
         self.addCleanup(torch.set_num_threads, previous)

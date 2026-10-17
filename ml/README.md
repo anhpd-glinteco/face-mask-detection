@@ -164,7 +164,7 @@ inference mode. Test media is never opened by this trainer.
 Real smoke runs 5 train batches and 2 validation prediction checks for one epoch.
 Baseline runs all 670 train images / 335 batches and all 98 validation images per
 epoch for 30 epochs, using the existing scratch CPU SGD/StepLR settings. Validation
-checks finite outputs and coordinates only: it does not compute loss, mAP or select
+checks finite outputs and coordinates, counting/excluding clipped zero-area boxes: it does not compute loss, mAP or select
 a best model. `checkpoint.pt` retains the final completed epoch, optimizer/scheduler,
 RNG, config, manifest identity and per-batch loss/timing history. `real-report.json`
 contains its checksum, split counts and limitations. Logs/weights stay on D outside
