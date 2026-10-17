@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "target_ratio": [
+    70,
+    15,
+    15
+  ],
+  "pillow_version": "12.3.0",
+  "source_groups_sha256": "bdbaa11e07cc5bcd0f1cd2e3908b1c6b24fcab9a9e89d091bdaa837cdb359e04",
+  "bbox_convention": "source pixel xyxy; no clipping or automatic VOC offset conversion",
+  "near_duplicate_method": "64-bit dHash, grayscale bilinear 9x8, Hamming <= 4; connected components",
+  "group_count": 600,
+  "source_group_coverage": 281,
+  "exact_duplicate_groups": [],
+  "duplicate_annotation_conflicts": [],
+  "scene_leakage_verified": false,
+  "limitations": [
+    "dHash is a candidate heuristic, not proof of scene independence",
+    "scene metadata requires human verification",
+    "license/consent approval is external to this tool"
+  ],
+  "errors": [],
+  "unreferenced_images": [],
+  "missing_split_classes": [],
+  "technical_checks_passed": true,
+  "distribution": {
+    "train": {
+      "images": 670,
+      "objects": {
+        "with_mask": 2358,
+        "without_mask": 594,
+        "mask_worn_incorrectly": 93
+      }
+    },
+    "validation": {
+      "images": 98,
+      "objects": {
+        "with_mask": 479,
+        "without_mask": 72,
+        "mask_worn_incorrectly": 14
+      }
+    },
+    "test": {
+      "images": 75,
+      "objects": {
+        "with_mask": 299,
+        "without_mask": 49,
+        "mask_worn_incorrectly": 12
+      }
+    }
+  },
+  "review_date": "2026-10-17",
+  "base_code_sha": "db2ff57",
+  "curated_images": 843,
+  "curated_objects": 3970,
+  "source_images": 853,
+  "source_objects": 4072,
+  "excluded_images": 10,
+  "excluded_objects": 102,
+  "corrected_images": 11,
+  "corrected_boxes": 12,
+  "source_matches_archive": true,
+  "source_unchanged": true,
+  "source_files_verified": 1706,
+  "manifest_sha256": "a2236fd6bd445de1aa9ea9e52547b01bf2a8ab7e25ba87008e59795c3130a3b3",
+  "manifest_repeat_sha256": "a2236fd6bd445de1aa9ea9e52547b01bf2a8ab7e25ba87008e59795c3130a3b3",
+  "curation_log_sha256": "4925f8649a8be5dbf46761eb8a7dc3c0293ce57be47370fa9c03f4131e775519",
+  "review_decisions_sha256": "08fd6c40e85d2ed03847c3a02b6190bc3a15e4198cafc28f7525c1ec8b14c809",
+  "scene_csv_sha256": "bdbaa11e07cc5bcd0f1cd2e3908b1c6b24fcab9a9e89d091bdaa837cdb359e04",
+  "scene_review_csv_sha256": "78d85a9ddfdfb600da881a50112faf5c30c29c5bb3e8142b5be941b959f9574c",
+  "curation_script_sha256": "6c8e1c14e4c1eafa6c641dd46379d94ef3cf82439116c861875977976f5c1fd3",
+  "audit_script_sha256": "207d47dc6e6c6f39f58be95b7bedceda67cfd38db9ab03e3f3f9f35a0b5b13ba",
+  "visual_review": {
+    "source_images_screened": 853,
+    "contact_sheets": 24,
+    "enlarged_flagged_overlays": 21,
+    "reviewed_groups": 38,
+    "grouped_retained_images": 281,
+    "unresolved_retained_images": 562,
+    "group_status_counts": {
+      "candidate_source_family": 3,
+      "visual_scene": 23,
+      "candidate_scene": 12
+    },
+    "independent_human_signoff": false,
+    "per_object_review_complete": false
+  },
+  "unit_tests": {
+    "count": 12,
+    "exit_code": 0
+  },
+  "audit_runs": [
+    {
+      "output": "manifest.json",
+      "exit_code": 0
+    },
+    {
+      "output": "manifest-repeat.json",
+      "exit_code": 0
+    }
+  ],
+  "repeatability_bytes_equal": true,
+  "exact_duplicate_cross_split": 0,
+  "dhash_cross_split_pairs": 0,
+  "reviewed_scene_group_cross_split": 0,
+  "reviewed_groups_crossing_previous_split": [
+    "home-photo-series",
+    "striped-airport-seats",
+    "terminal-red-vest",
+    "street-plaid-scarf",
+    "street-crossing-family",
+    "supermarket-carts",
+    "denim-airport",
+    "terminal-pink-wall",
+    "street-phone-group",
+    "airport-grey-puffer",
+    "airport-red-top",
+    "instruction-plush-background",
+    "temple-crowd",
+    "terminal-red-jacket-cap",
+    "school-uniform-terminal",
+    "green-sign-mask-event"
+  ],
+  "python": "3.14.4",
+  "p3_ready": false,
+  "train_deploy_rights_approved": false,
+  "blockers": [
+    "Train/deploy provenance and consent unresolved; visible stock-image watermarks need rights review.",
+    "562 retained images have unresolved scene/source grouping; matched candidate groups can also over-group.",
+    "No independent human sign-off or exhaustive annotation quality review."
+  ],
+  "artifact_directory": "D:\\Codex\\outputs\\face-mask-detection\\p2-review",
+  "curated_directory": "D:\\Codex\\work\\face-mask-detection\\p2\\dataset-curated-v1"
+}

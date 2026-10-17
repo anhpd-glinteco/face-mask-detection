@@ -1,0 +1,3 @@
+# Review artifact hashes require identical bytes across checkouts.
+ml/reviews/p2-curation.json -text
+ml/reviews/p2-scene-groups.csv -text

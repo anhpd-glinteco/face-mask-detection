@@ -21,7 +21,7 @@ Video và webcam dùng HTTP frame sampling có backpressure. MVP không upload t
 
 - Next.js, TypeScript, Tailwind CSS, Canvas 2D.
 - Python, FastAPI, Pydantic, Pillow/OpenCV.
-- PyTorch + lightweight detector: `TBD` sau license review.
+- PyTorch + SSDLite320 MobileNetV3: baseline đã chọn trong ADR 0002; chưa train, data review còn chặn.
 - Vitest/React Testing Library, Pytest và Playwright.
 - GitHub Actions, Docker Compose và Vercel.
 
@@ -91,6 +91,11 @@ Schema chuẩn nằm tại `packages/contracts/detection.schema.json`. API hiệ
 `main` được bảo vệ. Dùng branch `feat/...`, `fix/...`, `docs/...`, `test/...`; PR nhỏ, ít nhất một reviewer, CI bắt buộc và squash merge.
 
 ## Milestones
+
+Kế hoạch theo phiên đến 27/10/2026: [docs/plan.md](docs/plan.md).
+Trước khi tiếp tục công việc, đọc [bàn giao gần nhất](docs/handoffs/README.md).
+Bộ [yêu cầu, use case và báo cáo nguồn](docs/report/README.md) phân biệt thiết kế
+mục tiêu với tính năng đã kiểm chứng; không coi sơ đồ là bằng chứng hoàn thành.
 
 - Sprint 1: scope, contract, dataset và baseline/mocks.
 - Sprint 2: model, API, ba input flow và integration.

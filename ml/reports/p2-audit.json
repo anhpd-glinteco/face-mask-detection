@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "target_ratio": [
+    70,
+    15,
+    15
+  ],
+  "pillow_version": "12.3.0",
+  "source_groups_sha256": null,
+  "bbox_convention": "source pixel xyxy; no clipping or automatic VOC offset conversion",
+  "near_duplicate_method": "64-bit dHash, grayscale bilinear 9x8, Hamming <= 4; connected components",
+  "group_count": 824,
+  "source_group_coverage": 0,
+  "exact_duplicate_groups": [
+    [
+      "images/maksssksksss13.png",
+      "images/maksssksksss737.png"
+    ],
+    [
+      "images/maksssksksss146.png",
+      "images/maksssksksss219.png"
+    ],
+    [
+      "images/maksssksksss410.png",
+      "images/maksssksksss428.png"
+    ],
+    [
+      "images/maksssksksss653.png",
+      "images/maksssksksss775.png"
+    ],
+    [
+      "images/maksssksksss656.png",
+      "images/maksssksksss690.png"
+    ]
+  ],
+  "duplicate_annotation_conflicts": [
+    [
+      "images/maksssksksss13.png",
+      "images/maksssksksss737.png"
+    ],
+    [
+      "images/maksssksksss146.png",
+      "images/maksssksksss219.png"
+    ],
+    [
+      "images/maksssksksss410.png",
+      "images/maksssksksss428.png"
+    ],
+    [
+      "images/maksssksksss653.png",
+      "images/maksssksksss775.png"
+    ],
+    [
+      "images/maksssksksss656.png",
+      "images/maksssksksss690.png"
+    ]
+  ],
+  "scene_leakage_verified": false,
+  "limitations": [
+    "dHash is a candidate heuristic, not proof of scene independence",
+    "scene metadata requires human verification",
+    "license/consent approval is external to this tool"
+  ],
+  "errors": [
+    {
+      "annotation": "annotations/maksssksksss110.xml",
+      "error": "invalid bbox: [381, 14, 401, 34]"
+    },
+    {
+      "annotation": "annotations/maksssksksss231.xml",
+      "error": "invalid bbox: [392, 86, 401, 106]"
+    },
+    {
+      "annotation": "annotations/maksssksksss251.xml",
+      "error": "invalid bbox: [373, 76, 401, 114]"
+    },
+    {
+      "annotation": "annotations/maksssksksss457.xml",
+      "error": "invalid bbox: [389, 56, 401, 83]"
+    },
+    {
+      "annotation": "annotations/maksssksksss5.xml",
+      "error": "invalid bbox: [364, 30, 401, 66]"
+    },
+    {
+      "annotation": "annotations/maksssksksss501.xml",
+      "error": "invalid bbox: [357, 65, 401, 132]"
+    },
+    {
+      "annotation": "annotations/maksssksksss603.xml",
+      "error": "invalid bbox: [397, 132, 401, 142]"
+    },
+    {
+      "annotation": "annotations/maksssksksss616.xml",
+      "error": "invalid bbox: [394, 92, 401, 111]"
+    },
+    {
+      "annotation": "annotations/maksssksksss706.xml",
+      "error": "invalid bbox: [368, 162, 401, 219]"
+    },
+    {
+      "annotation": "annotations/maksssksksss787.xml",
+      "error": "invalid bbox: [360, 79, 401, 139]"
+    },
+    {
+      "annotation": "annotations/maksssksksss93.xml",
+      "error": "invalid bbox: [388, 72, 401, 92]"
+    }
+  ],
+  "unreferenced_images": [
+    "images/maksssksksss110.png",
+    "images/maksssksksss231.png",
+    "images/maksssksksss251.png",
+    "images/maksssksksss457.png",
+    "images/maksssksksss5.png",
+    "images/maksssksksss501.png",
+    "images/maksssksksss603.png",
+    "images/maksssksksss616.png",
+    "images/maksssksksss706.png",
+    "images/maksssksksss787.png",
+    "images/maksssksksss93.png"
+  ],
+  "missing_split_classes": [],
+  "technical_checks_passed": false,
+  "distribution": {
+    "train": {
+      "images": 606,
+      "objects": {
+        "with_mask": 2128,
+        "without_mask": 539,
+        "mask_worn_incorrectly": 93
+      }
+    },
+    "validation": {
+      "images": 127,
+      "objects": {
+        "with_mask": 544,
+        "without_mask": 77,
+        "mask_worn_incorrectly": 12
+      }
+    },
+    "test": {
+      "images": 109,
+      "objects": {
+        "with_mask": 358,
+        "without_mask": 60,
+        "mask_worn_incorrectly": 16
+      }
+    }
+  },
+  "dataset": "andrewmvd/face-mask-detection",
+  "dataset_version": 1,
+  "checked_at": "2026-10-17 Asia/Saigon",
+  "source_images": 853,
+  "valid_candidate_images": 842,
+  "raw_objects": {
+    "mask_weared_incorrect": 123,
+    "with_mask": 3232,
+    "without_mask": 717
+  },
+  "archive_sha256": "cabae358a60492a1b96da0510c31475414b64100480ae52cadbe00753bbef904",
+  "manifest_sha256": "1b7309de4cd69420a6ff2ea15221ca7a116f7aa051091f1fea62e2b19f7d0404",
+  "audit_script_sha256": "207d47dc6e6c6f39f58be95b7bedceda67cfd38db9ab03e3f3f9f35a0b5b13ba",
+  "metadata_sha256": {
+    "kaggle-view.json": "d32a91ed58f4e12fbf6890ae4d6e857fa83ebac321cfc520bf021b81d33cc2bd",
+    "kaggle-list.json": "92e5bb53bdb9d952593a561ccc7e5fee0a38be170c4dd008ac5e573ce5df7cec"
+  },
+  "unit_tests": {
+    "exit_code": 0,
+    "count": 9
+  },
+  "audit_runs": [
+    {
+      "output": "manifest.json",
+      "exit_code": 2
+    },
+    {
+      "output": "manifest-repeat.json",
+      "exit_code": 2
+    }
+  ],
+  "repeatability_bytes_equal": true,
+  "duplicate_cross_split_pairs": 0,
+  "python": "3.14.4",
+  "p3_ready": false
+}
