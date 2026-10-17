@@ -78,3 +78,14 @@ chứng pipeline; các mục dữ liệu chưa xác minh ở #2/#3 vẫn còn tr
 dùng đã cho phép push, tạo PR và đóng các task đã đủ đầu ra. Kiến trúc/config #7
 đã có ADR, config và smoke model thật; phần synthetic của #8 đã hoàn thành, còn
 dataset adapter/baseline weights dữ liệu thật chưa thực hiện.
+
+## Công bố theo yêu cầu người dùng
+
+- Commit triển khai: `fd393b6`, đã push nhánh `codex/synthetic-trainer`.
+- [PR #29](https://github.com/anhpd-glinteco/face-mask-detection/pull/29), base
+  `codex/p2-data-baseline` để chỉ review phần trainer; phụ thuộc PR #28 trước khi
+  đưa vào main. Chưa merge.
+- [CI của PR](https://github.com/anhpd-glinteco/face-mask-detection/pull/29/checks)
+  là nguồn trạng thái remote; số đo local trong bảng trên giữ nguyên.
+- #7 được nghiệm thu riêng phần chọn kiến trúc/config; #8 ghi nhận synthetic
+  trainer đã xong và tiếp tục theo dõi phần baseline dữ liệu thật.
