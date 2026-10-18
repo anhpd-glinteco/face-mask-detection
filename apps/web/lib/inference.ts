@@ -2,7 +2,7 @@ export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 export const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
 export type MaskLabel = "with_mask" | "without_mask" | "mask_worn_incorrectly";
-export type DetectionErrorCode = "FILE_TOO_LARGE" | "UNSUPPORTED_TYPE" | "INVALID_IMAGE" | "NETWORK_ERROR" | "SERVER_ERROR" | "INVALID_RESPONSE";
+export type DetectionErrorCode = "FILE_TOO_LARGE" | "UNSUPPORTED_TYPE" | "INVALID_IMAGE" | "NETWORK_ERROR" | "SERVER_ERROR" | "INVALID_RESPONSE" | "TIMEOUT" | "MODEL_NOT_READY";
 
 export interface DetectionResponse {
   schema_version: "1.0";
@@ -42,7 +42,9 @@ function isDetectionResponse(value: unknown): value is DetectionResponse {
     const confidence = item.confidence;
     const bbox = item.bbox;
     if (typeof classId !== "number" || !Number.isInteger(classId) || classId < 0 || !["with_mask", "without_mask", "mask_worn_incorrectly"].includes(item.label as string) || !isFiniteNonNegative(confidence) || confidence > 1 || !isRecord(bbox)) return false;
-    return ["x1", "y1", "x2", "y2"].every((key) => isFiniteNonNegative(bbox[key]));
+    const { x1, y1, x2, y2 } = bbox;
+    return isFiniteNonNegative(x1) && isFiniteNonNegative(y1) && isFiniteNonNegative(x2) && isFiniteNonNegative(y2)
+      && x1 < x2 && y1 < y2 && x2 <= imageWidth && y2 <= imageHeight;
   });
 }
 
@@ -50,6 +52,7 @@ function errorCodeForStatus(status: number): DetectionErrorCode {
   if (status === 413) return "FILE_TOO_LARGE";
   if (status === 415) return "UNSUPPORTED_TYPE";
   if (status === 422) return "INVALID_IMAGE";
+  if (status === 503) return "MODEL_NOT_READY";
   return "SERVER_ERROR";
 }
 
@@ -58,20 +61,39 @@ export async function detectImage(file: File, options: { signal?: AbortSignal } 
   if (!apiUrl) throw new DetectionApiError("SERVER_ERROR", undefined, "Thiếu NEXT_PUBLIC_INFERENCE_API_URL.");
   const body = new FormData();
   body.append("image", file);
-  let response: Response;
+  const controller = new AbortController();
+  const abort = () => controller.abort(options.signal?.reason);
+  options.signal?.addEventListener("abort", abort, { once: true });
+  if (options.signal?.aborted) abort();
+  let timedOut = false;
+  const timer = setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, 30_000);
   try {
-    response = await fetch(`${apiUrl}/api/v1/detect`, { method: "POST", body, signal: options.signal });
+    let response: Response;
+    try {
+      controller.signal.throwIfAborted();
+      response = await fetch(`${apiUrl}/api/v1/detect`, { method: "POST", body, signal: controller.signal });
+    } catch {
+      throw new DetectionApiError("NETWORK_ERROR");
+    }
+    if (!response.ok) throw new DetectionApiError(errorCodeForStatus(response.status), response.status);
+    let payload: unknown;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new DetectionApiError("INVALID_RESPONSE", response.status);
+    }
+    controller.signal.throwIfAborted();
+    if (!isDetectionResponse(payload)) throw new DetectionApiError("INVALID_RESPONSE", response.status);
+    return payload;
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") throw error;
-    throw new DetectionApiError("NETWORK_ERROR", undefined, "Không thể kết nối tới dịch vụ phân tích.");
+    if (timedOut) throw new DetectionApiError("TIMEOUT");
+    if (controller.signal.aborted) throw controller.signal.reason;
+    throw error;
+  } finally {
+    clearTimeout(timer);
+    options.signal?.removeEventListener("abort", abort);
   }
-  if (!response.ok) throw new DetectionApiError(errorCodeForStatus(response.status), response.status);
-  let payload: unknown;
-  try {
-    payload = await response.json();
-  } catch {
-    throw new DetectionApiError("INVALID_RESPONSE", response.status);
-  }
-  if (!isDetectionResponse(payload)) throw new DetectionApiError("INVALID_RESPONSE", response.status);
-  return payload;
 }

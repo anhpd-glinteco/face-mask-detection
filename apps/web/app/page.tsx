@@ -51,6 +51,8 @@ function messageForError(error: unknown): string {
     if (code === "INVALID_IMAGE") return "Không thể đọc ảnh. File có thể bị hỏng hoặc không phải ảnh hợp lệ.";
     if (code === "NETWORK_ERROR") return "Không thể kết nối tới dịch vụ phân tích. Vui lòng kiểm tra kết nối và thử lại.";
     if (code === "INVALID_RESPONSE") return "Dữ liệu trả về từ dịch vụ không hợp lệ.";
+    if (code === "TIMEOUT") return "Phân tích quá thời gian chờ 30 giây. Vui lòng thử lại.";
+    if (code === "MODEL_NOT_READY") return "Mô hình chưa sẵn sàng. Vui lòng thử lại sau.";
     if (code === "SERVER_ERROR") return "Dịch vụ phân tích đang gặp sự cố. Vui lòng thử lại.";
   }
   return error instanceof Error ? error.message : "Không thể phân tích ảnh. Vui lòng thử lại.";
@@ -63,21 +65,26 @@ export default function Home() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [result, setResult] = useState<DetectionResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [previewFailed, setPreviewFailed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const requestRef = useRef<AbortController | null>(null);
   const requestIdRef = useRef(0);
   const previewUrlRef = useRef<string | null>(null);
 
   useEffect(() => () => {
+    requestIdRef.current += 1;
     requestRef.current?.abort();
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
   }, []);
 
   async function analyze(nextFile: File) {
+    requestRef.current?.abort();
     const requestId = ++requestIdRef.current;
     const controller = new AbortController();
     requestRef.current = controller;
     setPhase("loading");
+    setResult(null);
 
     try {
       const response = await detectImage(nextFile, { signal: controller.signal });
@@ -101,6 +108,8 @@ export default function Home() {
     setFile(nextFile);
     setResult(null);
     setError(null);
+    setDimensions(null);
+    setPreviewFailed(false);
 
     const validationError = validateFile(nextFile);
     if (validationError) {
@@ -125,12 +134,25 @@ export default function Home() {
   }
 
   function retry() {
-    if (!file || !previewUrl || validateFile(file)) return;
+    if (!file || !previewUrl || previewFailed || validateFile(file)) return;
     setError(null);
     void analyze(file);
   }
 
-  const isBusy = phase === "loading";
+  function previewError() {
+    requestRef.current?.abort();
+    requestIdRef.current += 1;
+    setPreviewFailed(true);
+    setResult(null);
+    setError("Không thể đọc ảnh. Vui lòng chọn ảnh khác.");
+    setPhase("error");
+  }
+
+  const mismatched = Boolean(result && dimensions && (result.image.width !== dimensions.width || result.image.height !== dimensions.height));
+  const displayPhase = mismatched ? "error" : phase === "success" && !dimensions ? "loading" : phase;
+  const displayError = mismatched ? "Kích thước kết quả không khớp ảnh đã chọn. Vui lòng thử lại." : error;
+  const visibleResult = displayPhase === "success" ? result : null;
+  const isBusy = displayPhase === "loading";
 
   return (
     <main className="app-shell">
@@ -140,7 +162,7 @@ export default function Home() {
           <div><strong>MaskCheck</strong><span>Không gian kiểm định mô hình</span></div>
         </div>
         <div className="header-tools">
-          <span className="model-status"><i aria-hidden="true" /> API stub sẵn sàng</span>
+          <span className="model-status">{visibleResult ? "Đã nhận kết quả" : "Phân tích ảnh"}</span>
           <button className="icon-button" type="button" aria-label="Trợ giúp">?</button>
           <button className="icon-button" type="button" aria-label="Tùy chọn khác">⋯</button>
         </div>
@@ -170,14 +192,14 @@ export default function Home() {
             <div>
               <p className="eyebrow">PHÂN TÍCH ẢNH</p>
               <h1 id="workspace-title">Kiểm định trạng thái khẩu trang</h1>
-              <p className="subtitle">Tải lên một ảnh để nhận kết quả từ API stub.</p>
+              <p className="subtitle">Tải lên một ảnh để phân tích trạng thái khẩu trang.</p>
             </div>
             {file && <span className="file-chip">{file.name}</span>}
           </div>
 
           <div className={`media-stage ${previewUrl ? "has-preview" : ""}`}>
             {previewUrl && file ? (
-                <ImagePreview key={previewUrl} file={file} previewUrl={previewUrl} isLoading={isBusy} onReplace={() => inputRef.current?.click()} />
+                <ImagePreview key={previewUrl} file={file} previewUrl={previewUrl} result={visibleResult} isLoading={isBusy} onReplace={() => inputRef.current?.click()} onDimensions={(width, height) => setDimensions({ width, height })} onError={previewError} />
             ) : (
               <div className="empty-stage">
                 <div className="upload-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 5v14M5 12h14" strokeLinecap="round" /></svg></div>
@@ -188,20 +210,21 @@ export default function Home() {
           </div>
 
           <ImageUploader inputRef={inputRef} onChange={onImage} disabled={false} error={error && !previewUrl ? error : null} />
-          <DetectionStatus phase={phase} error={previewUrl ? error : null} onRetry={retry} canRetry={Boolean(file && previewUrl)} />
+          <DetectionStatus phase={displayPhase} error={previewUrl ? displayError : null} onRetry={retry} canRetry={Boolean(file && previewUrl && !previewFailed)} />
           <p className="privacy-note">Không nhận diện danh tính. Dữ liệu không được lưu trong phiên MVP.</p>
         </section>
 
         <aside className="result-panel" aria-labelledby="result-title">
           <div className="panel-kicker">KẾT QUẢ PHÂN TÍCH</div>
           <h2 id="result-title">Trạng thái phát hiện</h2>
-          <DetectionResult result={result} phase={phase} />
+          <DetectionResult result={visibleResult} phase={displayPhase} />
           <details className="model-details">
             <summary>Thông tin mô hình</summary>
             <dl>
-              <div><dt>Kiến trúc</dt><dd>API stub</dd></div>
+              <div><dt>Mô hình</dt><dd>{visibleResult?.model.name ?? "Chưa có kết quả"}</dd></div>
+              <div><dt>Phiên bản</dt><dd>{visibleResult?.model.version ?? "—"}</dd></div>
               <div><dt>Schema</dt><dd>1.0</dd></div>
-              <div><dt>Trạng thái</dt><dd>Stub sẵn sàng</dd></div>
+              <div><dt>Trạng thái</dt><dd>{visibleResult ? "Đã nhận kết quả" : "Chưa xác nhận sẵn sàng"}</dd></div>
             </dl>
           </details>
         </aside>
