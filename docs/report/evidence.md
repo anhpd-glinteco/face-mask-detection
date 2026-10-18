@@ -53,6 +53,14 @@ và [dataset card](../dataset-card.md). Raw responses/checksum/metadata lưu ngo
 repo tại `D:\Codex\outputs\face-mask-detection\p2-provenance`; E01/E02 chưa hoàn tất,
 `p3_ready=false`. Không chạy lại train hoặc audit split vì đầu vào không đổi.
 
+P4 nội bộ, 18/10/2026: E04 có validation chọn ngưỡng 0,15 trên 98 ảnh, sau đó
+test riêng 75 ảnh. Test macro F1 0,2061, AP50 0,1792, mAP50:95 0,0820; có
+precision/recall/F1/AP theo lớp, confusion matrix, error counts và biểu đồ F1.
+Xem [model card](../model-card.md) và [bàn giao P4](../handoffs/2026-10-18-p4-internal-evaluation.md).
+Đây là baseline nội bộ chất lượng thấp, không phải nghiệm thu model dùng thực tế;
+quyền ảnh/scene chưa xác minh, weights không publish/deploy. Không suy diễn
+nguyên nhân ánh sáng/góc mặt từ phân tích bbox chưa review trực quan.
+
 ## Bảng đóng góp thực tế (điền từ bằng chứng)
 
 | Thành viên | Dự kiến | Đã thực hiện + PR/commit/review | Hạn chế |

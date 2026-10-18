@@ -21,7 +21,7 @@ Video và webcam dùng HTTP frame sampling có backpressure. MVP không upload t
 
 - Next.js, TypeScript, Tailwind CSS, Canvas 2D.
 - Python, FastAPI, Pydantic, Pillow/OpenCV.
-- PyTorch + SSDLite320 MobileNetV3: baseline đã chọn trong ADR 0002; chưa train, data review còn chặn.
+- PyTorch + SSDLite320 MobileNetV3: baseline nội bộ đã train/đánh giá; chất lượng thấp, quyền ảnh/scene chưa xác minh. Xem [model card](docs/model-card.md).
 - Vitest/React Testing Library, Pytest và Playwright.
 - GitHub Actions, Docker Compose và Vercel.
 
