@@ -35,6 +35,7 @@ khỏi kiểm chứng weights thật. Mọi kết luận định lượng dẫn 
 - [Sơ đồ và hướng dẫn xuất](diagrams/README.md).
 - [Bằng chứng cần thu thập](evidence.md).
 - [Đề cương nội dung ban đầu](manuscript.md).
+- [Dàn ý slide: khó khăn trong quá trình xây dựng sản phẩm](development-challenges-slides.md).
 
 ## Tham chiếu chuẩn đầu ra
 
