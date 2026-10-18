@@ -194,7 +194,14 @@ def main():
                 phase_data = next((p for p in browser['phases'] if p['phase'] == phase), None)
                 if phase_data:
                     values = [r['capture_to_display_ms'] for r in phase_data['display']]
+                    skipped, previous = 0, 0
+                    for sample in browser['samples']:
+                        if sample['phase'] == phase and sample['statistics']:
+                            current = int(sample['statistics'][1])
+                            skipped += current - previous if current >= previous else current
+                            previous = current
                     entry.update(duration_s=phase_data['duration_s'], final_statistics=phase_data['final_statistics'],
+                                 sampled_skipped_lower_bound=skipped,
                                  http_successes_per_s=entry['successes'] / phase_data['duration_s'],
                                  displayed_frames_per_s=len(values) / phase_data['duration_s'],
                                  display_samples=len(values), display_p50_ms=percentile(values, .5),

@@ -30,6 +30,10 @@ Sampler statistics record capture-through-API latency and processed/skipped coun
 Snapshot load plus two animation callbacks approximates capture-to-display latency;
 it is not physical display latency. Sampling/observation itself adds overhead.
 Intentional cancellation on stop is recorded separately from unexpected failures.
+Video loop seeking can reset the UI sampler counters. Aggregate HTTP/display FPS
+uses the whole phase duration; final UI counters describe the last sampling segment.
+Skipped opportunities reconstructed from 1 s samples are a lower bound if a reset
+happens between samples; the raw UI counters remain available.
 
 Percentiles use nearest rank on successful attempts; error-rate denominators retain
 failed attempts. Raw failures/timeouts remain in JSON/logs and aborts are explicit.
