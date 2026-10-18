@@ -69,7 +69,9 @@ docker compose up --build
 - `GET /api/v1/health`: process health.
 - `GET /api/v1/ready`: model readiness.
 
-Schema chuẩn nằm tại `packages/contracts/detection.schema.json`. API hiện dùng detector stub và trả danh sách rỗng cho đến khi weights đã được kiểm chứng được tích hợp.
+Schema chuẩn nằm tại `packages/contracts/detection.schema.json`. API có adapter SSDLite CPU;
+chưa cấu hình weights hợp lệ thì `/ready` và detect ảnh hợp lệ trả **503**.
+`/health` vẫn trả 200. Không còn fallback stub. Xem [cấu hình inference](services/inference/README.md).
 
 ## Training and evaluation
 

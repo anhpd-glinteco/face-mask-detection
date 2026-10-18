@@ -19,17 +19,28 @@ def test_health() -> None:
     assert client.get("/api/v1/health").json() == {"status": "ok"}
 
 
-def test_ready() -> None:
-    assert client.get("/api/v1/ready").json() == {"status": "ready", "model": "stub"}
+def test_ready(monkeypatch) -> None:
+    monkeypatch.delenv("MODEL_PATH", raising=False)
+    monkeypatch.delenv("MODEL_SHA256", raising=False)
+    with TestClient(app) as running:
+        assert running.get("/api/v1/health").status_code == 200
+        assert running.get("/api/v1/ready").status_code == 503
+        assert running.post("/api/v1/detect", files={"image": ("sample.png", make_png(), "image/png")}).status_code == 503
 
 
-def test_detect_contract() -> None:
+def test_detect_contract(monkeypatch) -> None:
+    from types import SimpleNamespace
+    monkeypatch.setattr(app.state, "detector", SimpleNamespace(detect=lambda image: {
+        "image": {"width": image.width, "height": image.height},
+        "model": {"name": "fixture", "version": "test"}, "detections": [],
+        "timing_ms": {"preprocess": 0, "inference": 0, "postprocess": 0},
+    }), raising=False)
     response = client.post("/api/v1/detect", files={"image": ("sample.png", make_png(), "image/png")})
     assert response.status_code == 200
     body = response.json()
     assert body["schema_version"] == "1.0"
     assert body["image"] == {"width": 16, "height": 12}
-    assert body["model"]["name"] == "stub"
+    assert body["model"]["name"] == "fixture"
     assert body["detections"] == []
 
 

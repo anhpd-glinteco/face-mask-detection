@@ -10,11 +10,12 @@ phần trăm hoàn thành sản phẩm.
 | P2 | Khôi phục công bố MakeML; curated pass kỹ thuật, còn quyền từng ảnh và scene grouping | [Provenance mới nhất](2026-10-17-p2-provenance.md), [review curated](2026-10-17-p2-review.md), [audit gốc](2026-10-17-p2.md) |
 | P3 nội bộ | Baseline scratch 30 epoch hoàn tất; quyền ảnh/scene chưa xác minh, chưa đánh giá chất lượng | [Bàn giao P3 nội bộ](2026-10-17-p3-internal.md), [trainer synthetic](2026-10-17-p3-synthetic.md) |
 | P4 nội bộ | Đã chọn ngưỡng validation và đánh giá test; chất lượng thấp, không deploy | [Bàn giao P4](2026-10-18-p4-internal-evaluation.md) |
-| P5–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| P5 nền tảng | Adapter/readiness và fixture; chưa tích hợp checkpoint P4 | [Bàn giao P5](2026-10-18-p5-inference-fixtures.md) |
+| P6–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
 P4 internal evaluation completed: fixed epoch 30, validation threshold 0.15,
-test macro F1 0.2061 and mAP50:95 0.0820. Next: decide the P5 model-quality/data
-path; current internal weights are not approved for publication/deployment.
+test macro F1 0.2061 and mAP50:95 0.0820. P5 prepares the service using synthetic
+fixtures; current internal weights are not approved for publication/deployment.
 Rights and scene/source grouping remain an independent P2 follow-up; internal
 evaluation does not change their verification status or `p3_ready=false`.
 
