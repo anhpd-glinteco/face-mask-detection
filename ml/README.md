@@ -145,8 +145,8 @@ Use the existing P3 Python environment and set `OMP_NUM_THREADS=2` and
 `MKL_NUM_THREADS=2` as above. From the repository root:
 
 ```powershell
-& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/train.py --real-smoke --config ml/configs/internal-baseline.json --dataset D:\Codex\work\face-mask-detection\p2\dataset-curated-v1 --manifest D:\Codex\outputs\face-mask-detection\p2-review\manifest.json --output D:\Codex\outputs\face-mask-detection\p3-internal\smoke-v2
-& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/train.py --real-train --config ml/configs/internal-baseline.json --dataset D:\Codex\work\face-mask-detection\p2\dataset-curated-v1 --manifest D:\Codex\outputs\face-mask-detection\p2-review\manifest.json --output D:\Codex\outputs\face-mask-detection\p3-internal\baseline-v1
+& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/train.py --real-smoke --config ml/configs/internal-baseline.json --dataset D:\Codex\work\face-mask-detection\p2\dataset-curated-v1 --manifest D:\Codex\outputs\face-mask-detection\p2-review\manifest.json --output D:\Codex\outputs\face-mask-detection\p3-internal\smoke-v3
+& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/train.py --real-train --config ml/configs/internal-baseline.json --dataset D:\Codex\work\face-mask-detection\p2\dataset-curated-v1 --manifest D:\Codex\outputs\face-mask-detection\p2-review\manifest.json --output D:\Codex\outputs\face-mask-detection\p3-internal\baseline-v2
 ```
 
 Run smoke successfully before baseline. Use new output directories for replay;

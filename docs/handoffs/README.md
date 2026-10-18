@@ -8,17 +8,17 @@ phần trăm hoàn thành sản phẩm.
 | P0 | Đã kiểm tra nền; Docker runtime và browser→API smoke chưa xác minh | [Hiện trạng và checks](2026-10-17-baseline.md) |
 | P1 | Bộ phân tích/thiết kế ban đầu đã soạn; chưa là thiết kế nghiệm thu | [Bàn giao P1](2026-10-17-p1.md) |
 | P2 | Khôi phục công bố MakeML; curated pass kỹ thuật, còn quyền từng ảnh và scene grouping | [Provenance mới nhất](2026-10-17-p2-provenance.md), [review curated](2026-10-17-p2-review.md), [audit gốc](2026-10-17-p2.md) |
-| Chuẩn bị P3 | Trainer synthetic + checkpoint/resume đã kiểm thử; chưa train baseline hoặc đạt gate P3 | [Bàn giao synthetic](2026-10-17-p3-synthetic.md) |
-| P3–P13 | Chưa thực hiện trên dữ liệu thật | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| P3 nội bộ | Baseline scratch 30 epoch hoàn tất; quyền ảnh/scene chưa xác minh, chưa đánh giá chất lượng | [Bàn giao P3 nội bộ](2026-10-17-p3-internal.md), [trainer synthetic](2026-10-17-p3-synthetic.md) |
+| P4–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
-Next authorized session: internal real-data baseline, with unverified image rights
-and unresolved scene leakage recorded explicitly. See [internal baseline handoff](2026-10-17-p3-internal.md).
-Full P2 verification remains incomplete; this user decision permits the internal
-experiment without changing verification flags or claiming deployment readiness.
+Next phase: evaluate the internal baseline in P4, with validation-only selection
+before a separate test evaluation. Rights and scene/source grouping remain an
+independent P2 follow-up; the internal training decision does not change their
+verification status or `p3_ready=false`.
 
-Phiên kế tiếp: **hoàn tất gate P2 — quyền dùng và scene/source grouping**; bản
+P2 follow-up riêng: **quyền dùng và scene/source grouping**; bản
 curated đã xử lý bbox vượt biên và duplicate conflicts. Còn 562 ảnh chưa rõ nhóm
-cảnh và các nhóm ứng viên cần xác nhận. Chưa bắt đầu P3/train; không làm lại audit
+cảnh và các nhóm ứng viên cần xác nhận. Phạm vi cũ chưa cho train; quyết định nội bộ mới ở trên thay thế giới hạn này; không làm lại audit
 gốc hoặc sửa lại bbox đã có bằng chứng nếu không xuất hiện dữ kiện mới.
 Đã khôi phục trang MakeML qua Wayback; metadata toàn bộ PNG/XML không cung cấp
 mapping scene/source, CSV không đổi. Bước tiếp cần bằng chứng từng nguồn hoặc
@@ -27,7 +27,7 @@ quyết định có ghi rõ giới hạn của nhóm phụ trách, không lặp 
 "Gate P2" ở đây là các mục dữ liệu chưa xác minh (#2/#3), không phải thiếu
 quyền thao tác repo từ người dùng. Phần chọn kiến trúc/config (#7) và phần trainer
 synthetic đã có đầu ra riêng; việc nghiệm thu chúng không đồng nghĩa dataset đã
-được xác minh hoặc baseline dữ liệu thật (#8) đã train xong.
+được xác minh hoặc model đã được đánh giá chất lượng (#9).
 
 Khi chuyển chat, gửi:
 
