@@ -40,6 +40,14 @@ beforeEach(() => {
 afterEach(() => cleanup());
 
 describe("image detection flow", () => {
+  it("shows a retryable error when the model is not ready", async () => {
+    mockedDetectImage.mockRejectedValueOnce(new DetectionApiError("SERVER_ERROR", 503));
+    render(<Home />);
+    await upload();
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Dịch vụ phân tích đang gặp sự cố"));
+    expect(screen.getByRole("button", { name: "Thử lại" })).toBeInTheDocument();
+    expect(screen.queryByText("Không phát hiện đối tượng")).not.toBeInTheDocument();
+  });
   it("previews a valid image, calls the stub, and shows the empty result", async () => {
     render(<Home />);
     await upload();

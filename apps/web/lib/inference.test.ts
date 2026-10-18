@@ -33,6 +33,7 @@ describe("detectImage", () => {
     [415, "UNSUPPORTED_TYPE"],
     [422, "INVALID_IMAGE"],
     [500, "SERVER_ERROR"],
+    [503, "SERVER_ERROR"],
   ] as const)("maps HTTP %s to %s", async (status, code) => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status })));
     await expect(detectImage(file)).rejects.toMatchObject({ code, status });
