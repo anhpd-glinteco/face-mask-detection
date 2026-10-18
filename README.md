@@ -111,6 +111,10 @@ mục tiêu với tính năng đã kiểm chứng; không coi sơ đồ là bằ
 
 ## Deployment
 
+Internal local performance evidence and the closed deployment gate are documented
+in the [P10 benchmark report](docs/benchmark-report.md). This does not provide a
+public preview or authorize deployment of the current P4 checkpoint.
+
 Web và inference được thử deploy thành hai Vercel projects từ cùng monorepo. Nếu inference không đạt performance budget, chỉ backend model được chuyển sang container host; API contract giữ nguyên.
 
 ## Privacy and responsible use

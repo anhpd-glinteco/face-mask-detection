@@ -1,5 +1,10 @@
 # Test Plan
 
+P10 adds an opt-in internal real-model local benchmark, separate from fixture CI.
+See the [method/report](benchmark-report.md) and [reproduction commands](../scripts/benchmark/README.md).
+The benchmark's small percentile/error/readiness/process-tree tests run in inference CI;
+the P4 checkpoint and performance run remain local, with deployment gate closed.
+
 P9 promotes P6–P8 browser fixtures into the repository and CI. Run
 `npm run test:e2e` in `apps/web`; the runner builds production and tests Chromium
 at desktop/mobile DPR1. See [commands and limits](../apps/web/e2e/README.md).
