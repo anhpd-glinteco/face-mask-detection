@@ -38,7 +38,7 @@ Evidence: `D:\Codex\outputs\face-mask-detection\p9-integration-fixtures`.
 | Backend | PASS, 24 tests | Python 3.12, p5-venv, `python -m pytest tests -v`; existing Starlette/httpx deprecation warning |
 | Compose configuration | PASS | `docker compose config --quiet` |
 | Local Docker runtime | BLOCKED | CLI/Compose installed; engine pipe unavailable even after starting Docker Desktop; `compose-build.log` |
-| GitHub CI / Compose runtime | Pending | To be updated from the P9 PR run |
+| GitHub CI / Compose runtime | Repair pending | First run built both images and passed startup health; browser smoke found a test API error. See history below. |
 | Independent review | Not performed | No reviewer/subagent dispatched |
 
 Failures retained in `e2e-first.log`, `e2e-second.log`, `e2e-third.log`:
@@ -46,6 +46,18 @@ initial `import.meta` under CommonJS runner, browser installation not yet comple
 then ambiguous Next.js route-announcer `role=alert`. Tests now resolve fixture
 paths from the documented working directory and filter application alerts by
 their error text. No product code change was needed. The final run passes.
+
+Draft [PR #37](https://github.com/anhpd-glinteco/face-mask-detection/pull/37)
+targets the P8 branch. Initial CI run `39112546139` on `655f03b` passed web,
+inference and ML. Docker build/startup also passed and both containers were
+cleaned up after failure. Its Compose smoke exposed use of nonexistent
+`request.options`; corrected to `request.fetch` with method OPTIONS.
+Desktop stream geometry also sampled a newly replaced snapshot before decode/
+ResizeObserver; the test now polls decoded snapshot alignment at the same <1 px
+tolerance, without retrying the test or changing product behavior.
+The repaired local production E2E run passes all four tests (`e2e-repair.log`).
+Failed CI logs, trace/screenshots and Compose startup logs are retained under
+external `ci-first-e2e` / `ci-first-compose` and `ci-*-first-failure.log`.
 
 Playwright initially downloaded its managed Chromium/FFmpeg to the default cache
 on C: (`C:\Users\ASUS\AppData\Local\ms-playwright`); deliverables remain on D:.

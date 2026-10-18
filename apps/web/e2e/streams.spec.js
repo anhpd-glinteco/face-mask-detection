@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import path from 'node:path';
 import { uploadImage } from './image-fixture';
 
@@ -63,14 +63,18 @@ test('video and webcam sampling, errors, stale results and cleanup', async ({ pa
       await page.setViewportSize(mobile?{width:390,height:844}:{width:1440,height:1000});
       await camera().getByRole('button',{name:'Bắt đầu',exact:true}).click(); await snapshot();
       await page.waitForFunction(()=>[...document.querySelectorAll('[aria-label="Thống kê lấy mẫu"]')].some(e=>e.getBoundingClientRect().width>0&&Number(e.querySelector('dd')?.textContent)>=3));
-      const geometry=await page.evaluate(()=>{
+      let geometry;
+      // Snapshots are replaced while sampling; wait for decode and ResizeObserver.
+      await expect.poll(async () => {
+        geometry=await page.evaluate(()=>{
         const image=[...document.querySelectorAll('.video-workspace img')].find(e=>e.getBoundingClientRect().width>0);
         const canvas=[...document.querySelectorAll('.video-workspace .detection-canvas')].find(e=>e.getBoundingClientRect().width>0);
         const a=image.getBoundingClientRect(),b=canvas.getBoundingClientRect();
-        return {dpr:devicePixelRatio,deltas:['x','y','width','height'].map(k=>Math.abs(a[k]-b[k])),overflow:document.documentElement.scrollWidth>innerWidth,
+        return {decoded:image.complete && image.naturalWidth > 0,dpr:devicePixelRatio,deltas:['x','y','width','height'].map(k=>Math.abs(a[k]-b[k])),overflow:document.documentElement.scrollWidth>innerWidth,
           mirrored:getComputedStyle(document.querySelector('[aria-label="Camera trực tiếp"]')).transform!=='none'};
       });
-      assert(geometry.dpr===1&&geometry.deltas.every(d=>d<1)&&!geometry.overflow&&!geometry.mirrored,'geometry/mirroring failure '+JSON.stringify(geometry));
+        return geometry.decoded&&geometry.dpr===1&&geometry.deltas.every(d=>d<1)&&!geometry.overflow&&!geometry.mirrored;
+      }, { message: 'decoded snapshot overlay must align within 1 CSS px' }).toBe(true);
       const statistics=await camera().getByRole('region',{name:'Thống kê lấy mẫu'}).innerText();
       assert(statistics.includes('Latency frame gần nhất')&&statistics.includes('ms'),'latency missing');
       await page.screenshot({path:testInfo.outputPath('webcam.png'),fullPage:true});

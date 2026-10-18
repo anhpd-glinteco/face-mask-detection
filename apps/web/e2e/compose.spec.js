@@ -10,7 +10,7 @@ test('Compose web, real API, CORS and missing-model readiness', async ({ page, r
   expect(health.status()).toBe(200);
   expect(ready.status()).toBe(503);
   for (const origin of ['http://localhost:3000', 'https://untrusted.invalid']) {
-    const response = await request.options(`${api}/detect`, { headers: {
+    const response = await request.fetch(`${api}/detect`, { method: 'OPTIONS', headers: {
       Origin: origin, 'Access-Control-Request-Method': 'POST',
     } });
     expect(response.headers()['access-control-allow-origin']).toBe(
