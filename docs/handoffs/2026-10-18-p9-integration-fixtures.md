@@ -34,11 +34,12 @@ Evidence: `D:\Codex\outputs\face-mask-detection\p9-integration-fixtures`.
 |---|---|---|
 | Frontend unit | PASS, 80 tests | `unit-final.log` |
 | Typecheck / lint | PASS | `typecheck-final.log`, `lint-final.log` |
-| Production build + Chromium | PASS, 4 tests / two viewports | `e2e-final.log`, copied `playwright-report`, `test-results` |
+| Production build + Chromium | PASS, 4 tests / two viewports | `e2e-repair.log`, CI `e2e` artifact |
 | Backend | PASS, 24 tests | Python 3.12, p5-venv, `python -m pytest tests -v`; existing Starlette/httpx deprecation warning |
 | Compose configuration | PASS | `docker compose config --quiet` |
 | Local Docker runtime | BLOCKED | CLI/Compose installed; engine pipe unavailable even after starting Docker Desktop; `compose-build.log` |
-| GitHub CI / Compose runtime | Repair pending | First run built both images and passed startup health; browser smoke found a test API error. See history below. |
+| GitHub CI | PASS, all 5 jobs | [Run 39112763957](https://github.com/anhpd-glinteco/face-mask-detection/actions/runs/39112763957), code commit `25734c8`: web, inference, ML, E2E, Compose |
+| Compose runtime (CI Linux) | PASS | Both images build and services healthy; web/health 200, ready/detect 503, CORS allow/deny and actual browser upload; teardown passes. `ci-final/compose-results` |
 | Independent review | Not performed | No reviewer/subagent dispatched |
 
 Failures retained in `e2e-first.log`, `e2e-second.log`, `e2e-third.log`:
@@ -65,10 +66,13 @@ The test README documents `PLAYWRIGHT_BROWSERS_PATH` for future D: installations
 
 ## Remaining work and rollback
 
-#19/#21 remain open pending CI/runtime evidence and complete DoD verification.
+#19/#21 completed with checked DoD and links to PR #37 / passing CI. The issue
+evidence explicitly distinguishes fixtures/missing-model plumbing from real-model
+quality, physical camera and deployment readiness. PR remains a draft for review.
 Do not infer trained-model integration or model readiness from fixture/health
 checks. Current P4 weights remain unapproved for publication/deployment.
 Physical camera, Firefox/WebKit, model quality and 60-second benchmarks are untested.
-Next: inspect P9 CI results; resolve failures, then update issue completion only
-where evidence meets DoD. Obtain independent review before merging the PR stack.
+Next: obtain independent review before merging the PR stack; P10 preview and
+benchmarks still require a separate model/deployment decision. Raw CI artifacts,
+job metadata and initial-failure evidence are saved externally on D:.
 Rollback only the P9 test/CI/Docker/docs changes; preserve P8 and ML artifacts.
