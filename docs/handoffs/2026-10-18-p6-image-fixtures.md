@@ -4,13 +4,18 @@
 
 Image frontend implementation and fixture checks pass. Issues #12 (overlay)
 and #13 (image errors/empty results) meet their issue DoD using combined frontend
-and backend unit coverage; these are marked for closure with this PR. Full
-frontend/backend integration remains open in #10, #11 and #14. No checkpoint/media was loaded, no deployment/publication, no changes to
+and backend unit coverage; GitHub issues #12 and #13 are closed with PR #34.
+Full frontend/backend integration remains open in #10, #11 and #14. No
+checkpoint/media was loaded, no deployment/publication, no changes to
 P2 rights/scene flags, `p3_ready=false`, dataset splits or training.
 
 Branch: `codex/p6-image-fixtures`, base `e3dfcc8` on
 `codex/p5-inference-fixtures` ([parent PR #33](https://github.com/anhpd-glinteco/face-mask-detection/pull/33)).
-Changes are local and uncommitted; no P6 PR/push/merge or issue changes made.
+Commit `6756a705a95666cfa01a23c967b902590d93a543` is pushed in
+[PR #34](https://github.com/anhpd-glinteco/face-mask-detection/pull/34),
+targeting the unmerged P5 branch. No merge, deployment or release.
+Issues #12 and #13 are closed with completion comments; #6, #10, #11 and #14
+remain open. PR #34 CI was pending at handoff time.
 Inputs: plan, P5 handoff, requirements/use cases, current frontend/client/tests
 and contract. User explicitly chose P6 fixtures and approved implementation.
 
@@ -74,8 +79,8 @@ successful check. Failures are retained in `first-browser-failure.json` and
 ## Next / rollback
 
 - Obtain independent review before merge; runtime fixture checks do not replace it.
-- Close #12/#13 with this PR; retain #6/#10/#11/#14 until contract, model and
-  end-to-end API evidence reaches their full DoD.
+- Retain #6/#10/#11/#14 until contract, model and end-to-end API evidence reaches
+  their full DoD.
 - P5/P6 model integration still requires an approved model/data path. Do not
   reuse P4 weights for deployment or infer model quality from these results.
 - P7 can build local video sampling with fixtures: single in-flight request,
