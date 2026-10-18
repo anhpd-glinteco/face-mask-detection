@@ -1,5 +1,17 @@
 # Test Plan
 
+P9 promotes P6–P8 browser fixtures into the repository and CI. Run
+`npm run test:e2e` in `apps/web`; the runner builds production and tests Chromium
+at desktop/mobile DPR1. See [commands and limits](../apps/web/e2e/README.md).
+Image checks cover resize/overlay, empty/invalid responses, 503 and retry.
+Video/webcam checks cover serial JPEG sampling, skipped busy opportunities,
+statistics, stale-response rejection, permission errors and track cleanup.
+`E2E_COMPOSE=1` selects the separate real-service smoke: web/health 200,
+ready/detect 503 without weights, CORS and browser→API connectivity.
+Existing Python tests cover model-loader/contract boundaries with synthetic weights;
+fixture success does not certify a trained model or physical camera.
+Results and runtime blockers: [P9 handoff](handoffs/2026-10-18-p9-integration-fixtures.md).
+
 - Empty/no-face image; multiple people; occlusion; low light; tilted and small faces.
 - Corrupt/unsupported/oversized files; fake MIME; API timeout; unavailable model.
 - Low-confidence boundaries and invalid/out-of-bounds boxes.

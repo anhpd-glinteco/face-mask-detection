@@ -34,3 +34,7 @@ uploads/
 Thumbs.db
 .idea/
 .vscode/
+
+# Playwright artifacts
+apps/web/test-results/
+apps/web/playwright-report/

@@ -63,6 +63,12 @@ Hoặc chạy cả hai service:
 docker compose up --build
 ```
 
+Compose builds the browser API URL (`http://localhost:8000`) into the web bundle;
+changing it requires rebuilding the web image. Open web at `http://localhost:3000`.
+No weights are included: health returns 200 while readiness/detection return 503.
+Web startup health does not certify model readiness. See the reproducible
+[browser and Compose checks](apps/web/e2e/README.md), including teardown and CI evidence.
+
 ## API contract
 
 - `POST /api/v1/detect`: nhận một ảnh qua multipart field `image`.

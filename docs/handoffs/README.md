@@ -13,8 +13,9 @@ phần trăm hoàn thành sản phẩm.
 | P5 nền tảng | Adapter/readiness và fixture; chưa tích hợp checkpoint P4 | [Bàn giao P5](2026-10-18-p5-inference-fixtures.md) |
 | P6 frontend | PR #34 đã push, #12/#13 đã đóng; #6/#10/#11/#14 còn mở, chờ review/CI | [Bàn giao P6](2026-10-18-p6-image-fixtures.md) |
 | P7 frontend | PR #35, CI xanh; #15/#17 đã đóng; chưa review/model thật | [Bàn giao P7](2026-10-18-p7-video-fixtures.md) |
-| P8 frontend | Webcam/thống kê fixture: 80 unit test, 9 Chromium checks đạt; local diff, review độc lập blocked | [Bàn giao P8](2026-10-18-p8-webcam-fixtures.md) |
-| P9–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| P8 frontend | PR #36 đã push, CI xanh; #16/#18 đã đóng; review độc lập chưa có | [Bàn giao P8](2026-10-18-p8-webcam-fixtures.md) |
+| P9 integration | Draft PR #37; 5 job CI xanh, Compose/browser→API đạt khi thiếu model; #19/#21 đã đóng, chưa review/model thật | [Bàn giao P9](2026-10-18-p9-integration-fixtures.md) |
+| P10–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
 P4 internal evaluation completed: fixed epoch 30, validation threshold 0.15,
 test macro F1 0.2061 and mAP50:95 0.0820. P5 prepares the service using synthetic
