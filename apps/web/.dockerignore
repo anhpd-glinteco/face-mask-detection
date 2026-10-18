@@ -1,0 +1,15 @@
+node_modules
+.next
+.venv
+__pycache__
+.pytest_cache
+.env
+.env.*
+*.pt
+*.pth
+*.onnx
+weights
+data
+uploads
+test-results
+playwright-report

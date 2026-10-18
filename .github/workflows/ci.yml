@@ -54,3 +54,64 @@ jobs:
           cache-dependency-path: ml/requirements.txt
       - run: pip install -r ml/requirements.txt
       - run: python -m unittest discover -s ml/tests -v
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-results
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results
+
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+        working-directory: apps/web
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/web
+      - run: docker compose up --build --wait --wait-timeout 120
+      - run: npm run test:e2e
+        working-directory: apps/web
+        env:
+          E2E_COMPOSE: "1"
+      - name: Capture startup logs and state
+        if: always()
+        run: |
+          mkdir -p compose-results
+          docker compose logs --no-color > compose-results/startup.log 2>&1
+          docker compose ps --all > compose-results/state.log 2>&1
+      - name: Stop containers
+        if: always()
+        run: docker compose down --volumes --remove-orphans
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compose-results
+          path: |
+            compose-results
+            apps/web/playwright-report
+            apps/web/test-results
