@@ -3,10 +3,11 @@
 ## Status
 
 Local-video frontend and serial sampling implemented on `codex/p7-video-fixtures`,
-based on P6 commit `c297e26`. Changes remain local; no commit, push, PR, merge,
-deployment or issue closure in this session. P6 PR #34 and P5 PR #33 are unchanged.
-Issues #15/#17 require full DoD review and real-model integration evidence before
-being called complete. Webcam is P8 and remains disabled.
+based on P6 commit `c297e26`. P6 PR #34 and P5 PR #33 are unchanged. Issues #15
+and #17 are completed and closed with evidence links in their comments; PR #35
+is open and targets `codex/p6-image-fixtures`. Commit `6159a26` contains the
+implementation and handoff. Webcam is P8 and remains disabled. Issue #18 stays
+open for per-frame statistics, webcam and its full smoke coverage.
 
 User approved the plan with “oke” in this chat. Plan artifact:
 `D:\Codex\outputs\face-mask-detection\p7-video-fixtures\plan.json`, SHA256
@@ -88,5 +89,7 @@ the fixture now uses empty detections to isolate dimensions. Retained failure:
 - Parent performed all work inline; initial/repair/diagnostic counts 1/1/0.
   Self-review completed; independent review remains blocked. Source/evidence
   fingerprints and producer `/root` are recorded in `evidence-results.json`.
+- PR #35 CI is running. No merge/deploy. Real-model and independent review
+  evidence remain outstanding.
 - Roll back only this session's web/docs diff. Preserve P6 changes, dataset,
   weights and evidence. Source remains at its original D: repository path.
