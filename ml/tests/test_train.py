@@ -154,7 +154,7 @@ class TrainerTests(unittest.TestCase):
             return real_epoch(model, optimizer, batches)
 
         with patch.object(train, "train_epoch", side_effect=bad_epoch):
-            with self.assertRaisesRegex(ValueError, "non-finite synthetic loss"):
+            with self.assertRaisesRegex(ValueError, "non-finite loss"):
                 train.run(self.config, output, model_factory=TinyDetector)
         self.assertEqual(self.checkpoint(output)["next_epoch"], 1)
 
@@ -170,7 +170,7 @@ class TrainerTests(unittest.TestCase):
         with patch.object(model, "forward", return_value=[
                 {"boxes": torch.tensor([[0., 0., 81., 64.]]),
                  "labels": torch.tensor([1]), "scores": torch.tensor([0.5])}] * 2):
-            with self.assertRaisesRegex(ValueError, "invalid synthetic predictions"):
+            with self.assertRaisesRegex(ValueError, "invalid predictions"):
                 train.check_predictions(model, 1)
 
     def test_cli_requires_synthetic_and_rejects_dataset_argument(self):

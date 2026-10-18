@@ -85,3 +85,13 @@ Chỉ đóng issue đủ toàn bộ DoD. Không push/đóng issue hàng loạt �
 
 Rủi ro: ML bắt đầu từ đầu, còn 10 ngày; GPU/host miễn phí không bảo đảm; metadata
 cảnh/nguồn có thể thiếu nên không được tuyên bố không leakage nếu chỉ kiểm tra hash.
+
+## Internal experiment decision — 17/10/2026
+
+The user explicitly chose internal training on the current curated dataset,
+acknowledging unverified image rights and possible scene leakage. This authorizes
+the internal experiment, not a claim of verified rights or scene independence.
+Do not publish media/weights or deploy this checkpoint. Keep P2 verification flags
+false and issues #2/#3 open. The internal config pins the existing manifest/splits;
+do not repeat the completed provenance search or change source media.
+See [internal baseline handoff](handoffs/2026-10-17-p3-internal.md).
