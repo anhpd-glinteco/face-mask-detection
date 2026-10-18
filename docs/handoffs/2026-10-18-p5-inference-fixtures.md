@@ -10,6 +10,7 @@ Rights/scene verification (#2/#3) and `p3_ready=false` are unchanged.
 Branch: `codex/p5-inference-fixtures`, base `codex/internal-evaluation` at
 `541112216771931b4c46b5ea85591d7ab78dd3f6` (PR #32). Keep this PR stacked on
 #32 until the parent chain merges; do not merge automatically.
+Implementation commit: `2283cfc`; [PR #33](https://github.com/anhpd-glinteco/face-mask-detection/pull/33).
 
 ## Changes
 
