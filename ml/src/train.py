@@ -68,9 +68,11 @@ def synthetic_batch():
 
 
 class ManifestData:
-    """Verify the frozen manifest and media before using train/validation records."""
+    """Verify frozen manifest/media; training defaults never open test media."""
 
-    def __init__(self, dataset, manifest_path, config):
+    def __init__(self, dataset, manifest_path, config, splits=("train", "validation")):
+        if not splits or any(split not in ("train", "validation", "test") for split in splits):
+            raise ValueError("invalid requested splits")
         self.root = Path(dataset).resolve()
         raw = Path(manifest_path).read_bytes()
         self.identity = {"manifest_sha256": hashlib.sha256(raw).hexdigest(),
@@ -83,7 +85,7 @@ class ManifestData:
         if (manifest["schema_version"] != 1 or manifest["technical_checks_passed"] is not True
                 or manifest["errors"] or manifest["missing_split_classes"]):
             raise ValueError("manifest technical checks did not pass")
-        self.records = {split: [] for split in ("train", "validation")}
+        self.records = {split: [] for split in splits}
         seen, groups = set(), {}
         for record in manifest["records"]:
             split = record["split"]
@@ -94,7 +96,7 @@ class ManifestData:
             if group in groups and groups[group] != split:
                 raise ValueError("group crosses splits")
             groups[group] = split
-            if split == "test":
+            if split not in self.records:
                 continue
             for key in ("image", "annotation"):
                 path = (self.root / record[key]).resolve()
@@ -115,8 +117,9 @@ class ManifestData:
                         or not 0 <= y1 < y2 <= record["height"]):
                     raise ValueError("invalid manifest target")
             self.records[split].append(record)
-        if len(self.records["train"]) < 2 or not self.records["validation"]:
-            raise ValueError("need at least two training images and one validation image")
+        if any(not records for records in self.records.values()) or (
+                "train" in self.records and len(self.records["train"]) < 2):
+            raise ValueError("requested splits must be nonempty; training needs two images")
 
     def batches(self, split, limit=None):
         records = self.records[split]

@@ -25,3 +25,14 @@ exact/dHash/reviewed-scene grouping, totals reconciled against exclusions, and a
 See `ml/reports/p2-curated-audit.json`; no assertion of complete scene independence
 or train/deploy rights follows from technical audit exit 0.
 
+P4 evaluation: known-answer fixtures cover perfect detection, duplicate/false
+positives, missing detections, wrong classes, absent ground-truth classes,
+IoU=0.5 boundary, 101-point AP, best-unmatched-truth matching, threshold tie rules,
+zero-area exclusion, invalid predictions and the 100-detection limit. End-to-end
+fixture evaluation removes train/test media during validation and verifies only
+the selected split is opened. Test rejects missing/modified decisions and
+checkpoint/method identity mismatches before loading data. Corrupt selected media
+and runtime mismatches fail. Existing trainer/synthetic/data tests still run.
+See [P4 handoff](handoffs/2026-10-18-p4-internal-evaluation.md) for real evaluation
+results, test logs and environment limits; these are separate from deployment QA.
+

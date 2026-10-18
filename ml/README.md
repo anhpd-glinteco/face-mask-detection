@@ -169,3 +169,62 @@ a best model. `checkpoint.pt` retains the final completed epoch, optimizer/sched
 RNG, config, manifest identity and per-batch loss/timing history. `real-report.json`
 contains its checksum, split counts and limitations. Logs/weights stay on D outside
 Git; artifacts are for internal use only. P4 evaluation and deployment are separate.
+
+## P4 internal evaluation — 18/10/2026
+
+Use the same P3 environment and two CPU threads. Evaluation loads the fixed final
+epoch 30, never trains, and never chooses a best epoch. Each command needs an empty
+output directory outside source/data. From the repository root:
+
+```powershell
+$env:OMP_NUM_THREADS = '2'
+$env:MKL_NUM_THREADS = '2'
+$checkpoint = 'D:\Codex\outputs\face-mask-detection\p3-internal\baseline-v2\checkpoint.pt'
+$checkpointHash = '1671b05ee0762ac9c1ebd5501a703b357ea2aa043e61ce029b70ae5f85c2ef74'
+$dataset = 'D:\Codex\work\face-mask-detection\p2\dataset-curated-v1'
+$manifest = 'D:\Codex\outputs\face-mask-detection\p2-review\manifest.json'
+$evaluationOutput = 'D:\Codex\outputs\face-mask-detection\p4-evaluation'
+& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/evaluate.py validation --checkpoint $checkpoint --checkpoint-sha256 $checkpointHash --dataset $dataset --manifest $manifest --output "$evaluationOutput\validation"
+if ($LASTEXITCODE -ne 0) { throw 'Validation failed; do not run test.' }
+$decision = "$evaluationOutput\validation\decision.json"
+$decisionHash = (Get-FileHash -LiteralPath $decision -Algorithm SHA256).Hash.ToLowerInvariant()
+& D:\Codex\work\face-mask-detection\p3-venv\Scripts\python.exe ml/src/evaluate.py test --checkpoint $checkpoint --checkpoint-sha256 $checkpointHash --dataset $dataset --manifest $manifest --decision $decision --decision-sha256 $decisionHash --output "$evaluationOutput\test"
+```
+
+These output directories hold the recorded run; choose a new root to reproduce.
+Validation opens only validation media; test requires the sealed decision before
+opening test media. Both check manifest, selected-split media/XML hashes, dimensions,
+targets, checkpoint/config hashes and the exact P3 runtime. Trainer loading still
+defaults to train/validation and never reads test. The loader source changed in P4;
+resuming old training still requires its original P3 source, as documented above.
+
+Inference: scratch architecture, strict checkpoint state loading, RGB float [0,1],
+original xyxy pixels; detector performs its own 320 resize. Score floor 0.001,
+class-wise NMS IoU 0.55, 300 candidates per class before NMS, maximum 100 detections
+per image across classes. Invalid predictions fail; clipped zero-area boxes are
+counted and excluded without replacing them. Scores are compared as returned,
+without rounding. Equal-score ordering follows detector output, then image order.
+
+Select one common threshold from 0.05–0.95 in 0.05 steps by maximum validation
+macro F1 at IoU 0.5, ties choosing the higher threshold. All three classes must be
+present in validation. Test uses that threshold unchanged. PR/F1/AP use same-class,
+confidence-descending greedy one-to-one matching to the best unmatched truth box.
+Macro metrics exclude classes with no ground truth (reported N/A for recall/F1/AP).
+Precision is zero when no predictions exist. AP uses 101 recall points and IoU
+0.50–0.95 in 0.05 steps, before applying the selected operating threshold.
+This is a defined AP calculation without COCO area/crowd rules, not official COCO
+evaluation. AP remains bounded by the declared score floor, top-k and NMS.
+
+Each stage emits `report.json`, `predictions.json` (numeric boxes/labels, no media),
+`summary.md` and `f1.svg`. Validation also emits `decision.json`; test checks its
+SHA-256, evaluator source hash, checkpoint, manifest, config, runtime and method.
+Confusion rows are truth and columns prediction, with background at index 0;
+class-agnostic greedy IoU>=0.5 matching exposes class errors. Unmatched predictions
+are localization errors if same-class truth has IoU in [0.1,0.5), otherwise extra
+(including duplicates). Unmatched truth is missed. These are diagnostic counts,
+not mutually exclusive object outcomes: a poorly localized box can also leave a
+miss. Full per-image counts and the ten images with most errors are recorded.
+
+Image rights and scene independence remain unverified, `p3_ready=false`; do not
+publish media/weights or deploy this checkpoint. See the P4 handoff for measured
+results and the model card for limitations.
