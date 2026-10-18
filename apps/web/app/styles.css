@@ -73,6 +73,12 @@ h2 { margin-bottom: 8px; font-size: 16px; line-height: 24px; }
 .preview-file span { margin-top: 2px; color: var(--secondary); font-family: var(--font-plex-mono), monospace; font-size: 12px; }
 .preview-canvas { position: relative; display: grid; min-height: 360px; place-items: center; overflow: hidden; border-radius: 8px; background: var(--canvas); }
 .preview-canvas img { display: block; width: auto; height: auto; max-width: 100%; max-height: 58vh; }
+.video-workspace { min-width: 0; }
+.video-workspace input { max-width: 100%; margin: 8px 0 16px; }
+.video-preview video { display: block; width: 100%; max-height: 58vh; background: var(--canvas); }
+.video-workspace .preview-frame { padding: 0; }
+.video-workspace h3 { margin-top: 24px; font-size: 16px; }
+[hidden] { display: none !important; }
 .detection-canvas { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); pointer-events: none; }
 .preview-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; background: rgb(23 32 31 / 58%); color: #fff; font-size: 14px; }
 .spinner, .mini-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin .7s linear infinite; }

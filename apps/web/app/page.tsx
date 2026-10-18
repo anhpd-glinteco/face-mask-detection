@@ -5,13 +5,14 @@ import {
   ALLOWED_IMAGE_TYPES,
   MAX_UPLOAD_BYTES,
   detectImage,
-  type DetectionApiError,
   type DetectionResponse,
 } from "@/lib/inference";
 import { DetectionResult } from "./components/DetectionResult";
 import { DetectionStatus } from "./components/DetectionStatus";
 import { ImagePreview } from "./components/ImagePreview";
 import { ImageUploader } from "./components/ImageUploader";
+import { VideoWorkspace } from "./components/VideoWorkspace";
+import { messageForError } from "@/lib/detection-errors";
 
 type Mode = "image" | "video" | "webcam";
 export type DetectionPhase = "idle" | "ready" | "loading" | "success" | "error";
@@ -41,21 +42,6 @@ function validateFile(file: File): string | null {
   }
   if (file.size > MAX_UPLOAD_BYTES) return `Ảnh vượt quá dung lượng tối đa ${formatBytes(MAX_UPLOAD_BYTES)}.`;
   return null;
-}
-
-function messageForError(error: unknown): string {
-  if (error && typeof error === "object" && "code" in error) {
-    const code = (error as DetectionApiError).code;
-    if (code === "FILE_TOO_LARGE") return `Ảnh vượt quá dung lượng tối đa ${formatBytes(MAX_UPLOAD_BYTES)}.`;
-    if (code === "UNSUPPORTED_TYPE") return "Định dạng không được hỗ trợ. Vui lòng chọn ảnh JPEG, PNG hoặc WebP.";
-    if (code === "INVALID_IMAGE") return "Không thể đọc ảnh. File có thể bị hỏng hoặc không phải ảnh hợp lệ.";
-    if (code === "NETWORK_ERROR") return "Không thể kết nối tới dịch vụ phân tích. Vui lòng kiểm tra kết nối và thử lại.";
-    if (code === "INVALID_RESPONSE") return "Dữ liệu trả về từ dịch vụ không hợp lệ.";
-    if (code === "TIMEOUT") return "Phân tích quá thời gian chờ 30 giây. Vui lòng thử lại.";
-    if (code === "MODEL_NOT_READY") return "Mô hình chưa sẵn sàng. Vui lòng thử lại sau.";
-    if (code === "SERVER_ERROR") return "Dịch vụ phân tích đang gặp sự cố. Vui lòng thử lại.";
-  }
-  return error instanceof Error ? error.message : "Không thể phân tích ảnh. Vui lòng thử lại.";
 }
 
 export default function Home() {
@@ -162,7 +148,7 @@ export default function Home() {
           <div><strong>MaskCheck</strong><span>Không gian kiểm định mô hình</span></div>
         </div>
         <div className="header-tools">
-          <span className="model-status">{visibleResult ? "Đã nhận kết quả" : "Phân tích ảnh"}</span>
+          <span className="model-status">{mode === "video" ? "Phân tích video" : visibleResult ? "Đã nhận kết quả" : "Phân tích ảnh"}</span>
           <button className="icon-button" type="button" aria-label="Trợ giúp">?</button>
           <button className="icon-button" type="button" aria-label="Tùy chọn khác">⋯</button>
         </div>
@@ -176,45 +162,61 @@ export default function Home() {
               key={item.id}
               type="button"
               aria-pressed={mode === item.id}
-              disabled={item.id !== "image"}
-              onClick={() => setMode(item.id)}
-              title={item.id === "image" ? undefined : "Sẽ triển khai ở tuần sau"}
+              disabled={item.id === "webcam"}
+              onClick={() => {
+                if (item.id === mode) return;
+                requestRef.current?.abort();
+                requestIdRef.current += 1;
+                if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
+                previewUrlRef.current = null;
+                setPreviewUrl(null);
+                setFile(null);
+                setResult(null);
+                setError(null);
+                setDimensions(null);
+                setPhase("idle");
+                setMode(item.id);
+              }}
+              title={item.id === "webcam" ? "Sẽ triển khai ở tuần sau" : undefined}
             >
               <ModeIcon mode={item.id} />
               <span>{item.label}</span>
-              {item.id !== "image" && <small>Sẽ triển khai ở tuần sau</small>}
+              {item.id === "webcam" && <small>Sẽ triển khai ở tuần sau</small>}
             </button>
           ))}
         </nav>
 
         <section className="media-workspace" aria-labelledby="workspace-title">
-          <div className="workspace-heading">
-            <div>
-              <p className="eyebrow">PHÂN TÍCH ẢNH</p>
-              <h1 id="workspace-title">Kiểm định trạng thái khẩu trang</h1>
-              <p className="subtitle">Tải lên một ảnh để phân tích trạng thái khẩu trang.</p>
-            </div>
-            {file && <span className="file-chip">{file.name}</span>}
-          </div>
-
-          <div className={`media-stage ${previewUrl ? "has-preview" : ""}`}>
-            {previewUrl && file ? (
-                <ImagePreview key={previewUrl} file={file} previewUrl={previewUrl} result={visibleResult} isLoading={isBusy} onReplace={() => inputRef.current?.click()} onDimensions={(width, height) => setDimensions({ width, height })} onError={previewError} />
-            ) : (
-              <div className="empty-stage">
-                <div className="upload-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 5v14M5 12h14" strokeLinecap="round" /></svg></div>
-                <h2>Chọn ảnh để bắt đầu</h2>
-                <p>Ảnh JPEG, PNG hoặc WebP · tối đa {formatBytes(MAX_UPLOAD_BYTES)}</p>
+          <div hidden={mode !== "image"}>
+            <div className="workspace-heading">
+              <div>
+                <p className="eyebrow">PHÂN TÍCH ẢNH</p>
+                <h1 id="workspace-title">Kiểm định trạng thái khẩu trang</h1>
+                <p className="subtitle">Tải lên một ảnh để phân tích trạng thái khẩu trang.</p>
               </div>
-            )}
-          </div>
+              {file && <span className="file-chip">{file.name}</span>}
+            </div>
 
-          <ImageUploader inputRef={inputRef} onChange={onImage} disabled={false} error={error && !previewUrl ? error : null} />
-          <DetectionStatus phase={displayPhase} error={previewUrl ? displayError : null} onRetry={retry} canRetry={Boolean(file && previewUrl && !previewFailed)} />
+            <div className={`media-stage ${previewUrl ? "has-preview" : ""}`}>
+              {previewUrl && file ? (
+                  <ImagePreview key={previewUrl} file={file} previewUrl={previewUrl} result={visibleResult} isLoading={isBusy} onReplace={() => inputRef.current?.click()} onDimensions={(width, height) => setDimensions({ width, height })} onError={previewError} />
+              ) : (
+                <div className="empty-stage">
+                  <div className="upload-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 5v14M5 12h14" strokeLinecap="round" /></svg></div>
+                  <h2>Chọn ảnh để bắt đầu</h2>
+                  <p>Ảnh JPEG, PNG hoặc WebP · tối đa {formatBytes(MAX_UPLOAD_BYTES)}</p>
+                </div>
+              )}
+            </div>
+
+            <ImageUploader inputRef={inputRef} onChange={onImage} disabled={false} error={error && !previewUrl ? error : null} />
+            <DetectionStatus phase={displayPhase} error={previewUrl ? displayError : null} onRetry={retry} canRetry={Boolean(file && previewUrl && !previewFailed)} />
+          </div>
+          <VideoWorkspace active={mode === "video"} />
           <p className="privacy-note">Không nhận diện danh tính. Dữ liệu không được lưu trong phiên MVP.</p>
         </section>
 
-        <aside className="result-panel" aria-labelledby="result-title">
+        <aside hidden={mode !== "image"} className="result-panel" aria-labelledby="result-title">
           <div className="panel-kicker">KẾT QUẢ PHÂN TÍCH</div>
           <h2 id="result-title">Trạng thái phát hiện</h2>
           <DetectionResult result={visibleResult} phase={displayPhase} />
