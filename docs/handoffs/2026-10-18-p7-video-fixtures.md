@@ -89,7 +89,7 @@ the fixture now uses empty detections to isolate dimensions. Retained failure:
 - Parent performed all work inline; initial/repair/diagnostic counts 1/1/0.
   Self-review completed; independent review remains blocked. Source/evidence
   fingerprints and producer `/root` are recorded in `evidence-results.json`.
-- PR #35 CI is running. No merge/deploy. Real-model and independent review
-  evidence remain outstanding.
+- PR #35 CI (`web`, `inference`, `ml`) passed on commit `d8f1775`. No merge/deploy.
+  Real-model and independent review evidence remain outstanding.
 - Roll back only this session's web/docs diff. Preserve P6 changes, dataset,
   weights and evidence. Source remains at its original D: repository path.
