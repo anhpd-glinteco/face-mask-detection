@@ -27,6 +27,8 @@ Evidence: `D:\Codex\outputs\face-mask-detection\p9-integration-fixtures`.
   screenshots/report and startup/state logs; Compose teardown runs on failure.
   Compose test does not intercept API requests: it checks HTTP statuses, CORS and
   an actual browser image upload. Docs include commands and teardown.
+- Root `AGENTS.md` now carries this P9 wrap-up behavior forward as the default for
+  later implementation sessions in this repository.
 
 ## Verification
 
