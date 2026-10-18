@@ -6,7 +6,7 @@ must be free. No new dependency or public hosting is required.
 
 ```powershell
 & D:\Codex\work\face-mask-detection\p5-venv\Scripts\python.exe -m unittest discover -s scripts/benchmark -v
-& D:\Codex\work\face-mask-detection\p5-venv\Scripts\python.exe scripts/benchmark/run.py --checkpoint D:\Codex\outputs\face-mask-detection\p3-internal\baseline-v2\checkpoint.pt --sha256 1671b05ee0762ac9c1ebd5501a703b357ea2aa043e61ce029b70ae5f85c2ef74 --output D:\Codex\outputs\face-mask-detection\p10-internal-benchmark\run-2
+& D:\Codex\work\face-mask-detection\p5-venv\Scripts\python.exe scripts/benchmark/run.py --checkpoint D:\Codex\outputs\face-mask-detection\p3-internal\baseline-v2\checkpoint.pt --sha256 1671b05ee0762ac9c1ebd5501a703b357ea2aa043e61ce029b70ae5f85c2ef74 --output D:\Codex\outputs\face-mask-detection\p10-internal-benchmark\run-3
 ```
 
 Output must be empty. Failure evidence is preserved; use a new directory for each
@@ -37,8 +37,10 @@ happens between samples; the raw UI counters remain available.
 
 Percentiles use nearest rank on successful attempts; error-rate denominators retain
 failed attempts. Raw failures/timeouts remain in JSON/logs and aborts are explicit.
-Memory samples every second use Windows working/peak working set for each API/web
-server PID, excluding descendants. CDP JSHeapUsedSize is page JS heap only, not total
+Memory samples every second sum Windows working sets of each owned API/web process
+tree, including the Windows venv launcher and its Python worker. Per-PID current
+and lifetime peak counters are retained; summed working sets can double-count shared
+pages and are not private bytes. CDP JSHeapUsedSize is page JS heap only, not total
 Chromium memory. Memory sampling errors are retained rather than replaced with zero.
 Raw browser JSON includes numeric detection responses, never media payloads.
 

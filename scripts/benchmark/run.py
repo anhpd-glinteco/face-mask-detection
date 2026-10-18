@@ -74,6 +74,45 @@ def working_set(pid):
         kernel.CloseHandle(handle)
 
 
+def process_parents():
+    class Entry(ctypes.Structure):
+        _fields_ = [('size', wintypes.DWORD), ('usage', wintypes.DWORD), ('pid', wintypes.DWORD),
+                    ('heap', ctypes.c_size_t), ('module', wintypes.DWORD), ('threads', wintypes.DWORD),
+                    ('parent', wintypes.DWORD), ('priority', wintypes.LONG), ('flags', wintypes.DWORD),
+                    ('exe', wintypes.WCHAR * 260)]
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.CreateToolhelp32Snapshot.restype = wintypes.HANDLE
+    kernel.CreateToolhelp32Snapshot.argtypes = [wintypes.DWORD, wintypes.DWORD]
+    kernel.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel.Process32FirstW.argtypes = [wintypes.HANDLE, ctypes.POINTER(Entry)]
+    kernel.Process32NextW.argtypes = [wintypes.HANDLE, ctypes.POINTER(Entry)]
+    handle = kernel.CreateToolhelp32Snapshot(2, 0)
+    if handle == wintypes.HANDLE(-1).value:
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
+        entry = Entry()
+        entry.size = ctypes.sizeof(entry)
+        parents = {}
+        more = kernel.Process32FirstW(handle, ctypes.byref(entry))
+        if not more:
+            raise ctypes.WinError(ctypes.get_last_error())
+        while more:
+            parents[entry.pid] = entry.parent
+            more = kernel.Process32NextW(handle, ctypes.byref(entry))
+        return parents
+    finally:
+        kernel.CloseHandle(handle)
+
+
+def descendants(pid, parents):
+    selected = {pid}
+    while True:
+        expanded = selected | {child for child, parent in parents.items() if parent in selected}
+        if expanded == selected:
+            return sorted(selected)
+        selected = expanded
+
+
 def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--checkpoint', type=Path, required=True)
@@ -99,7 +138,7 @@ def main():
          'commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
          'diff': subprocess.check_output(['git', 'diff', '--stat'], cwd=ROOT, text=True),
          'checkpoint_sha256': args.sha256, 'threads': 2, 'ports': [8000, 3110],
-         'memory_method': 'Windows process working set; 1 second samples; no child-process aggregation',
+         'memory_method': 'Windows working set; 1 second samples; sum owned process tree including venv launcher/worker',
          'cold_method': 'new process, includes imports/model load; OS file cache not cleared'})
     with (args.output / 'packages.txt').open('w') as log:
         subprocess.run([sys.executable, '-m', 'pip', 'freeze'], stdout=log, check=True)
@@ -108,10 +147,18 @@ def main():
     stop = threading.Event()
     def sample():
         while not stop.is_set():
+            try:
+                parents = process_parents()
+            except OSError as error:
+                memory.append({'time': time.time(), 'error': str(error), 'process': 'snapshot'})
+                stop.wait(1)
+                continue
             for name, proc in list(processes):
                 if proc.poll() is None:
                     try:
-                        memory.append({'time': time.time(), 'process': name, 'pid': proc.pid, **working_set(proc.pid)})
+                        members = [{'pid': pid, **working_set(pid)} for pid in descendants(proc.pid, parents)]
+                        memory.append({'time': time.time(), 'process': name, 'pid': proc.pid, 'members': members,
+                                       'working_set_bytes': sum(m['working_set_bytes'] for m in members)})
                     except OSError as error:
                         memory.append({'time': time.time(), 'process': name, 'error': str(error)})
             stop.wait(1)
@@ -177,7 +224,8 @@ def main():
             wait_ready(client, 'http://localhost:3110', web, timeout=60)
             with (args.output / 'browser.log').open('w') as log:
                 subprocess.run(['node', 'benchmark.mjs', str(args.output.resolve()), args.sha256],
-                               cwd=ROOT / 'apps/web', env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
+                               cwd=ROOT / 'apps/web', env=env, stdout=log, stderr=subprocess.STDOUT,
+                               check=True, timeout=300)
             # Validate every browser response with the shared schema too.
             browser = json.loads((args.output / 'browser.json').read_text())
             for row in browser['requests']:
@@ -208,6 +256,9 @@ def main():
                                  display_p95_ms=percentile(values, .95))
                 browser_summary[phase] = entry
             save('browser-summary.json', browser_summary)
+            if not all(any(m.get('working_set_bytes', 0) > 0 and m['process'] == name for m in memory)
+                       for name in ('api-4', 'web')):
+                raise RuntimeError('missing API/web memory samples')
             save('result.json', {'complete': True, 'deployment_gate': 'CLOSED'})
     except Exception as error:
         save('result.json', {'complete': False, 'error': str(error), 'deployment_gate': 'CLOSED'})

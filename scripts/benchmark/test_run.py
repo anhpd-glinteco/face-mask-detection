@@ -2,10 +2,13 @@ import unittest
 from unittest.mock import Mock
 
 import httpx
-from run import percentile, summary, wait_ready
+from run import descendants, percentile, summary, wait_ready
 
 
 class BenchmarkTests(unittest.TestCase):
+    def test_owned_process_tree(self):
+        self.assertEqual(descendants(10, {10: 1, 20: 10, 30: 20, 40: 1}), [10, 20, 30])
+
     def test_nearest_rank_and_errors(self):
         self.assertEqual(percentile(list(range(1, 101)), .95), 95)
         self.assertEqual(percentile([10], .5), 10)
