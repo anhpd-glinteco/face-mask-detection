@@ -11,7 +11,8 @@ phần trăm hoàn thành sản phẩm.
 | P3 nội bộ | Baseline scratch 30 epoch hoàn tất; quyền ảnh/scene chưa xác minh, chưa đánh giá chất lượng | [Bàn giao P3 nội bộ](2026-10-17-p3-internal.md), [trainer synthetic](2026-10-17-p3-synthetic.md) |
 | P4 nội bộ | Đã chọn ngưỡng validation và đánh giá test; chất lượng thấp, không deploy | [Bàn giao P4](2026-10-18-p4-internal-evaluation.md) |
 | P5 nền tảng | Adapter/readiness và fixture; chưa tích hợp checkpoint P4 | [Bàn giao P5](2026-10-18-p5-inference-fixtures.md) |
-| P6–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| P6 frontend | #12/#13 DoD đạt bằng frontend/backend tests; PR chờ review; #6/#10/#11/#14 còn mở | [Bàn giao P6](2026-10-18-p6-image-fixtures.md) |
+| P7–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
 P4 internal evaluation completed: fixed epoch 30, validation threshold 0.15,
 test macro F1 0.2061 and mAP50:95 0.0820. P5 prepares the service using synthetic

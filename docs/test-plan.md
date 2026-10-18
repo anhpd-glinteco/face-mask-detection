@@ -36,3 +36,21 @@ and runtime mismatches fail. Existing trainer/synthetic/data tests still run.
 See [P4 handoff](handoffs/2026-10-18-p4-internal-evaluation.md) for real evaluation
 results, test logs and environment limits; these are separate from deployment QA.
 
+P6 image fixtures: `npm test -- --maxWorkers=1` from `apps/web` passes 48 tests.
+Client tests reject invalid/degenerate/out-of-bounds/non-finite boxes, accept
+fractional/full-edge boxes, distinguish 503 and timeout, enforce one 30-second
+deadline through headers/body, forward cancellation and clean timers/listeners.
+Page tests wait for decoded dimensions, reject mismatches, handle preview errors,
+retry, drop stale results and release requests/object URLs. Canvas tests cover
+three numbered labels, original-to-rendered coordinate scaling, resize/DPR2,
+portrait/edge labels, one-pixel inputs, empty results and observer cleanup.
+
+Production Chromium fixture checks cover landscape/portrait at 1440×1000 and
+390×844 (DPR1), plus portrait at DPR2. Canvas/image geometry deltas are <1 CSS px;
+labels stay in bounds. Empty, invalid, dimension mismatch, 503, retry, source
+replacement/stale response, real 30-second timeout and corrupt PNG checks pass.
+Synthetic PNGs contain no faces; test harness intercepts API calls. Evidence and
+reproduction script: `D:\Codex\outputs\face-mask-detection\p6-image-fixtures`.
+See [P6 handoff](handoffs/2026-10-18-p6-image-fixtures.md): these checks do not
+prove model quality, real API integration, Docker, camera or deployment readiness.
+
