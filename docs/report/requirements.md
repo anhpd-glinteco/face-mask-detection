@@ -10,12 +10,12 @@ Các yêu cầu dưới đây là mục tiêu; trạng thái ở cột cuối kh
 | ID | Yêu cầu và nghiệm thu | Use case | Issue | Kiểm chứng / mục báo cáo | Hiện tại |
 |---|---|---|---|---|---|
 | FR01 | Chọn ảnh JPEG/PNG/WebP ≤ 10 MiB, preview; loại file lỗi/type giả/quá lớn | UC01 | #11, #13, #14 | page.test.tsx; test_api.py; tích hợp ảnh thật / Ch3–5 | Có validation/test cơ bản; thiếu kiểm tra type giả và model thật |
-| FR02 | Mỗi mặt: nhãn, confidence, bbox ảnh gốc; overlay đúng khi resize, nhiều mặt | UC01–03 | #6, #10, #12, #18 | Fixture bbox; ảnh thật và ảnh chụp sau resize / Ch3–5 | Danh sách có; overlay/model chưa có |
+| FR02 | Mỗi mặt: nhãn, confidence, bbox ảnh gốc; overlay đúng khi resize, nhiều mặt | UC01–03 | #6, #10, #12, #18 | Fixture bbox; ảnh thật và ảnh chụp sau resize / Ch3–5 | Overlay ảnh/video/webcam fixture đã kiểm chứng ở P6–P8; chưa model thật |
 | FR03 | Video chỉ đọc local; trích/gửi frame, pause/resume/seek và cleanup | UC02 | #15, #17 | Unit sampler; E2E video / Ch3–5 | P7 fixture đã kiểm chứng; chưa model thật/review độc lập |
-| FR04 | Webcam chỉ mở sau thao tác; start/stop/quyền/ngắt camera/cleanup | UC03 | #16, #18 | Mock permissions + E2E; camera thật / Ch3–5 | Chưa có |
-| FR05 | Không chồng request trong một vòng sampling; không backlog; bỏ kết quả cũ | UC02–03 | #17, #18 | Counter đồng thời ≤ 1; delayed response/seek/source change / Ch3–5 | P7 video fixture đã kiểm chứng; webcam/model thật chưa có |
+| FR04 | Webcam chỉ mở sau thao tác; start/stop/quyền/ngắt camera/cleanup | UC03 | #16, #18 | Mock permissions + E2E; camera thật / Ch3–5 | P8 webcam fixture đã kiểm chứng lifecycle/quyền/lỗi; chưa camera thật/review độc lập |
+| FR05 | Không chồng request trong một vòng sampling; không backlog; bỏ kết quả cũ | UC02–03 | #17, #18 | Counter đồng thời ≤ 1; delayed response/seek/source change / Ch3–5 | P7–P8 video/webcam fixture đã kiểm chứng; chưa model thật/review độc lập |
 | FR06 | Phân biệt loading, lỗi, không mặt, chưa sẵn sàng; retry/cancel hợp lý | UC01–03 | #10, #13, #14 | HTTP/network/timeout/weights lỗi; empty model thật / Ch3–5 | Một phần ở luồng ảnh stub |
-| FR07 | Hiển thị thống kê frame gần nhất, processed FPS/latency; không gọi là camera FPS | UC02–03 | #18, #20 | Script 60 giây và số đếm đối chiếu / Ch4–5 | Chưa có |
+| FR07 | Hiển thị thống kê frame gần nhất, processed FPS/latency; không gọi là camera FPS | UC02–03 | #18, #20 | Script 60 giây và số đếm đối chiếu / Ch4–5 | P8 có count/skipped opportunities/FPS/latency với fake clock và browser fixture; chưa benchmark 60 giây/model thật |
 | FR08 | Hiển thị model version, schema và readiness thật; timing đo thật | UC01–03 | #6, #10, #23 | Contract fixtures và API model thật / Ch3–5 | Stub/version/timing giả định bằng 0 |
 
 ## Phi chức năng

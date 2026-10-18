@@ -68,3 +68,21 @@ See [P7 handoff](handoffs/2026-10-18-p7-video-fixtures.md) for reproduction,
 failure history and limits. Real model/camera, rotated-video fixtures and
 performance benchmarks remain unverified; independent review is blocked.
 
+P8 webcam/statistics fixtures: `npm test` passes 80 tests. Webcam tests verify
+explicit video-only permission, denied/security/missing/busy camera errors,
+insecure/unsupported contexts, late permission resolution after stop/unmount,
+track end, play/API errors, abort, snapshot URL cleanup and explicit retry.
+Fake-clock sampler tests verify a 200 ms opportunity cadence, busy skipped
+opportunities (not dropped source frames), no queue, exact latency/FPS, frozen
+stop statistics and reset on restart; existing video tests cover shared capture.
+
+Production Chromium passes 9 checks with face-free synthetic video-backed
+MediaStreams and API fixtures: image/video regression, webcam desktop/mobile,
+denied permission/retry, track end, API failure/retry, delayed-request
+backpressure/skipped opportunities, mode-switch stale result rejection and
+camera cleanup. At 1440×1000 and 390×844 DPR1 overlay deltas are 0 CSS px,
+without mirroring or horizontal overflow. All 15 fixture requests and statistics
+are synthetic, not model/hardware performance evidence. Evidence/reproduction:
+[P8 handoff](handoffs/2026-10-18-p8-webcam-fixtures.md). Independent review remains
+blocked; camera/model hardware and the 60-second benchmark remain unverified.
+
