@@ -2,13 +2,13 @@
 
 ## Status and scope
 
-Implemented locally on `codex/p8-webcam-fixtures`, based on P7 `5904b7b`.
+Implemented in commit `8ff5c36` on `codex/p8-webcam-fixtures`, based on P7 `5904b7b`. PR #36 targets the P7 branch and CI passes `web`, `inference`, and `ml`.
 User explicitly requested implementation of the P8 plan, chose fixture-first
 verification and counting skipped sampling opportunities. Plan schema 3:
 `D:\Codex\outputs\face-mask-detection\p8-webcam-fixtures\plan.json`, SHA256
 `ac4c7baf8f7e70927be5eaab17a289d303f916b17223228a2a7bf2b1c616a0cb`.
 Mode: change, internal surface; target 18/10/2026, estimate 1–3 hours.
-No push/PR/issue changes, merge or deployment in this session. #16/#18 remain open.
+Pushed; [PR #36](https://github.com/anhpd-glinteco/face-mask-detection/pull/36) is open. Issues #16/#18 closed with evidence comments. No merge or deployment.
 
 ## Behavior and interfaces
 
@@ -47,6 +47,7 @@ Commands run in `apps/web` unless stated otherwise.
 | Vitest | PASS | 80/80, `vitest-final.log`; 16 added tests |
 | Typecheck / lint / production build | PASS | `typecheck-final.log`, `lint-final.log`, `build-final.log` |
 | Production Chromium | PASS | 9 checks, `browser-final.json`, `browser-check.js`, two screenshots |
+| GitHub CI | PASS | PR #36, commit `8ff5c36`: `web`, `inference`, `ml` |
 | Responsive / overlay | PASS | 1440×1000 and 390×844, DPR1; deltas 0 CSS px, no overflow or mirroring |
 | Privacy / affected-scope self-review | PASS | No audio/storage/logging/new dependency; captured JPEG payloads, abort/track/URL cleanup reviewed and tested |
 | React Doctor | PASS diagnostic | 9 files including untracked; one URL warning classified false positive, see below |
