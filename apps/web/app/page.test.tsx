@@ -142,11 +142,13 @@ describe("image detection flow", () => {
     await waitFor(() => expect(screen.getByText("Không phát hiện đối tượng")).toBeInTheDocument());
   });
 
-  it("enables video without starting API work and keeps webcam unavailable", async () => {
+  it("enables video and webcam without starting API or camera work", async () => {
     render(<Home />);
     expect(screen.getByRole("button", { name: /Video/ })).toBeEnabled();
-    expect(screen.getByRole("button", { name: /Webcam/ })).toBeDisabled();
-    expect(screen.getAllByText("Sẽ triển khai ở tuần sau")).toHaveLength(1);
+    expect(screen.getByRole("button", { name: /Webcam/ })).toBeEnabled();
+    fireEvent.click(screen.getByRole("button", { name: "Webcam" }));
+    expect(screen.getByRole("button", { name: "Bắt đầu" })).toBeEnabled();
+    expect(mockedDetectImage).not.toHaveBeenCalled();
   });
 
   it("cancels an image request on video switch and discards its late result", async () => {

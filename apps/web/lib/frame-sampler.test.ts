@@ -11,6 +11,28 @@ function deferred<T>() {
 }
 
 describe("serial frame sampler", () => {
+  it("counts fixed-rate busy opportunities, measures latency/FPS and freezes/reset statistics", async () => {
+    vi.useFakeTimers();
+    const pending = deferred<number>();
+    const onStatistics = vi.fn();
+    const sampler = createFrameSampler({ process: () => pending.promise, onResult: vi.fn(), onError: vi.fn(), onStatistics });
+    sampler.start();
+    await vi.advanceTimersByTimeAsync(450);
+    expect(onStatistics.mock.lastCall?.[0]).toEqual({ processed: 0, skipped: 2, fps: 0, latencyMs: null });
+    pending.resolve(1);
+    await vi.advanceTimersByTimeAsync(0);
+    expect(onStatistics.mock.lastCall?.[0]).toEqual({ processed: 1, skipped: 2, fps: 1000 / 450, latencyMs: 450 });
+    await vi.advanceTimersByTimeAsync(50);
+    sampler.stop();
+    expect(onStatistics.mock.lastCall?.[0].fps).toBe(2);
+    const count = onStatistics.mock.calls.length;
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(onStatistics).toHaveBeenCalledTimes(count);
+    sampler.start();
+    expect(onStatistics.mock.lastCall?.[0]).toEqual({ processed: 0, skipped: 0, fps: 0, latencyMs: null });
+    sampler.stop();
+  });
+
   it("holds one lock through cancellation, restarts only after settlement and ignores stale results", async () => {
     vi.useFakeTimers();
     const old = deferred<number>();

@@ -1,22 +1,18 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { detectImage, MAX_UPLOAD_BYTES, type DetectionResponse } from "@/lib/inference";
-import { createFrameSampler } from "@/lib/frame-sampler";
+import { captureFrame, type FrameSnapshot as Snapshot } from "@/lib/capture-frame";
+import { createFrameSampler, EMPTY_FRAME_STATISTICS } from "@/lib/frame-sampler";
 import { messageForError } from "@/lib/detection-errors";
 import { ImagePreview } from "./ImagePreview";
 import { DetectionResult } from "./DetectionResult";
-
-interface Snapshot {
-  file: File;
-  timestamp: number;
-  result: DetectionResponse;
-}
+import { FrameStatistics } from "./FrameStatistics";
 
 export function VideoWorkspace({ active }: { active: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const sourceRef = useRef<string | null>(null);
   const snapshotUrlRef = useRef<string | null>(null);
+  const [statistics, setStatistics] = useState(EMPTY_FRAME_STATISTICS);
   const [source, setSource] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [snapshot, setSnapshot] = useState<(Snapshot & { url: string }) | null>(null);
@@ -43,28 +39,9 @@ export function VideoWorkspace({ active }: { active: boolean }) {
         if (!video || video.paused || video.seeking || video.ended || video.readyState < 2) {
           throw new Error("Video chưa sẵn sàng. Hãy chờ tải rồi phát lại.");
         }
-        const width = video.videoWidth;
-        const height = video.videoHeight;
-        // shortcut: cap local capture at 20 MP for memory, revisit for larger video requirements.
-        if (!width || !height || width * height > 20_000_000) throw new Error("Kích thước frame không hợp lệ hoặc vượt quá 20 triệu pixel.");
-        const timestamp = video.currentTime;
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const context = canvas.getContext("2d");
-        if (!context) throw new Error("Trình duyệt không hỗ trợ chụp frame.");
-        context.drawImage(video, 0, 0, width, height);
-        const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(
-          (value) => value ? resolve(value) : reject(new Error("Không thể chụp frame video.")), "image/jpeg", 0.9,
-        ));
-        signal.throwIfAborted();
-        if (blob.size > MAX_UPLOAD_BYTES) throw new Error("Frame vượt quá dung lượng ảnh cho phép.");
-        const file = new File([blob], "video-frame.jpg", { type: "image/jpeg" });
-        const result = await detectImage(file, { signal });
-        signal.throwIfAborted();
-        if (result.image.width !== width || result.image.height !== height) throw new Error("Kích thước kết quả không khớp frame video.");
-        return { file, timestamp, result };
+        return captureFrame(video, signal, "video-frame.jpg");
       },
+      onStatistics: setStatistics,
       onResult(value) {
         const url = URL.createObjectURL(value.file);
         if (snapshotUrlRef.current) URL.revokeObjectURL(snapshotUrlRef.current);
@@ -126,6 +103,7 @@ export function VideoWorkspace({ active }: { active: boolean }) {
         event.currentTarget.value = "";
         if (!file) return;
         invalidate();
+        setStatistics(EMPTY_FRAME_STATISTICS);
         videoRef.current?.pause();
         if (sourceRef.current) URL.revokeObjectURL(sourceRef.current);
         sourceRef.current = null;
@@ -167,6 +145,7 @@ export function VideoWorkspace({ active }: { active: boolean }) {
           } else start();
         }}>Thử lại</button>}
       </div>}
+      <FrameStatistics statistics={statistics} />
       <p role="status">{running ? "Đang phân tích từng frame…" : "Phát video để phân tích frame."}</p>
       {snapshot && <section aria-label="Frame đã phân tích">
         <h3>Frame đã phân tích · {snapshot.timestamp.toFixed(2)} giây</h3>

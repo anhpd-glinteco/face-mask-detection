@@ -12,6 +12,7 @@ import { DetectionStatus } from "./components/DetectionStatus";
 import { ImagePreview } from "./components/ImagePreview";
 import { ImageUploader } from "./components/ImageUploader";
 import { VideoWorkspace } from "./components/VideoWorkspace";
+import { WebcamWorkspace } from "./components/WebcamWorkspace";
 import { messageForError } from "@/lib/detection-errors";
 
 type Mode = "image" | "video" | "webcam";
@@ -148,7 +149,7 @@ export default function Home() {
           <div><strong>MaskCheck</strong><span>Không gian kiểm định mô hình</span></div>
         </div>
         <div className="header-tools">
-          <span className="model-status">{mode === "video" ? "Phân tích video" : visibleResult ? "Đã nhận kết quả" : "Phân tích ảnh"}</span>
+          <span className="model-status">{mode === "webcam" ? "Phân tích webcam" : mode === "video" ? "Phân tích video" : visibleResult ? "Đã nhận kết quả" : "Phân tích ảnh"}</span>
           <button className="icon-button" type="button" aria-label="Trợ giúp">?</button>
           <button className="icon-button" type="button" aria-label="Tùy chọn khác">⋯</button>
         </div>
@@ -162,7 +163,6 @@ export default function Home() {
               key={item.id}
               type="button"
               aria-pressed={mode === item.id}
-              disabled={item.id === "webcam"}
               onClick={() => {
                 if (item.id === mode) return;
                 requestRef.current?.abort();
@@ -177,16 +177,14 @@ export default function Home() {
                 setPhase("idle");
                 setMode(item.id);
               }}
-              title={item.id === "webcam" ? "Sẽ triển khai ở tuần sau" : undefined}
             >
               <ModeIcon mode={item.id} />
               <span>{item.label}</span>
-              {item.id === "webcam" && <small>Sẽ triển khai ở tuần sau</small>}
             </button>
           ))}
         </nav>
 
-        <section className="media-workspace" aria-labelledby="workspace-title">
+        <section className="media-workspace" aria-label="Không gian phân tích">
           <div hidden={mode !== "image"}>
             <div className="workspace-heading">
               <div>
@@ -213,6 +211,7 @@ export default function Home() {
             <DetectionStatus phase={displayPhase} error={previewUrl ? displayError : null} onRetry={retry} canRetry={Boolean(file && previewUrl && !previewFailed)} />
           </div>
           <VideoWorkspace active={mode === "video"} />
+          {mode === "webcam" && <WebcamWorkspace />}
           <p className="privacy-note">Không nhận diện danh tính. Dữ liệu không được lưu trong phiên MVP.</p>
         </section>
 
