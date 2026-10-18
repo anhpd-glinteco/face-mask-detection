@@ -61,3 +61,9 @@ Next: P11 regression/documentation can reuse this evidence; a usable public mode
 and hosted preview require separate resolution of the data/model/deployment gates.
 Rollback only P10 tooling/docs/CI self-check additions, preserving P9 and P4 files.
 The runner terminates its owned service processes after completion or failure.
+
+Final session verification (remote branch/head, draft PR/base, all CI jobs, open
+issue states, clean working tree and released ports) is saved at the evidence
+root as `final-state.json` after the final push. PR #38 remains pending review;
+consult that snapshot for the final documentation-head CI rather than treating
+the earlier tooling run as evidence for a different commit.
