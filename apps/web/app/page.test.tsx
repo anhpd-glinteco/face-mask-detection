@@ -142,11 +142,26 @@ describe("image detection flow", () => {
     await waitFor(() => expect(screen.getByText("Không phát hiện đối tượng")).toBeInTheDocument());
   });
 
-  it("does not start API work for unavailable video and webcam modes", async () => {
+  it("enables video without starting API work and keeps webcam unavailable", async () => {
     render(<Home />);
-    expect(screen.getByRole("button", { name: /Video/ })).toBeDisabled();
+    expect(screen.getByRole("button", { name: /Video/ })).toBeEnabled();
     expect(screen.getByRole("button", { name: /Webcam/ })).toBeDisabled();
-    expect(screen.getAllByText("Sẽ triển khai ở tuần sau")).toHaveLength(2);
+    expect(screen.getAllByText("Sẽ triển khai ở tuần sau")).toHaveLength(1);
+  });
+
+  it("cancels an image request on video switch and discards its late result", async () => {
+    let finish!: (response: DetectionResponse) => void;
+    mockedDetectImage.mockImplementation(() => new Promise((resolve) => { finish = resolve; }));
+    render(<Home />);
+    await upload();
+    const signal = mockedDetectImage.mock.calls[0][1]?.signal;
+    fireEvent.click(screen.getByRole("button", { name: "Video" }));
+    expect(signal?.aborted).toBe(true);
+    await act(async () => { finish(detectedResponse); });
+    expect(screen.getByText("Phân tích video")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Ảnh" }));
+    expect(screen.queryByText("1. Có khẩu trang")).not.toBeInTheDocument();
+    expect(screen.queryByAltText("Ảnh đã chọn: sample.png")).not.toBeInTheDocument();
   });
 
   it("keeps status and error regions accessible", async () => {

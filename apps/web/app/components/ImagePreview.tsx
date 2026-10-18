@@ -8,6 +8,7 @@ interface ImagePreviewProps {
   previewUrl: string;
   isLoading: boolean;
   onReplace: () => void;
+  replaceLabel?: string;
   result: DetectionResponse | null;
   onDimensions: (width: number, height: number) => void;
   onError: () => void;
@@ -17,7 +18,7 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function ImagePreview({ file, previewUrl, isLoading, onReplace, result, onDimensions, onError }: ImagePreviewProps) {
+export function ImagePreview({ file, previewUrl, isLoading, onReplace, replaceLabel = "Thay ảnh", result, onDimensions, onError }: ImagePreviewProps) {
   const [dimensions, setDimensions] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -86,7 +87,7 @@ export function ImagePreview({ file, previewUrl, isLoading, onReplace, result, o
             <span>{dimensions ?? "Đang đọc kích thước"} · {formatBytes(file.size)}</span>
           </div>
         </div>
-        <button className="secondary-button" type="button" onClick={onReplace}>Thay ảnh</button>
+        <button className="secondary-button" type="button" onClick={onReplace}>{replaceLabel}</button>
       </div>
       <div className="preview-canvas">
         <img

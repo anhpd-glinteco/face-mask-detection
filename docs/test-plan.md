@@ -54,3 +54,17 @@ reproduction script: `D:\Codex\outputs\face-mask-detection\p6-image-fixtures`.
 See [P6 handoff](handoffs/2026-10-18-p6-image-fixtures.md): these checks do not
 prove model quality, real API integration, Docker, camera or deployment readiness.
 
+P7 video fixtures: 64 frontend tests pass, including serial capture/request locking,
+stale-result suppression across pause/seek/end/replacement/mode/unmount, timer/URL
+cleanup, capture limits/failure, 503/timeout retry and image-mode cancellation.
+Production Chromium passes 10 checks with synthetic face-free WebM video and
+intercepted API responses: landscape/portrait desktop/mobile DPR1 geometry,
+timestamp and accessible list, repeated sampling, no backlog during delayed
+response, stale pause response, 503/error-stop/retry, dimension mismatch, corrupt
+codec, mode cleanup and an actual 30-second timeout/retry. All geometry deltas are
+0 CSS px. No full video appears in request multipart; only JPEG frames.
+Evidence: `D:\Codex\outputs\face-mask-detection\p7-video-fixtures`.
+See [P7 handoff](handoffs/2026-10-18-p7-video-fixtures.md) for reproduction,
+failure history and limits. Real model/camera, rotated-video fixtures and
+performance benchmarks remain unverified; independent review is blocked.
+
