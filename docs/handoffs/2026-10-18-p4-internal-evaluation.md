@@ -9,6 +9,9 @@ Keep #2/#3 open and `p3_ready=false`. API/web still use the existing stub.
 Branch: `codex/internal-evaluation`, based on `codex/internal-baseline` at
 `e08d1fe0f457f89a257e3a5f5e65495c1fbfbf29` (PR #30). The evaluation PR is separate
 from the slide PR #31 and must remain based on #30 until that dependency merges.
+Implementation commit: `0c2a9ad`; [evaluation PR #32](https://github.com/anhpd-glinteco/face-mask-detection/pull/32).
+The PR links #9 for closure when merged into the default branch; do not close
+the separate P2 rights/scene issues as a side effect of measured internal results.
 
 Inputs: completed P3 handoff/verification, fixed 30-epoch checkpoint, pinned
 internal config and curated manifest. No retraining, source-media edits, split
