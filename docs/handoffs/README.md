@@ -17,7 +17,8 @@ phần trăm hoàn thành sản phẩm.
 | P9 integration | Draft PR #37; 5 job CI xanh, Compose/browser→API đạt khi thiếu model; #19/#21 đã đóng, chưa review/model thật | [Bàn giao P9](2026-10-18-p9-integration-fixtures.md) |
 | P10 internal local | Benchmark model P4 local; deployment gate đóng, chưa preview HTTPS | [Bàn giao P10](2026-10-19-p10-internal-benchmark.md) |
 | P11 internal regression | Regression local và tài liệu; giới hạn nghiệm thu ở báo cáo | [Bàn giao P11](2026-10-20-p11-internal-regression.md) |
-| P12–P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
+| P12 report/slides | Báo cáo 27 trang và 14 slide để review; còn thông tin nhóm và review độc lập | [Bàn giao P12](2026-10-20-p12-report-slides.md) |
+| P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
 P4 internal evaluation completed: fixed epoch 30, validation threshold 0.15,
 test macro F1 0.2061 and mAP50:95 0.0820. P5 prepares the service using synthetic

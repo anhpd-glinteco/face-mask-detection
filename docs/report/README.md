@@ -1,5 +1,9 @@
 # Báo cáo cuối đồ án — bản làm việc
 
+**Cập nhật P12, 20/10/2026:** đã có [báo cáo 27 trang và 14 slide để review](p12/README.md),
+nguồn biên soạn, hướng dẫn tái tạo và danh mục evidence. Thông tin bìa/đóng góp
+còn thiếu; chưa có review độc lập hoặc nghiệm thu. Các phần P1 bên dưới giữ lịch sử.
+
 Đề tài: **XÂY DỰNG ỨNG DỤNG WEB PHÁT HIỆN TRẠNG THÁI ĐEO KHẨU TRANG**.
 Đại học Công nghiệp Hà Nội — Trường Công nghệ thông tin và Truyền thông.
 Đồ án chuyên ngành Kỹ thuật phần mềm; GVHD: ThS. Vũ Thị Dương; nhóm 1.

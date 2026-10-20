@@ -1,0 +1,89 @@
+{
+  "timestamp_utc": "2026-10-20T08:08:43.504373+00:00",
+  "source_p11": "88687c935f8cfe94036fb81bd4fb924fadd04776",
+  "report_pages": 27,
+  "slides": 14,
+  "speaker_seconds": 600,
+  "assertions": "passed",
+  "independent_review": false,
+  "physical_camera": false,
+  "deployment_gate": "CLOSED",
+  "records": [
+    {
+      "id": "E01",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p4-evaluation\\validation\\decision.json",
+      "copy": "evidence\\E01-decision.json",
+      "sha256": "6c54c06e333ac51b1b519d5ca899c7df974a868fe1bfb6884d2a87bac2226151",
+      "bytes": 1819
+    },
+    {
+      "id": "E02",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p4-evaluation\\test\\report.json",
+      "copy": "evidence\\E02-report.json",
+      "sha256": "9543da41730442679bd9d76aaec21a558f9b413ae5c990ca75dbf767522c5092",
+      "bytes": 19426
+    },
+    {
+      "id": "E03",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\api-summary.json",
+      "copy": "evidence\\E03-api-summary.json",
+      "sha256": "321671f188f141cfd38835f8ae68f064740be10c88d74f35aa7edbb8dd6d9764",
+      "bytes": 394
+    },
+    {
+      "id": "E04",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\browser-summary.json",
+      "copy": "evidence\\E04-browser-summary.json",
+      "sha256": "040b46486c99ef788e227a4dfc85ed7f74578305339367b35c970e7b90d91c11",
+      "bytes": 1236
+    },
+    {
+      "id": "E05a",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\memory.json",
+      "copy": "evidence\\E05a-memory.json",
+      "sha256": "017745e17a9fadd0bd50443a311b865d4907a52732802b17f3c9f262f728a7ae",
+      "bytes": 92762
+    },
+    {
+      "id": "E05b",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\environment.json",
+      "copy": "evidence\\E05b-environment.json",
+      "sha256": "fbfbec44f677ad19a74d57c5da3b5458c61f83881b5c449221865b251a9b1984",
+      "bytes": 1355
+    },
+    {
+      "id": "E06",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p12-report-slides\\p11-remote-snapshot.json",
+      "copy": "evidence\\E06-p11-remote-snapshot.json",
+      "sha256": "76e3c6c8b227b9dc60795a0e1b4d79750c64b2ceffe1db2a85b983fa26d14b52",
+      "bytes": 1665
+    },
+    {
+      "id": "E07",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p12-report-slides\\assets\\capture.json",
+      "copy": "evidence\\E07-capture.json",
+      "sha256": "616f81017bdf6fc174346f1e2e85ce668607877a8d2f512294baf592c081d8b2",
+      "bytes": 172
+    },
+    {
+      "deliverable": "bao-cao-do-an.docx",
+      "sha256": "20a69efd0bac02ef4f0cb7d0ff840cdd23ee0a12c9d738e308704a246451278d",
+      "bytes": 337778
+    },
+    {
+      "deliverable": "bao-cao-do-an.pdf",
+      "sha256": "ec3ec17c5625d0ef157750f7b3eef919fa6af43f863fd45d5ff895eec2c7a148",
+      "bytes": 786205
+    },
+    {
+      "deliverable": "slide-thuyet-trinh.pptx",
+      "sha256": "b37660600b225c7b357065911fedf3f2e36ac408faf1c39d6e84c83aadc08a33",
+      "bytes": 241546
+    },
+    {
+      "deliverable": "slide-thuyet-trinh.pdf",
+      "sha256": "17ca0f2164f9aabcad3e4ddefe380b86f8ac50d5ba9f858432d16233c5179a3c",
+      "bytes": 355793
+    }
+  ]
+}

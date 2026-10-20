@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="430" viewBox="0 0 1100 430">
+<rect width="1100" height="430" fill="white"/>
+<g font-family="Arial" fill="#172b42" font-size="23" text-anchor="middle">
+<rect x="20" y="65" width="300" height="240" fill="#edf4f7" stroke="#748da5"/>
+<text x="170" y="105" font-weight="bold">Browser và Next.js</text>
+<text x="170" y="155">Ảnh, video local, webcam</text><text x="170" y="195">Capture và sampler 200 ms</text><text x="170" y="235">Snapshot, overlay, thống kê</text><text x="170" y="275">Loại kết quả generation cũ</text>
+<rect x="415" y="65" width="260" height="240" fill="#edf4f7" stroke="#748da5"/>
+<text x="545" y="105" font-weight="bold">FastAPI</text><text x="545" y="155">Giới hạn byte và decode</text><text x="545" y="195">Health khác readiness</text><text x="545" y="235">Contract schema 1.0</text><text x="545" y="275">Không lưu lịch sử media</text>
+<rect x="770" y="65" width="310" height="240" fill="#edf4f7" stroke="#748da5"/>
+<text x="925" y="105" font-weight="bold">Adapter và SSDLite</text><text x="925" y="155">Checkpoint kiểm SHA-256</text><text x="925" y="195">RGB float và CPU 2 luồng</text><text x="925" y="235">BBox ảnh gốc, nhãn, score</text><text x="925" y="275">Timing đo thật</text>
+<text x="550" y="370">HTTP localhost đã kiểm chứng • HTTPS công khai chưa kiểm chứng</text>
+<text x="550" y="405">Không database, không tải cả video, không nhận diện danh tính</text>
+</g>
+<g stroke="#172b42" stroke-width="3" fill="none"><path d="M320 160 H415 m-12 -8 12 8 -12 8"/><path d="M415 240 H320 m12 -8 -12 8 12 8"/><path d="M675 160 H770 m-12 -8 12 8 -12 8"/><path d="M770 240 H675 m12 -8 -12 8 12 8"/></g>
+<g font-family="Arial" font-size="17" fill="#172b42" text-anchor="middle"><text x="366" y="140">image</text><text x="366" y="280">JSON</text><text x="722" y="140">RGB</text><text x="722" y="280">result</text></g>
+</svg>
