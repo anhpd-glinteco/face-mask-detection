@@ -70,3 +70,17 @@ Rollback bằng revert commit P11 của video/test/benchmark/docs; giữ P10/P4 
 mọi artifact người dùng. Chỉ dừng process do phiên tạo; không đụng dịch vụ khác.
 Remote HEAD, draft PR/base, CI và issue states cuối phiên lưu tại evidence root
 trong `final-state.json`; trạng thái cuối cùng được bổ sung sau khi push.
+
+## PR và kiểm tra kết phiên
+
+Draft [PR #39](https://github.com/anhpd-glinteco/face-mask-detection/pull/39)
+nhắm `codex/p10-internal-benchmark`, pending review; không merge/deploy.
+Commit code `42a0f76`, report/docs `f495f27`; commit hiện tại bổ sung liên kết
+PR và snapshot verification. Xem CI gắn với **HEAD cuối** trên PR, không lấy run
+của commit cũ làm kết quả cho HEAD mới.
+
+`final-state.json` lưu remote/local HEAD equality, trạng thái draft/base, từng
+check CI, #2/#3/#24/#25, ports và checksum `AGENTS.md`. Issue #24/#25 có comment
+liên kết PR, checks và phần DoD còn thiếu; giữ OPEN. Trạng thái dự kiến cuối:
+chỉ `AGENTS.md` còn dirty đúng checksum ban đầu; ports 3000/8000/3109/3110 không
+còn process do phiên tạo. Snapshot thực tế là nguồn kiểm chứng nếu có blocker.
