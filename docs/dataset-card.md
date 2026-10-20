@@ -1,6 +1,10 @@
 # Dataset Card
 
-Status: **bản curated pass audit kỹ thuật; chưa duyệt train/deploy hoặc scene independence** — P2, 17/10/2026.
+Status, 20/10/2026: **curated pass audit kỹ thuật; đã cho phép thí nghiệm nội bộ,
+chưa xác minh quyền từng ảnh/scene independence, không deploy hoặc phát hành media/weights**.
+Quyết định nội bộ ngày 17/10 ở cuối tài liệu thay thế giới hạn train ban đầu;
+`p3_ready=false` và #2/#3 vẫn mở. Các phần P2 bên dưới giữ lịch sử audit theo ngày,
+không phải kết luận rằng chưa train. P11 không sửa dataset/split hoặc lặp lại provenance.
 
 ## Nguồn, phiên bản và quyền sử dụng
 
@@ -180,3 +184,11 @@ Do not publish media/weights or deploy this checkpoint. Keep P2 verification fla
 false and issues #2/#3 open. The internal config pins the existing manifest/splits;
 do not repeat the completed provenance search or change source media.
 See [internal baseline handoff](handoffs/2026-10-17-p3-internal.md).
+
+## P11 — giới hạn nghiệm thu, 20/10/2026
+
+Regression dùng ảnh/video face-free synthetic, không mở lại dataset để đo chất
+lượng hoặc điều chỉnh threshold. Kết quả kỹ thuật không xác minh license/consent
+hay 562 ảnh unresolved. Manifest SHA-256, grouping và các cờ P2 giữ nguyên;
+xem [regression report](regression-report.md) để phân biệt bằng chứng local và
+điều kiện nghiệm thu còn thiếu.

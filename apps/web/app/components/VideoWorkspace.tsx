@@ -37,6 +37,11 @@ export function VideoWorkspace({ active }: { active: boolean }) {
       async process(signal) {
         const video = videoRef.current;
         if (!video || video.paused || video.seeking || video.ended || video.readyState < 2) {
+          sampler.stop();
+          setRunning(false);
+          if (snapshotUrlRef.current) URL.revokeObjectURL(snapshotUrlRef.current);
+          snapshotUrlRef.current = null;
+          setSnapshot(null);
           throw new Error("Video chưa sẵn sàng. Hãy chờ tải rồi phát lại.");
         }
         return captureFrame(video, signal, "video-frame.jpg");

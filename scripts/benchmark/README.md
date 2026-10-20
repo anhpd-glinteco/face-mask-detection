@@ -32,6 +32,11 @@ it is not physical display latency. Sampling/observation itself adds overhead.
 Intentional cancellation on stop is recorded separately from unexpected failures.
 Video loop seeking can reset the UI sampler counters. Aggregate HTTP/display FPS
 uses the whole phase duration; final UI counters describe the last sampling segment.
+P11 also records media playback state and UI alerts in each browser sample and
+fails a phase if no new displayed snapshot appears for 5 seconds. This is a
+benchmark liveness guard, not a new product latency budget. Earlier runs could
+report complete after sampling stopped; preserve their raw evidence and inspect
+whole-phase counts rather than treating that flag as continuous-stream proof.
 Skipped opportunities reconstructed from 1 s samples are a lower bound if a reset
 happens between samples; the raw UI counters remain available.
 

@@ -1,5 +1,11 @@
 # Test Plan
 
+Current execution evidence: [P11 regression report](regression-report.md),
+20/10/2026. P2–P10 sections below describe their original runs and limitations;
+their test counts and statements such as "benchmark remains unverified" are
+historical, not the current aggregate status. Physical camera and hosted preview
+remain unverified. P11 does not change the API/schema, fixtures or quality metrics.
+
 P10 adds an opt-in internal real-model local benchmark, separate from fixture CI.
 See the [method/report](benchmark-report.md) and [reproduction commands](../scripts/benchmark/README.md).
 The benchmark's small percentile/error/readiness/process-tree tests run in inference CI;

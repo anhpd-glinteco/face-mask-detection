@@ -7,7 +7,8 @@
 - Ảnh tải lên, video tải lên và webcam.
 - Bounding box, nhãn và confidence.
 - Ba lớp: `with_mask`, `without_mask`, `mask_worn_incorrectly`.
-- `uncertain` được suy ra từ confidence threshold, không phải lớp train.
+- `uncertain` là trạng thái dự kiến từ confidence threshold, không phải lớp train;
+  UI/API hiện trả ba nhãn cùng confidence, chưa áp dụng trạng thái này.
 - Thống kê theo frame; không tài khoản, database hoặc lịch sử.
 - Không lưu ảnh/video và không ghi media vào log.
 
@@ -19,11 +20,11 @@ Video và webcam dùng HTTP frame sampling có backpressure. MVP không upload t
 
 ## Tech stack
 
-- Next.js, TypeScript, Tailwind CSS, Canvas 2D.
-- Python, FastAPI, Pydantic, Pillow/OpenCV.
+- Next.js, TypeScript, CSS, Canvas 2D.
+- Python, FastAPI, Pydantic, Pillow.
 - PyTorch + SSDLite320 MobileNetV3: baseline nội bộ đã train/đánh giá; chất lượng thấp, quyền ảnh/scene chưa xác minh. Xem [model card](docs/model-card.md).
 - Vitest/React Testing Library, Pytest và Playwright.
-- GitHub Actions, Docker Compose và Vercel.
+- GitHub Actions và Docker Compose; chưa có hosted preview được kiểm chứng.
 
 ## Repository structure
 
@@ -32,7 +33,7 @@ apps/web                 Next.js frontend
 services/inference       FastAPI inference service
 ml                       Training, evaluation and reports
 packages/contracts       Shared JSON/OpenAPI contracts
-tests/fixtures           Fixed regression fixtures
+apps/web/e2e             Browser tests and synthetic video fixture
 docs                     ADRs, dataset/model cards and test plan
 ```
 
@@ -40,22 +41,32 @@ docs                     ADRs, dataset/model cards and test plan
 
 ### Frontend
 
-```bash
+Node 22 (CI); local P11 dùng Node 24.19.0. PowerShell, từ repository root:
+
+```powershell
 cd apps/web
-npm install
-cp .env.example .env.local
+npm ci
+$env:NEXT_PUBLIC_INFERENCE_API_URL='http://localhost:8000'
 npm run dev
 ```
 
 ### Inference API
 
-```bash
+Python 3.12; chạy trong terminal riêng từ repository root. Ví dụ môi trường mới
+trên D: (P11 dùng lại môi trường đã cài, không kiểm chứng cài mới hoàn toàn):
+
+```powershell
+python -m venv D:\Codex\work\face-mask-detection\inference-venv
 cd services/inference
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+& D:\Codex\work\face-mask-detection\inference-venv\Scripts\python.exe -m pip install -r requirements.txt
+& D:\Codex\work\face-mask-detection\inference-venv\Scripts\python.exe -m uvicorn app.main:app --reload --port 8000
 ```
+
+Mặc định không có weights: `/health` trả 200, `/ready` và detect ảnh hợp lệ trả
+503; UI hiển thị mô hình chưa sẵn sàng. Để chạy checkpoint **nội bộ**, đặt
+`MODEL_PATH` và `MODEL_SHA256` trong môi trường process API trước khi khởi động,
+theo [hướng dẫn inference](services/inference/README.md). Repo không chứa weights;
+không tải hoặc công bố checkpoint P4 qua CI/hosting.
 
 Hoặc chạy cả hai service:
 
@@ -68,6 +79,16 @@ changing it requires rebuilding the web image. Open web at `http://localhost:300
 No weights are included: health returns 200 while readiness/detection return 503.
 Web startup health does not certify model readiness. See the reproducible
 [browser and Compose checks](apps/web/e2e/README.md), including teardown and CI evidence.
+P11 local không chạy được Docker engine; native browser→API smoke đạt nhưng
+không thay thế kiểm chứng container. Xem [regression report](docs/regression-report.md).
+
+## Verification
+
+Từ `apps/web`: `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`
+và `npm run test:e2e` (Chromium đã cài). E2E tự build production và dùng port 3109.
+Backend: từ `services/inference`, `python -m pytest tests -v` bằng Python đã cài
+requirements. ML/self-check và benchmark thật dùng lệnh trong
+[P11 regression report](docs/regression-report.md).
 
 ## API contract
 
@@ -115,7 +136,10 @@ Internal local performance evidence and the closed deployment gate are documente
 in the [P10 benchmark report](docs/benchmark-report.md). This does not provide a
 public preview or authorize deployment of the current P4 checkpoint.
 
-Web và inference được thử deploy thành hai Vercel projects từ cùng monorepo. Nếu inference không đạt performance budget, chỉ backend model được chuyển sang container host; API contract giữ nguyên.
+Chưa có URL HTTPS công khai hoặc hosted rollback được kiểm chứng. Vercel/container
+host là phương án thiết kế, chưa phải kết quả triển khai. Giữ local/Docker làm
+phương án chạy nội bộ; chỉ xem xét deploy khi giải quyết chất lượng model,
+quyền dữ liệu và scene/source grouping.
 
 ## Privacy and responsible use
 

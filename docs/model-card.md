@@ -1,6 +1,8 @@
 # Model Card
 
-Status, 18/10/2026: **baseline nội bộ đã train/đánh giá; API vẫn dùng stub**.
+Status, 20/10/2026: **baseline nội bộ đã train/đánh giá; API có adapter SSDLite thật,
+không còn fallback stub**. Thiếu/sai weights thì health 200, ready/detect 503;
+P10 đã chạy checkpoint P4 qua browser→API local, P11 kiểm chứng lại riêng.
 Chất lượng thấp; chưa đủ cơ sở sử dụng thực tế. Không phát hành weights/media hoặc
 deploy checkpoint này. Quyền ảnh và scene independence chưa xác minh;
 `p3_ready=false`, #2/#3 vẫn mở. Xem [dataset card](dataset-card.md).
@@ -22,7 +24,9 @@ deploy checkpoint này. Quyền ảnh và scene independence chưa xác minh;
   Train source commit `24ce42a4bb8157e1387a239e322ea1397dfbc6fe`.
 - RGB float [0,1], xyxy pixel ảnh gốc; detector tự resize 320. Background ID 0;
   `with_mask`=1, `without_mask`=2, `mask_worn_incorrectly`=3.
-  `uncertain` không phải lớp train; P4 chưa triển khai hành vi này trong API.
+  `uncertain` không phải lớp train; UI/API hiện chưa áp dụng trạng thái này.
+  Ngưỡng 0,15 dùng cho đánh giá P4; API giữ score floor 0,001 và trả confidence,
+  không tự lọc theo ngưỡng đánh giá. Không coi hai đầu ra là cùng phép đo.
 
 ## Đánh giá P4
 
@@ -84,4 +88,14 @@ Không có ảnh hoặc weights trong đầu ra P4. Validation decision SHA-256:
 `6c54c06e333ac51b1b519d5ca899c7df974a868fe1bfb6884d2a87bac2226151`.
 Xem [lệnh tái lập](../ml/README.md) và
 [bàn giao P4](handoffs/2026-10-18-p4-internal-evaluation.md).
+
+## Regression và vận hành nội bộ
+
+Xem [P11 regression report](regression-report.md) và
+[cấu hình inference](../services/inference/README.md). Weights được kiểm checksum
+và cache một lần mỗi process; restart để reload. Các bài test backend dùng weights
+synthetic, còn runner local dùng checkpoint P4 đã pin với media synthetic.
+Không đánh giá lại test split, train lại hoặc thay threshold trong P11.
+Latency tốt không khắc phục recall thấp của hai lớp ít mẫu; deployment gate đóng,
+chưa kiểm chứng camera vật lý, domain shift hoặc hosted preview.
 
