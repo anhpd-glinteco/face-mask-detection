@@ -76,6 +76,21 @@ describe("local video", () => {
     expect(detect).toHaveBeenCalledTimes(1);
   });
 
+  it("resumes after media becomes unready before the seeking event arrives", async () => {
+    render(<VideoWorkspace active />);
+    const video = select(); fireEvent.playing(video); await flush();
+    expect(detect).toHaveBeenCalledTimes(1);
+    Object.defineProperty(video, "readyState", { configurable: true, value: 1 });
+    await act(async () => { await vi.advanceTimersByTimeAsync(200); });
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    expect(screen.queryByRole("region", { name: "Frame đã phân tích" })).not.toBeInTheDocument();
+    expect(vi.getTimerCount()).toBe(0);
+    Object.defineProperty(video, "readyState", { configurable: true, value: 2 });
+    fireEvent.playing(video); await flush();
+    expect(detect).toHaveBeenCalledTimes(2);
+    expect(screen.getByText(/Frame đã phân tích ·/)).toBeInTheDocument();
+  });
+
   it.each(["pause", "seeking", "ended", "replace", "inactive", "unmount"])("discards a late API result after %s", async (event) => {
     let finish!: (value: DetectionResponse) => void;
     detect.mockImplementation(() => new Promise((resolve) => { finish = resolve; }));

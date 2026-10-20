@@ -74,8 +74,13 @@ async function main() {
   await cdp.send('Performance.enable');
   async function sample(region) {
     const statistics = region ? await region.getByRole('region', { name: 'Thống kê lấy mẫu' }).locator('dd').allTextContents() : [];
+    const media = region ? await region.locator('video').evaluate(video => ({
+      currentTime: video.currentTime, paused: video.paused, seeking: video.seeking,
+      readyState: video.readyState, loop: video.loop,
+    })) : undefined;
+    const alerts = region ? await region.getByRole('alert').allTextContents() : [];
     const metrics = (await cdp.send('Performance.getMetrics')).metrics;
-    result.samples.push({ phase, time: Date.now(), statistics,
+    result.samples.push({ phase, time: Date.now(), statistics, media, alerts,
       js_heap_bytes: metrics.find(m => m.name === 'JSHeapUsedSize')?.value });
   }
   try {
@@ -99,9 +104,14 @@ async function main() {
         await region.locator('video').evaluate(async video => { video.loop = true; video.muted = true; await video.play(); });
       } else await region.getByRole('button', { name: 'Bắt đầu', exact: true }).click();
       const started = performance.now();
+      let lastDisplayCount = 0, lastProgress = started;
       while (performance.now() - started < 60000) {
         await page.waitForTimeout(1000);
         await sample(region);
+        const displayCount = await page.evaluate(() => window.benchmarkDisplay.length);
+        if (displayCount > lastDisplayCount) lastProgress = performance.now();
+        lastDisplayCount = displayCount;
+        assert(performance.now() - lastProgress < 5000, `${phase} display stalled for 5 seconds; see samples`);
       }
       const duration_s = (performance.now() - started) / 1000;
       const display = await page.evaluate(() => window.benchmarkDisplay);
