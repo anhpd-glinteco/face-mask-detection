@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="460" viewBox="0 0 1100 460">
+<rect width="1100" height="460" fill="white"/>
+<g font-family="Arial" font-size="23" fill="#172b42" text-anchor="middle">
+<text x="120" y="35" font-weight="bold">Workspace</text><text x="430" y="35" font-weight="bold">Sampler</text><text x="900" y="35" font-weight="bold">API và model</text>
+</g>
+<g stroke="#8ba0b2" stroke-dasharray="7 6" stroke-width="2"><path d="M120 55 V420"/><path d="M430 55 V420"/><path d="M900 55 V420"/></g>
+<g stroke="#172b42" stroke-width="3" fill="none"><path d="M120 95 H430 m-12 -8 12 8 -12 8"/><path d="M430 170 H900 m-12 -8 12 8 -12 8"/><path d="M900 255 H430 m12 -8 -12 8 12 8"/><path d="M430 340 H120 m12 -8 -12 8 12 8"/></g>
+<g font-family="Arial" font-size="22" fill="#172b42" text-anchor="middle"><text x="275" y="80">playing và đủ dữ liệu</text><text x="665" y="145">capture frame, giữ busy lock</text><text x="665" y="230">bbox, nhãn, confidence, timing</text><text x="275" y="315">cùng generation: hiển thị</text><text x="550" y="395">Pause, seek, đổi nguồn: stop và tăng generation, abort request</text><text x="550" y="440">Response cũ bị loại • Busy chỉ nhả khi tác vụ settle</text></g>
+</svg>

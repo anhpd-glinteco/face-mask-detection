@@ -1,5 +1,9 @@
 # Báo cáo đồ án — nội dung ban đầu
 
+Bản P1 lịch sử; nội dung hiện tại để review ở [P12](p12/bao-cao.md),
+[hướng dẫn xuất và giới hạn](p12/README.md). Không dùng trạng thái P1 dưới đây
+để mô tả triển khai hiện tại.
+
 **Trạng thái: bản nháp P1, chưa có kết quả model thật.** Không dùng bản này như
 báo cáo hoàn thành. Thông tin bìa/đề cương ở [README](README.md).
 
