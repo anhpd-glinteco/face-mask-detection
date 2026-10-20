@@ -71,6 +71,11 @@ sửa nguồn rồi tái xuất, kiểm trang/slide và cập nhật hashes; gi�
 
 ## Remote và kết phiên
 
+Draft [PR #40](https://github.com/anhpd-glinteco/face-mask-detection/pull/40)
+nhắm `test/p11-internal-regression`. Commit nội dung `df5f248`; commit bổ sung
+liên kết PR không thay artifact. Theo dõi CI tại HEAD cuối của PR, không lấy CI
+P11 hoặc commit trước làm kết quả cho HEAD mới.
+
 PR/CI/issue snapshots, remote HEAD equality, dirty state và port cleanup được
 ghi ở `final-state.json` trong output sau push; đó là trạng thái thực tế cuối.
 Working tree không sạch toàn bộ: dự kiến chỉ còn `AGENTS.md` của người dùng.
