@@ -1,11 +1,12 @@
 # P12 — báo cáo theo mẫu người dùng
 
-Bản DOCX/PDF mới gồm 35 trang (bìa + 6 trang đầu + 28 trang nội dung), 5 chương,
+Bản DOCX/PDF sau rà soát gồm 34 trang (bìa + 6 trang đầu + 27 trang nội dung), 5 chương,
 6 hình, 27 bảng. Mẫu chỉ quyết định hình thức; chức năng và tuyên bố của đề tài
 trong mẫu không phải yêu cầu của hệ thống khẩu trang. Bản P12 cũ và 14 slide giữ nguyên.
 
-Đầu ra: `D:\Codex\outputs\face-mask-detection\p12-report-template`.
-`manifest.json` ghi SHA-256 DOCX/PDF và kết quả đối chiếu; `qa/word-final` chứa 35
+Đầu ra hiện tại: `D:\Codex\outputs\face-mask-detection\p12-report-template-review\final`.
+Bản 35 trang trước rà soát giữ tại `D:\Codex\outputs\face-mask-detection\p12-report-template`.
+`manifest.json` ghi SHA-256 DOCX/PDF và kết quả đối chiếu; `qa/word-final` chứa 34
 ảnh render từ PDF cuối. Nguồn và receipts có bản sao trong `source` và `verification`.
 
 ## Nguồn và giới hạn
@@ -19,7 +20,8 @@ trong mẫu không phải yêu cầu của hệ thống khẩu trang. Bản P12 
 - Giữ khung bìa gốc và 15 package parts ngoài phạm vi biên tập. Nội dung cũ,
   danh mục cũ và các ảnh không dùng được loại theo phạm vi chuyển mẫu.
 - Thân bài A4/TNR13/1,5 dòng, lề trên 3 cm, ba lề 2,54 cm; bảng 11 pt và danh mục
-  11 pt/đơn để giữ khả năng đọc trong giới hạn trang. Heading 14 pt đậm theo mẫu.
+  11 pt/đơn để giữ khả năng đọc trong giới hạn trang. URL dài trên 100 ký tự dùng
+  8 pt để tránh tràn lề, giữ nguyên chuỗi URL. Heading 14 pt đậm theo mẫu.
 - MSSV/khóa/đóng góp chưa xác nhận ghi “Cần bổ sung”. Chưa review độc lập.
   Chất lượng model thấp, quyền từng ảnh và scene independence chưa xác minh;
   deployment gate CLOSED. Không thay API/code sản phẩm/dependencies/slide.
@@ -30,21 +32,21 @@ Cần Python có python-docx/lxml/pypdf/pdf2image và Microsoft Word desktop.
 Không thêm dependencies vào sản phẩm. Từ repo root:
 
 ```powershell
-./docs/report/p12-template/rebuild.ps1
+./docs/report/p12-template/rebuild.ps1 -Output D:/Codex/outputs/face-mask-detection/p12-report-template-review/final -Work D:/Codex/work/face-mask-detection/p12-template-review-build
 ```
 
 Có thể truyền `-Reference`, `-Output`, `-Work`, `-Python` cho các đường dẫn khác.
 Build mở mẫu gốc, biên tập đúng vùng, Word cập nhật ba TOC cùng SEQ captions,
 khôi phục parts cần giữ, rồi Word mở read-only và xuất PDF cuối. Bước cuối kiểm tra
-35 trang, 3 section, font/lề, từng vị trí heading/caption, số trang danh mục,
+số trang PDF khớp receipt Word, 3 section, font/lề, từng vị trí heading/caption, số trang danh mục,
 metric gốc, các relationship, hash mẫu và bốn deliverable P12 cũ.
 
 ```powershell
-& 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' docs/report/p12-template/render_pages.py --output D:/Codex/outputs/face-mask-detection/p12-report-template --bin C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin
+& 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' docs/report/p12-template/render_pages.py --output D:/Codex/outputs/face-mask-detection/p12-report-template-review/final --bin C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin
 ```
 
 Kiểm tra trực quan tất cả ảnh sau mỗi lần biên tập. PDF Word là bản chốt số trang;
-LibreOffice từng cho phân trang khác (33 thay vì 35) nên không dùng để thay PDF này.
+LibreOffice từng cho phân trang khác (33 thay vì 35 ở bản trước rà soát) nên không dùng để thay PDF này.
 Máy khác/phiên bản Word khác có thể cần refresh fields và kiểm tra lại số trang.
 Các câu lệnh phụ lục báo cáo là hướng dẫn tái lập sản phẩm; đợt này không chạy lại
 test/benchmark sản phẩm và không train/merge/deploy.

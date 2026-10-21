@@ -133,16 +133,11 @@ Mục đích: xem trạng thái khẩu trang trong một ảnh được phép s�
 | 5 | Client validate response, kiểm tra còn đúng nguồn/request, scale bbox để vẽ. |
 | 6 | Người dùng xem danh sách/overlay; có thể thay ảnh hoặc retry khi lỗi tạm thời. |
 
-Ngoại lệ: loại/dung lượng sai → không gọi API; ảnh hỏng → 422; model chưa sẵn sàng
-→ 503; mạng/timeout → giữ preview, báo lỗi và cho retry; response sai → không vẽ.
-Đổi ảnh trong lúc chờ → abort/loại response cũ. Không phát hiện mặt từ model thật
-là kết quả hợp lệ, tách biệt model lỗi hoặc stub.
+Ngoại lệ: loại/dung lượng sai → không gọi API; ảnh hỏng → 422; model chưa sẵn sàng → 503; mạng/timeout → giữ preview, báo lỗi và cho retry; response sai → không vẽ. Đổi ảnh trong lúc chờ → abort/loại response cũ. Không phát hiện mặt từ model thật là kết quả hợp lệ, tách biệt model lỗi hoặc stub.
 
-Hậu điều kiện: kết quả gắn với ảnh hiện tại, không lưu media; object URL cũ được
-thu hồi khi thay ảnh/rời trang. Issue #11–#14; FR01/02/06/08.
+Hậu điều kiện: kết quả gắn với ảnh hiện tại, không lưu media; object URL cũ được thu hồi khi thay ảnh/rời trang. Issue #11–#14; FR01/02/06/08.
 
-
-## 2.5 UC02 Phân tích video
+ ## 2.5 UC02 Phân tích video
 
 Mục đích: xem detection của các frame được xử lý trong video local. Tiền điều kiện: trình duyệt hỗ trợ codec của file; model sẵn sàng. Trigger: chọn video và phát. File ở browser, server chỉ nhận frame ảnh. Đầu ra: preview, frame đã phân tích kèm overlay, thống kê và lỗi nếu có.
 
@@ -156,22 +151,15 @@ Mục đích: xem detection của các frame được xử lý trong video local
 | 6 | Cập nhật thống kê của frame và processed FPS/latency; lặp khi còn phát. |
 | 7 | Pause/seek/end/đổi mode/file: dừng lịch, vô hiệu hóa kết quả cũ, cleanup. |
 
-Không vẽ bbox của frame cũ như thể đúng trên frame live mới: dùng vùng kết quả là
-snapshot đã phân tích, tách khỏi video preview đang chạy và ghi timestamp của nó.
-FPS xử lý không phải FPS video. Không cộng detection thành tổng người duy nhất.
+Không vẽ bbox của frame cũ như thể đúng trên frame live mới: dùng vùng kết quả là snapshot đã phân tích, tách khỏi video preview đang chạy và ghi timestamp của nó. FPS xử lý không phải FPS video. Không cộng detection thành tổng người duy nhất.
 
-Ngoại lệ: API chậm → bỏ lượt capture khi bận, không backlog; timeout/lỗi → dừng
-sampling và báo lỗi, người dùng chủ động thử lại; seek/pause → hủy/vô hiệu hóa request,
-không bắt đầu vòng mới trước khi request cũ kết thúc; video không đọc được → không gửi.
+Ngoại lệ: API chậm → bỏ lượt capture khi bận, không backlog; timeout/lỗi → dừng sampling và báo lỗi, người dùng chủ động thử lại; seek/pause → hủy/vô hiệu hóa request, không bắt đầu vòng mới trước khi request cũ kết thúc; video không đọc được → không gửi.
 
-Hậu điều kiện: không còn timer/request hữu hiệu của nguồn cũ; thu hồi object URL
-khi thay file/unmount. Issue #15/#17/#18; FR02/03/05/06/07/08.
+Hậu điều kiện: không còn timer/request hữu hiệu của nguồn cũ; thu hồi object URL khi thay file/unmount. Issue #15/#17/#18; FR02/03/05/06/07/08.
 
+ ## 2.6 UC03 Phân tích webcam
 
-## 2.6 UC03 Phân tích webcam
-
-Mục đích: xem detection theo frame từ camera do người dùng chủ động bật. Tiền điều kiện: HTTPS hoặc localhost, camera có thể truy cập, browser hỗ trợ
-  `getUserMedia`; model sẵn sàng. Trigger: nhấn bật camera. Không mở camera chỉ vì tải trang.
+Mục đích: xem detection theo frame từ camera do người dùng chủ động bật. Tiền điều kiện: HTTPS hoặc localhost, camera có thể truy cập, browser hỗ trợ `getUserMedia`; model sẵn sàng. Trigger: nhấn bật camera. Không mở camera chỉ vì tải trang.
 
 | Bước | Người dùng / hệ thống |
 |---|---|
@@ -181,13 +169,9 @@ Mục đích: xem detection theo frame từ camera do người dùng chủ độ
 | 4 | Hiển thị detections, số lượng theo lớp ở frame hiện tại, FPS xử lý và latency. |
 | 5 | Người dùng dừng/đổi mode hoặc rời trang: stop mọi track, timer và request. |
 
-Ngoại lệ: từ chối quyền/không camera/camera bận → thông báo riêng, không vòng retry
-vô hạn; track kết thúc → dừng sampling và báo ngắt; yêu cầu quyền trả về sau khi
-người dùng đã rời mode → stop ngay stream đến muộn. API lỗi giống UC02; thao tác
-dừng phải luôn dùng được ngay cả khi request pending.
+Ngoại lệ: từ chối quyền/không camera/camera bận → thông báo riêng, không vòng retry vô hạn; track kết thúc → dừng sampling và báo ngắt; yêu cầu quyền trả về sau khi người dùng đã rời mode → stop ngay stream đến muộn. API lỗi giống UC02; thao tác dừng phải luôn dùng được ngay cả khi request pending.
 
-Hậu điều kiện: đèn camera tắt, không còn stream hoạt động và không vẽ response cũ.
-Issue #16–#18; FR02/04/05/06/07/08.
+Hậu điều kiện: đèn camera tắt, không còn stream hoạt động và không vẽ response cũ. Issue #16–#18; FR02/04/05/06/07/08.
 
 ## 2.7 Kết luận chương 2
 
@@ -319,7 +303,7 @@ Hình 4.1 Luồng ảnh với media synthetic không khuôn mặt và response f
 
 ## 4.5 Giao diện webcam và khả năng tiếp cận
 
-Webcam chỉ gọi `getUserMedia` sau thao tác bắt đầu. Browser yêu cầu video, không yêu cầu audio; track cần được stop khi người dùng dừng, đổi tab, unmount hoặc khi yêu cầu khởi động cũ không còn phù hợp. Response đến muộn phải bị bỏ nếu phiên camera đã kết thúc. VideoWorkspace và WebcamWorkspace dùng chung sampler nhưng giữ vòng đời nguồn riêng. [5]
+Webcam chỉ gọi `getUserMedia` sau thao tác bắt đầu. Browser yêu cầu video, không yêu cầu audio; track cần được stop khi người dùng dừng, đổi chế độ đầu vào, unmount hoặc khi yêu cầu khởi động cũ không còn phù hợp. Response đến muộn phải bị bỏ nếu phiên camera đã kết thúc. VideoWorkspace và WebcamWorkspace dùng chung sampler nhưng giữ vòng đời nguồn riêng. [5]
 
 {{webcam}}
 

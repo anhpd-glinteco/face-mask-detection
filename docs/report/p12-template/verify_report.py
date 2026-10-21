@@ -29,7 +29,7 @@ def verify(reference,output,work,evidence):
     d=Document(output/'bao-cao-do-an.docx');pdf=PdfReader(output/'bao-cao-do-an.pdf')
     receipt=load(work/'word-final.json');authored=load(work/'authoring-receipt.json')
     assert receipt['read_only'] and receipt['toc_count']==3
-    assert len(pdf.pages)==receipt['pages']==35
+    assert len(pdf.pages)==receipt['pages'] and len(pdf.pages)>0
     assert len(d.sections)==3
     for section in d.sections[1:]:
         assert abs(section.top_margin.cm-3)<.02
@@ -40,6 +40,13 @@ def verify(reference,output,work,evidence):
     assert (normal.font.size.pt if normal.font.size else int(defaults.xpath('.//*[local-name()="sz"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'))/2)==13
     assert (normal.paragraph_format.line_spacing or int(defaults.xpath('.//*[local-name()="spacing"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}line'))/240)==1.5
     texts=[p.extract_text() for p in pdf.pages];all_text=compact('\n'.join(texts))
+    paragraphs=[p.text for p in d.paragraphs]
+    for phrase in ['Ngoại lệ: loại/dung lượng sai', 'Không vẽ bbox của frame cũ', 'Ngoại lệ: API chậm', 'Ngoại lệ: từ chối quyền']:
+        assert any(p.startswith(phrase) and p.rstrip().endswith('.') for p in paragraphs),('fragmented paragraph',phrase)
+    for p in d.paragraphs:
+        if p.text.startswith('[7] TorchVision.'):
+            assert any(r.font.size.pt==8 and r.text.startswith('https://docs.pytorch.org/') for r in p.runs)
+            assert compact('https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html') in all_text
     for bad in ['UniLend','Uni-Lend','Nguyễn Xuân Hoàng','Phạm Văn Hà','Dư Quốc An','20261IT6040001']:
         assert compact(bad) not in all_text,bad
     assert 'LỜI CẢM ƠN' not in texts[0] and 'LỜI CẢM ƠN' in texts[1]
@@ -90,13 +97,13 @@ def verify(reference,output,work,evidence):
         if 'deliverable' in item:assert digest(evidence/'p12-report-slides'/item['deliverable'])==item['sha256']
     assert len([e for e in receipt['entries'] if e['style']=='FigureCaption'])==6
     assert len([e for e in receipt['entries'] if e['style']=='TableCaption'])==27
-    result={'status':'PASS','pages':35,'figures':6,'tables':27,'toc_entries_checked':len(matched),
+    result={'status':'PASS','pages':len(pdf.pages),'figures':6,'tables':27,'toc_entries_checked':len(matched),
         'word_version':receipt['word_version'],'reference_sha256':REFERENCE_SHA,
         'preserved_parts_checked':len(authored['preserved_parts']),'old_p12_unchanged':True,
         'independent_review':False,'deployment_gate':'CLOSED','entries':matched,
         'deliverables':[{'name':name,'sha256':digest(output/name),'bytes':(output/name).stat().st_size} for name in ['bao-cao-do-an.docx','bao-cao-do-an.pdf']]}
     (output/'manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(f'PASS: 35 pages, 6 figures, 27 tables, {len(matched)} refreshed list entries, original metrics and P12 hashes.')
+    print(f'PASS: {len(pdf.pages)} pages, 6 figures, 27 tables, {len(matched)} refreshed list entries, original metrics and P12 hashes.')
 
 
 if __name__=='__main__':

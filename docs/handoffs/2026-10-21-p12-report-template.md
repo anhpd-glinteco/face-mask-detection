@@ -1,5 +1,8 @@
 # P12 — chuyển báo cáo theo mẫu, 21/10/2026
 
+> Bản 35 trang dưới đây là snapshot trước rà soát. Bản mới 34 trang và kết quả
+> sửa lỗi được bàn giao tại [P12 report review](2026-10-21-p12-report-review.md).
+
 Nhánh `docs/p12-report-template` từ P12 `d5126de`; PR draft nhắm
 `docs/p12-report-slides`. Không merge/deploy. Issue #26 giữ mở.
 Draft PR: https://github.com/anhpd-glinteco/face-mask-detection/pull/41.

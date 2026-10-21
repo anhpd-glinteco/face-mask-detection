@@ -214,11 +214,15 @@ def build(reference,source,output,work):
                 for r in p.runs:r.font.name='Consolas';r.font.size=Pt(9)
                 i+=1
         else:
-            p=d.add_paragraph();inline(p,line)
+            p=d.add_paragraph()
+            if references:
+                for value in re.split(r'(https?://\S+)',line):
+                    r=p.add_run(value)
+                    r.font.size=Pt(8 if len(value)>100 and value.startswith('https://') else 11)
+            else:inline(p,line)
             if 'SHA-256:' in line or line.startswith('['):p.alignment=WD_ALIGN_PARAGRAPH.LEFT;p.paragraph_format.first_line_indent=Cm(0)
             if references:
                 p.paragraph_format.line_spacing=1.15
-                for r in p.runs:r.font.size=Pt(11)
         i+=1
     settings=d.settings.element
     for child in settings.findall(qn('w:updateFields')):settings.remove(child)
