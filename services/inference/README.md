@@ -19,7 +19,7 @@ Input RGB tensor is CHW float32 in [0,1]; the detector handles resizing and
 normalization internally and returns coordinates in original-image pixels.
 Class IDs 1/2/3 map to with_mask/without_mask/mask_worn_incorrectly; 0 is background.
 Score floor 0.001, NMS 0.55, top-k 300/class, max 100 predictions/image.
-No operating threshold 0.15 is applied; frontend uncertainty handling is unchanged.
+The API retains score floor 0.001 and raw three-class predictions. The web UI uses the P4 validation-locked 0.15 presentation threshold: below it, detections remain visible as uncertain; at/above it, they meet the threshold. This is not an API filter or model-quality approval.
 Response schema remains 1.0; model version is the checkpoint SHA-256. Timings use
 the monotonic clock for tensor conversion, model call and output conversion,
 excluding upload/decode. No media is persisted or logged.

@@ -27,6 +27,7 @@ phần trăm hoàn thành sản phẩm.
 | P12 report/slides | Báo cáo 27 trang và 14 slide để review; còn thông tin nhóm và review độc lập | [Bàn giao P12](2026-10-20-p12-report-slides.md) |
 | P12 chuyển mẫu | Báo cáo mới 35 trang, giữ bản cũ và slide; còn thông tin nhóm/review | [Bàn giao chuyển mẫu](2026-10-21-p12-report-template.md) |
 | P12 review độc lập | 34 trang đã review, không có blocker kỹ thuật; còn thông tin nhóm trước nộp cuối | [Review độc lập](2026-10-21-p12-independent-review.md) |
+| #42 uncertainty | Shared threshold 0.15 presentation; verification and closeout in handoff | [Handoff #42](2026-10-21-detection-uncertainty.md) |
 | P13 | Chưa thực hiện | Đọc đầu vào/đầu ra tương ứng trong kế hoạch |
 
 P4 internal evaluation completed: fixed epoch 30, validation threshold 0.15,

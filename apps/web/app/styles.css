@@ -147,3 +147,7 @@ h2 { margin-bottom: 8px; font-size: 16px; line-height: 24px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+.status-uncertain { background: #6150a3; }
+.detection-list .detection-uncertain { border: 1px dashed #6150a3; }
+.uncertainty-badge { display: block; color: #6150a3; font-weight: 600; }

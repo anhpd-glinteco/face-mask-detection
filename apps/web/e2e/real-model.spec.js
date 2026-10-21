@@ -33,6 +33,8 @@ test('real checkpoint image response, labels and resized overlay', async ({ page
     expect(y2).toBeLessThanOrEqual(240);
     const row = page.getByRole('list', { name: 'Danh sách đối tượng phát hiện' }).getByRole('listitem').nth(index);
     await expect(row).toContainText(`${index + 1}. ${LABELS[detection.label]}`);
+    if (detection.confidence < .15) await expect(row).toContainText('Chưa chắc chắn');
+    else await expect(row).not.toContainText('Chưa chắc chắn');
     await expect(row).toContainText(`${Math.round(detection.confidence * 100)}%`);
   }
   for (const value of Object.values(body.timing_ms)) {

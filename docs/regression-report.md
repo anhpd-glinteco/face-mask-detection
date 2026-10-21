@@ -203,3 +203,14 @@ P11 hoàn tất phạm vi nội bộ; run thật sau fix đạt và kết quả 
 [bàn giao](handoffs/2026-10-20-p11-internal-regression.md). Không tuyên bố đạt toàn
 bộ DoD #24/#25. Bước tiếp P12 có thể dùng evidence hiện có và ghi rõ giới hạn;
 nghiệm thu công khai cần xử lý riêng các blocker dữ liệu/model/deployment.
+
+
+## Issue #42 — presentation policy update, 21/10/2026
+
+Supersedes the historical “uncertain not implemented” observation above for the
+new task head only. All three web flows retain detections below 0.15 and mark
+them “Chưa chắc chắn”, with purple dashed bbox and separate per-frame counts.
+Raw confidence is compared before rounding; exactly 0.15 meets the threshold.
+API floor 0.001/schema 1.0/classes/checkpoint are unchanged. This is presentation,
+not accuracy acceptance. Historical P10/P11 results are not rerun benchmark claims.
+Deployment gate remains CLOSED. Verification and limitations: see the issue #42 handoff.

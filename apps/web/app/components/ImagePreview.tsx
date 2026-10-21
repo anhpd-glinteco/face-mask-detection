@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
 import type { DetectionResponse } from "@/lib/inference";
-import { LABELS } from "@/lib/detection-labels";
+import { presentDetection } from "@/lib/detection-labels";
 
 interface ImagePreviewProps {
   file: File;
@@ -50,17 +50,20 @@ export function ImagePreview({ file, previewUrl, isLoading, onReplace, replaceLa
       };
       result.detections.forEach((detection, index) => {
         const { x1, y1, x2, y2 } = detection.bbox;
-        context.strokeStyle = colors[detection.label].trim();
+        const presentation = presentDetection(detection);
+        const color = presentation.uncertain ? "#6150a3" : colors[detection.label].trim();
+        context.setLineDash(presentation.uncertain ? [6, 4] : []);
+        context.strokeStyle = color;
         context.lineWidth = 2;
         context.strokeRect(x1 * scaleX, y1 * scaleY, (x2 - x1) * scaleX, (y2 - y1) * scaleY);
-        const text = `${index + 1}. ${LABELS[detection.label]} ${Math.round(detection.confidence * 100)}%`;
+        const text = `${index + 1}. ${presentation.text}`;
         const labelHeight = Math.min(24, height);
         context.font = `${Math.min(14, Math.max(1, labelHeight - 4))}px sans-serif`;
         context.textBaseline = "middle";
         const labelWidth = Math.min(width, context.measureText(text).width + 8);
         const left = Math.max(0, Math.min(x1 * scaleX, width - labelWidth));
         const top = Math.max(0, Math.min(y1 * scaleY - labelHeight, height - labelHeight));
-        context.fillStyle = colors[detection.label].trim();
+        context.fillStyle = color;
         context.fillRect(left, top, labelWidth, labelHeight);
         context.fillStyle = "#fff";
         const padding = Math.min(4, labelWidth / 4);
