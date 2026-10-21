@@ -2,7 +2,8 @@
 
 Branch `feat/detection-uncertainty` starts from `fix/dependency-security` at
 `f7ee61a`; worktree `D:\Codex\work\face-mask-detection\issue-42-uncertainty`.
-Draft PR targets its immediate predecessor. No merge/deploy; gate **CLOSED**.
+[Draft PR #49](https://github.com/anhpd-glinteco/face-mask-detection/pull/49)
+targets its immediate predecessor. No merge/deploy; gate **CLOSED**.
 
 ## Behavior
 
