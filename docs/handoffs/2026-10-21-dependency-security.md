@@ -2,7 +2,8 @@
 
 Nhánh `fix/dependency-security` từ `test/product-acceptance` tại `29ea5bf`;
 worktree `D:\Codex\work\face-mask-detection\dependency-security-2026-10-21`.
-PR draft nhắm nhánh tiền nhiệm; không merge/deploy. Deployment gate **CLOSED**.
+[PR #48](https://github.com/anhpd-glinteco/face-mask-detection/pull/48) đã mở
+draft nhắm nhánh tiền nhiệm; không merge/deploy. Deployment gate **CLOSED**.
 
 ## Thay đổi
 
@@ -45,10 +46,13 @@ Playwright fixture/real/native reports, driver tái dùng và manifest SHA-256.
 
 ## Closeout và bước tiếp
 
-Push task branch, mở draft PR nhắm `test/product-acceptance`; chỉ đóng #46 sau
+Đã push task branch, mở draft PR nhắm `test/product-acceptance`; chỉ đóng #46 sau
 khi CI HEAD cuối đạt và issue đã liên kết PR/audit/verification cùng quyết định
 cho cả năm high còn lại. #24/#25 giữ OPEN và dẫn kết quả này; các tiêu chí khác
-không được nghiệm thu bằng dependency patch. PR/CI cụ thể được bổ sung sau push.
+không được nghiệm thu bằng dependency patch. CI/issue/remote HEAD cuối phiên
+được đọc lại sau push và ghi trong `final-state.json` tại evidence root;
+[checks PR #48](https://github.com/anhpd-glinteco/face-mask-detection/pull/48/checks)
+là trạng thái live, không dùng CI của nhánh tiền nhiệm thay cho HEAD task.
 
 `AGENTS.md` đang sửa ở source gốc được giữ nguyên, SHA-256
 `b8cce059b0616eab2a249c7c2c15ac4b92939b1982183107a3848edc4e390a52`;
