@@ -7,8 +7,11 @@
 - Ảnh tải lên, video tải lên và webcam.
 - Bounding box, nhãn và confidence.
 - Ba lớp: `with_mask`, `without_mask`, `mask_worn_incorrectly`.
-- `uncertain` là trạng thái dự kiến từ confidence threshold, không phải lớp train;
-  UI/API hiện trả ba nhãn cùng confidence, chưa áp dụng trạng thái này.
+- `uncertain` là trạng thái trình bày, không phải lớp train. Confidence gốc < 0.15
+  được giữ và đánh dấu “Chưa chắc chắn” bằng chữ, màu riêng và bbox nét đứt;
+  >= 0.15 đạt ngưỡng. Cả ba luồng đếm riêng hai nhóm trong ảnh/frame hiện tại.
+  API schema 1.0 giữ nhãn/confidence/bbox và score floor 0.001; UI so sánh trước làm tròn.
+  Ngưỡng 0.15 lấy từ validation P4, không bảo đảm dự đoán đúng hoặc mở quality gate.
 - Thống kê theo frame; không tài khoản, database hoặc lịch sử.
 - Không lưu ảnh/video và không ghi media vào log.
 

@@ -11,7 +11,7 @@ test('video and webcam sampling, errors, stale results and cleanup', async ({ pa
   let width=320,height=240,scenario='success',requests=0,pending=null;
   const response = () => ({schema_version:'1.0',image:{width,height},model:{name:'synthetic-fixture',version:'p8-v1'},
     detections:[{class_id:1,label:'with_mask',confidence:.98,bbox:{x1:0,y1:0,x2:width/3,y2:height/3}},
-    {class_id:2,label:'without_mask',confidence:.9,bbox:{x1:width-30,y1:height-30,x2:width,y2:height}}],
+    {class_id:2,label:'without_mask',confidence:.1499,bbox:{x1:width-30,y1:height-30,x2:width,y2:height}}],
     timing_ms:{preprocess:1,inference:2,postprocess:1}});
   const fulfill = (route,body=response(),status=200) => route.fulfill({status,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(body)});
   await page.route('**/fixture.webm', route=>route.fulfill({path:fixtureRoot+'/landscape.webm',contentType:'video/webm'}));
@@ -42,6 +42,8 @@ test('video and webcam sampling, errors, stale results and cleanup', async ({ pa
   });
   const camera=()=>page.getByRole('region',{name:'Phân tích webcam',exact:true});
   async function snapshot() {
+    await expect(page.locator('.detection-uncertain')).toContainText('Chưa chắc chắn');
+    await expect(page.getByLabel('Thống kê detection')).toHaveText('Tổng: 2 · Đạt ngưỡng: 1 · Chưa chắc chắn: 1');
     await page.getByRole('region',{name:'Frame đã phân tích',exact:true}).waitFor();
     await page.waitForFunction(()=>{
       const image=[...document.querySelectorAll('.video-workspace img')].find(e=>e.getBoundingClientRect().width>0);

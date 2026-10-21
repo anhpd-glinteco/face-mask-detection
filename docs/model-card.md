@@ -24,7 +24,7 @@ deploy checkpoint này. Quyền ảnh và scene independence chưa xác minh;
   Train source commit `24ce42a4bb8157e1387a239e322ea1397dfbc6fe`.
 - RGB float [0,1], xyxy pixel ảnh gốc; detector tự resize 320. Background ID 0;
   `with_mask`=1, `without_mask`=2, `mask_worn_incorrectly`=3.
-  `uncertain` không phải lớp train; UI/API hiện chưa áp dụng trạng thái này.
+  `uncertain` không phải lớp train; UI đánh dấu confidence gốc < 0.15 là “Chưa chắc chắn”, giữ nhãn/score và đếm riêng. API giữ score floor 0.001 và schema 1.0; trạng thái này không chứng minh chất lượng model.
   Ngưỡng 0,15 dùng cho đánh giá P4; API giữ score floor 0,001 và trả confidence,
   không tự lọc theo ngưỡng đánh giá. Không coi hai đầu ra là cùng phép đo.
 

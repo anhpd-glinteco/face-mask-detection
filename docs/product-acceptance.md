@@ -104,3 +104,16 @@ Không factory reset, xóa socket/storage/distro, nâng cấp Docker hoặc ch�
 NOT_RUN: camera vật lý, clean machine/independent setup, fresh ML environment,
 Firefox/WebKit, quality evaluation/train/benchmark lại, HTTPS/hosted rollback,
 independent product review. Chất lượng P4 và quyền dữ liệu vẫn chặn public preview.
+
+
+## Follow-up #42 — 21/10/2026
+
+The earlier matrix is the acceptance-session snapshot. The #42 task adds shared
+uncertainty presentation across image/video/webcam at raw confidence < 0.15;
+exactly 0.15 meets threshold. All returned detections stay visible, with separate
+counts and dashed purple uncertain boxes. Schema/classes/API floor are unchanged.
+85 unit tests, typecheck/lint, production build, four fixture browser tests and
+two real-checkpoint synthetic-image tests pass. Native missing-model smoke passes;
+this is not Docker proof. See [handoff](handoffs/2026-10-21-detection-uncertainty.md).
+Camera #43, quality #44, Docker #45, hosted preview, independent product review
+and final P12/P13 acceptance remain separate. Deployment gate CLOSED.

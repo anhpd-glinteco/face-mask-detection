@@ -14,7 +14,7 @@ const result: DetectionResponse = {
 };
 
 const context = {
-  setTransform: vi.fn(), strokeRect: vi.fn(), fillRect: vi.fn(), fillText: vi.fn(),
+  setLineDash: vi.fn(), setTransform: vi.fn(), strokeRect: vi.fn(), fillRect: vi.fn(), fillText: vi.fn(),
   measureText: vi.fn(() => ({ width: 200 })),
 };
 let size = { width: 600, height: 400 };
@@ -104,4 +104,16 @@ describe("image overlay", () => {
     expect((context as typeof context & { font: string }).font).toBe("1px sans-serif");
     expect(context.fillText).toHaveBeenCalledWith("1. Có khẩu trang 98%", 0.25, 0.5, 0.5);
   });
+});
+
+it("marks low confidence with text and dashed boxes and resets styling after resize", () => {
+  const mixed = { ...result, detections: result.detections.map((d, i) => ({ ...d, confidence: [.1499, .15, .1501][i] })) };
+  render(<ImagePreview {...props} result={mixed} />);
+  expect(context.fillText.mock.calls[0][0]).toContain("Chưa chắc chắn");
+  expect(context.fillText.mock.calls[0][0]).toContain("Có khẩu trang 15%");
+  expect(context.setLineDash.mock.calls).toEqual([[[6, 4]], [[]], [[]]]);
+  context.setLineDash.mockClear();
+  size = { width: 300, height: 200 };
+  resize();
+  expect(context.setLineDash.mock.calls).toEqual([[[6, 4]], [[]], [[]]]);
 });
