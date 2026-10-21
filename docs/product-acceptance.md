@@ -1,5 +1,9 @@
 # Product acceptance — 21/10/2026
 
+> Cập nhật tiếp theo: [dependency security #46](security/dependency-audit-2026-10-21.md)
+> xử lý snapshot audit bên dưới: còn 5 high/0 critical ở tooling, production-only
+> audit 0; xem quyết định residual risk. Kết quả acceptance cũ giữ làm lịch sử.
+
 Phiên này kiểm chứng sản phẩm, không biên tập báo cáo P12. Source nền `699fcf5`,
 nhánh `test/product-acceptance` từ `docs/p12-report-template`. Deployment gate
 **CLOSED**; không merge/deploy, train, thay threshold/split hay phát hành media/weights.

@@ -1,3 +1,9 @@
+# Checkpoint mới nhất — 21/10/2026
+
+[Dependency security #46](2026-10-21-dependency-security.md): bản vá và residual
+audit risk, tiếp sau [product acceptance](2026-10-21-product-acceptance.md).
+Deployment gate CLOSED; bước tiếp #45 → #42. Các checkpoint cũ bên dưới là lịch sử.
+
 # Bàn giao các phiên
 
 Đọc [kế hoạch](../plan.md) trước khi thực hiện. Đây là chỉ mục tiến độ, không là
