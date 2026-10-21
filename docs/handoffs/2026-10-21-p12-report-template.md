@@ -2,6 +2,7 @@
 
 Nhánh `docs/p12-report-template` từ P12 `d5126de`; PR draft nhắm
 `docs/p12-report-slides`. Không merge/deploy. Issue #26 giữ mở.
+Draft PR: https://github.com/anhpd-glinteco/face-mask-detection/pull/41.
 
 ## Artifact và nguồn
 
