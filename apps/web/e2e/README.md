@@ -45,3 +45,26 @@ before **both** browser installation and test execution.
 
 No real model, camera hardware, model-quality measurement, performance benchmark,
 Firefox/WebKit or public deployment is covered by this suite.
+
+## Local checkpoint image acceptance
+
+Start the API separately using `services/inference/README.md`, with the local
+checkpoint and its checksum. Set API `ALLOWED_ORIGINS=http://localhost:3109`.
+From `apps/web`, with ports 8000 (API) and 3109 (test web) reserved for this run:
+
+```powershell
+$env:E2E_REAL_MODEL='1'
+$env:MODEL_SHA256='<expected checkpoint SHA-256>'
+Remove-Item Env:E2E_COMPOSE -ErrorAction SilentlyContinue
+npm run test:e2e
+Remove-Item Env:E2E_REAL_MODEL, Env:MODEL_SHA256 -ErrorAction SilentlyContinue
+```
+
+This opt-in test uses the real API without route interception, verifies checkpoint
+identity, response coordinates/class mapping, rendered labels/confidences and
+nonempty overlay after desktop/mobile resize. It expects the pinned internal P4
+checkpoint to produce detections on the face-free synthetic PNG; those detections
+are not evidence of accuracy. Response JSON is attached to the Playwright report.
+Run the default fixture suite separately for empty detection, invalid response,
+retry and streaming lifecycle checks. Use the Compose suite separately for missing
+weights/readiness. No checkpoint is downloaded, published or included in CI.

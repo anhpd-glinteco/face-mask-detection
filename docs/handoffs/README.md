@@ -5,6 +5,7 @@ phần trăm hoàn thành sản phẩm.
 
 | Phiên | Trạng thái | Bàn giao |
 |---|---|---|
+| Product acceptance 21/10 | Fresh dependencies + ảnh browser/checkpoint thật đạt; đối chiếu issues, Docker và npm audit có task riêng | [Acceptance](../product-acceptance.md), [bàn giao](2026-10-21-product-acceptance.md) |
 | P0 | Đã kiểm tra nền; Docker runtime và browser→API smoke chưa xác minh | [Hiện trạng và checks](2026-10-17-baseline.md) |
 | P1 | Bộ phân tích/thiết kế ban đầu đã soạn; chưa là thiết kế nghiệm thu | [Bàn giao P1](2026-10-17-p1.md) |
 | P2 | Khôi phục công bố MakeML; curated pass kỹ thuật, còn quyền từng ảnh và scene grouping | [Provenance mới nhất](2026-10-17-p2-provenance.md), [review curated](2026-10-17-p2-review.md), [audit gốc](2026-10-17-p2.md) |

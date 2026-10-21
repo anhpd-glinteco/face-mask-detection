@@ -84,6 +84,11 @@ không thay thế kiểm chứng container. Xem [regression report](docs/regress
 
 ## Verification
 
+Kiểm chứng sản phẩm mới nhất: [product acceptance 21/10](docs/product-acceptance.md).
+Fresh dependency setup và browser→checkpoint thật đã đạt trên cùng máy Windows;
+camera thật, independent setup và public preview vẫn chưa nghiệm thu. Audit npm
+còn 12 high/1 critical (#46); Docker Desktop startup bị chặn (#45).
+
 Từ `apps/web`: `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`
 và `npm run test:e2e` (Chromium đã cài). E2E tự build production và dùng port 3109.
 Backend: từ `services/inference`, `python -m pytest tests -v` bằng Python đã cài
