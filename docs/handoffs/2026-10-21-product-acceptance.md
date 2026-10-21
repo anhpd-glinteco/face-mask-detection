@@ -44,7 +44,8 @@ HTML/attachments trong `integration-receipts`, driver và manifest SHA-256.
 Lượt integration đầu PASS; lượt thứ hai giữ riêng receipts trước khi Playwright
 ghi đè report mặc định. Không gọi các lượt này là performance benchmark mới.
 
-PR draft nhắm nhánh tiền nhiệm; liên kết PR/CI và trạng thái issues cuối phiên
+Draft [PR #47](https://github.com/anhpd-glinteco/face-mask-detection/pull/47)
+nhắm nhánh tiền nhiệm `docs/p12-report-template`; liên kết CI và trạng thái issues cuối phiên
 được lưu trong `final-state.json` của evidence root và comments issues.
 GitHub app cần reauthentication; dùng gh đã xác thực làm fallback.
 
