@@ -1,5 +1,8 @@
 # Báo cáo cuối đồ án — bản làm việc
 
+**21/10/2026:** [Bản báo cáo theo mẫu người dùng, 35 trang](p12-template/README.md)
+được xuất riêng; bản P12 cũ và slide giữ nguyên. Chưa có review độc lập/nghiệm thu.
+
 **Cập nhật P12, 20/10/2026:** đã có [báo cáo 27 trang và 14 slide để review](p12/README.md),
 nguồn biên soạn, hướng dẫn tái tạo và danh mục evidence. Thông tin bìa/đóng góp
 còn thiếu; chưa có review độc lập hoặc nghiệm thu. Các phần P1 bên dưới giữ lịch sử.

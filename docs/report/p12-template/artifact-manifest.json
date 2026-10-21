@@ -1,0 +1,432 @@
+{
+  "status": "PASS",
+  "pages": 34,
+  "figures": 6,
+  "tables": 27,
+  "toc_entries_checked": 81,
+  "word_version": "16.0",
+  "reference_sha256": "7d8b433eefcb6c7d53484370d4e775b88daa60337595afa6ee13a72b7fddde5a",
+  "preserved_parts_checked": 15,
+  "old_p12_unchanged": true,
+  "independent_review": false,
+  "deployment_gate": "CLOSED",
+  "entries": [
+    {
+      "text": "LỜI CẢM ƠN",
+      "physical_page": 2,
+      "printed_page": "i"
+    },
+    {
+      "text": "TÓM TẮT",
+      "physical_page": 3,
+      "printed_page": "ii"
+    },
+    {
+      "text": "DANH MỤC THUẬT NGỮ VÀ CHỮ VIẾT TẮT",
+      "physical_page": 5,
+      "printed_page": "iv"
+    },
+    {
+      "text": "DANH MỤC HÌNH VẼ",
+      "physical_page": 6,
+      "printed_page": "v"
+    },
+    {
+      "text": "DANH MỤC BẢNG BIỂU",
+      "physical_page": 7,
+      "printed_page": "vi"
+    },
+    {
+      "text": "CHƯƠNG 1 GIỚI THIỆU DỰ ÁN PHẦN MỀM",
+      "physical_page": 8,
+      "printed_page": "1"
+    },
+    {
+      "text": "1.1 Giới thiệu hệ thống và đối tượng sử dụng",
+      "physical_page": 8,
+      "printed_page": "1"
+    },
+    {
+      "text": "1.2 Mục tiêu và phạm vi áp dụng",
+      "physical_page": 8,
+      "printed_page": "1"
+    },
+    {
+      "text": "Bảng 1.1 Nhóm mục tiêu và Trạng thái tại P11",
+      "physical_page": 8,
+      "printed_page": "1"
+    },
+    {
+      "text": "1.3 Khảo sát và cơ sở lựa chọn giải pháp",
+      "physical_page": 9,
+      "printed_page": "2"
+    },
+    {
+      "text": "1.4 Mô hình phát triển công nghệ và phân công dự kiến",
+      "physical_page": 9,
+      "printed_page": "2"
+    },
+    {
+      "text": "Bảng 1.2 Vai trò dự kiến trong kế hoạch và Xác nhận đóng góp thực tế",
+      "physical_page": 9,
+      "printed_page": "2"
+    },
+    {
+      "text": "1.5 Kết luận chương 1",
+      "physical_page": 9,
+      "printed_page": "2"
+    },
+    {
+      "text": "CHƯƠNG 2 PHÂN TÍCH VÀ ĐẶC TẢ YÊU CẦU PHẦN MỀM",
+      "physical_page": 10,
+      "printed_page": "3"
+    },
+    {
+      "text": "2.1 Tác nhân và biểu đồ use case",
+      "physical_page": 10,
+      "printed_page": "3"
+    },
+    {
+      "text": "Hình 2.1 Use case của ứng dụng khẩu trang, biên tập từ sơ đồ P1. Đây là sơ đồ chức năng; các điều kiện nghiệm thu camera thật, dữ liệu và deployment được đánh giá riêng ở chương 5.",
+      "physical_page": 10,
+      "printed_page": "3"
+    },
+    {
+      "text": "2.2 Yêu cầu chức năng và truy vết",
+      "physical_page": 10,
+      "printed_page": "3"
+    },
+    {
+      "text": "Bảng 2.1 Yêu cầu và bằng chứng kiểm chứng",
+      "physical_page": 11,
+      "printed_page": "4"
+    },
+    {
+      "text": "2.3 Yêu cầu phi chức năng",
+      "physical_page": 11,
+      "printed_page": "4"
+    },
+    {
+      "text": "Bảng 2.2 Yêu cầu và bằng chứng kiểm chứng",
+      "physical_page": 11,
+      "printed_page": "4"
+    },
+    {
+      "text": "2.4 UC01 Phân tích ảnh",
+      "physical_page": 12,
+      "printed_page": "5"
+    },
+    {
+      "text": "Bảng 2.3 Luồng chính UC01 Phân tích ảnh",
+      "physical_page": 12,
+      "printed_page": "5"
+    },
+    {
+      "text": "2.5 UC02 Phân tích video",
+      "physical_page": 13,
+      "printed_page": "6"
+    },
+    {
+      "text": "Bảng 2.4 Luồng chính UC02 Phân tích video",
+      "physical_page": 13,
+      "printed_page": "6"
+    },
+    {
+      "text": "2.6 UC03 Phân tích webcam",
+      "physical_page": 14,
+      "printed_page": "7"
+    },
+    {
+      "text": "Bảng 2.5 Luồng chính UC03 Phân tích webcam",
+      "physical_page": 14,
+      "printed_page": "7"
+    },
+    {
+      "text": "2.7 Kết luận chương 2",
+      "physical_page": 14,
+      "printed_page": "7"
+    },
+    {
+      "text": "CHƯƠNG 3 MÔ HÌNH HÓA DỮ LIỆU",
+      "physical_page": 15,
+      "printed_page": "8"
+    },
+    {
+      "text": "3.1 Nguồn dữ liệu annotation và quyền sử dụng",
+      "physical_page": 15,
+      "printed_page": "8"
+    },
+    {
+      "text": "Bảng 3.1 Phiên bản và Vai trò",
+      "physical_page": 15,
+      "printed_page": "8"
+    },
+    {
+      "text": "3.2 Chia tập và khả năng tái lập",
+      "physical_page": 16,
+      "printed_page": "9"
+    },
+    {
+      "text": "Bảng 3.2 Phân bố bbox theo lớp và split",
+      "physical_page": 16,
+      "printed_page": "9"
+    },
+    {
+      "text": "3.3 Dữ liệu trao đổi và contract API",
+      "physical_page": 16,
+      "printed_page": "9"
+    },
+    {
+      "text": "Bảng 3.3 Trường và Quy tắc cần giữ",
+      "physical_page": 16,
+      "printed_page": "9"
+    },
+    {
+      "text": "Bảng 3.4 Mã HTTP và Hành vi giao diện cần phân biệt",
+      "physical_page": 17,
+      "printed_page": "10"
+    },
+    {
+      "text": "3.4 Mô hình dữ liệu xử lý trong bộ nhớ",
+      "physical_page": 17,
+      "printed_page": "10"
+    },
+    {
+      "text": "Bảng 3.5 Cấu trúc và Quan hệ và vòng đời",
+      "physical_page": 17,
+      "printed_page": "10"
+    },
+    {
+      "text": "3.5 Biểu đồ trình tự và quản lý dữ liệu frame",
+      "physical_page": 18,
+      "printed_page": "11"
+    },
+    {
+      "text": "Hình 3.1 Trình tự một frame và nhánh loại response cũ. Sơ đồ mô tả thuật toán đang dùng trong sampler và workspace, không biểu diễn một kết nối streaming liên tục.",
+      "physical_page": 18,
+      "printed_page": "11"
+    },
+    {
+      "text": "3.6 Kết luận chương 3",
+      "physical_page": 18,
+      "printed_page": "11"
+    },
+    {
+      "text": "CHƯƠNG 4 PHÁT TRIỂN HỆ THỐNG",
+      "physical_page": 19,
+      "printed_page": "12"
+    },
+    {
+      "text": "4.1 Kiến trúc các thành phần",
+      "physical_page": 19,
+      "printed_page": "12"
+    },
+    {
+      "text": "Hình 4.1 Kiến trúc local được đối chiếu từ source P11. HTTP localhost là môi trường đã kiểm chứng; HTTPS công khai còn là mục tiêu. Mũi tên biểu diễn dữ liệu, không khẳng định có reverse proxy hoặc dịch vụ lưu trữ.",
+      "physical_page": 19,
+      "printed_page": "12"
+    },
+    {
+      "text": "4.2 Cơ sở detector và biểu diễn kết quả",
+      "physical_page": 19,
+      "printed_page": "12"
+    },
+    {
+      "text": "Bảng 4.1 Thành phần và Ý nghĩa trong đồ án",
+      "physical_page": 19,
+      "printed_page": "12"
+    },
+    {
+      "text": "4.3 Huấn luyện baseline và adapter suy luận",
+      "physical_page": 20,
+      "printed_page": "13"
+    },
+    {
+      "text": "Bảng 4.2 Tham số và Giá trị đã dùng",
+      "physical_page": 20,
+      "printed_page": "13"
+    },
+    {
+      "text": "4.4 Giao diện ảnh và tích hợp API",
+      "physical_page": 21,
+      "printed_page": "14"
+    },
+    {
+      "text": "Hình 4.2 Luồng ảnh với media synthetic không khuôn mặt và response fixture minh họa bbox. Hai nhãn trên hình là dữ liệu kiểm thử, không chứng minh khả năng nhận diện của checkpoint.",
+      "physical_page": 21,
+      "printed_page": "14"
+    },
+    {
+      "text": "4.5 Giao diện webcam và khả năng tiếp cận",
+      "physical_page": 21,
+      "printed_page": "14"
+    },
+    {
+      "text": "Hình 4.3 Giao diện webcam với media không khuôn mặt và response fixture do P12 tạo để minh họa overlay. Đây là ảnh chụp giao diện, không phải kết quả model hoặc thử camera vật lý.",
+      "physical_page": 22,
+      "printed_page": "15"
+    },
+    {
+      "text": "4.6 Giao diện video và sử dụng chung sampler",
+      "physical_page": 22,
+      "printed_page": "15"
+    },
+    {
+      "text": "Hình 4.4 Giao diện frame video đã phân tích. Media không khuôn mặt và response fixture; ảnh phục vụ minh họa UI, tách khỏi benchmark checkpoint thật.",
+      "physical_page": 22,
+      "printed_page": "15"
+    },
+    {
+      "text": "4.7 Kết luận chương 4",
+      "physical_page": 23,
+      "printed_page": "16"
+    },
+    {
+      "text": "CHƯƠNG 5 TRIỂN KHAI VÀ KIỂM THỬ HỆ THỐNG",
+      "physical_page": 24,
+      "printed_page": "17"
+    },
+    {
+      "text": "5.1 Môi trường và hướng dẫn triển khai local",
+      "physical_page": 24,
+      "printed_page": "17"
+    },
+    {
+      "text": "5.2 Kiểm thử phần mềm và CI",
+      "physical_page": 24,
+      "printed_page": "17"
+    },
+    {
+      "text": "Bảng 5.1 Kết quả kiểm thử phần mềm P11",
+      "physical_page": 24,
+      "printed_page": "17"
+    },
+    {
+      "text": "5.3 Phương pháp đánh giá chất lượng",
+      "physical_page": 24,
+      "printed_page": "17"
+    },
+    {
+      "text": "Bảng 5.2 Số đo và Giới hạn",
+      "physical_page": 25,
+      "printed_page": "18"
+    },
+    {
+      "text": "5.4 Kết quả đánh giá mô hình",
+      "physical_page": 25,
+      "printed_page": "18"
+    },
+    {
+      "text": "Bảng 5.3 Kết quả tổng hợp validation và test",
+      "physical_page": 25,
+      "printed_page": "18"
+    },
+    {
+      "text": "Bảng 5.4 Precision recall và F1 theo lớp trên test",
+      "physical_page": 26,
+      "printed_page": "19"
+    },
+    {
+      "text": "Bảng 5.5 Lớp và mAP50:95",
+      "physical_page": 26,
+      "printed_page": "19"
+    },
+    {
+      "text": "5.5 Phân tích lỗi và hồi quy video",
+      "physical_page": 26,
+      "printed_page": "19"
+    },
+    {
+      "text": "Bảng 5.6 Confusion matrix trên test",
+      "physical_page": 27,
+      "printed_page": "20"
+    },
+    {
+      "text": "5.6 Phương pháp đo hiệu năng",
+      "physical_page": 27,
+      "printed_page": "20"
+    },
+    {
+      "text": "Bảng 5.7 Lựa chọn và Điều chưa kết luận",
+      "physical_page": 27,
+      "printed_page": "20"
+    },
+    {
+      "text": "5.7 Kết quả hiệu năng local",
+      "physical_page": 28,
+      "printed_page": "21"
+    },
+    {
+      "text": "Bảng 5.8 Kết quả HTTP và cold readiness",
+      "physical_page": 28,
+      "printed_page": "21"
+    },
+    {
+      "text": "Bảng 5.9 Kết quả hiển thị và độ trễ streaming",
+      "physical_page": 28,
+      "printed_page": "21"
+    },
+    {
+      "text": "5.8 Đối chiếu nghiệm thu và hạn chế",
+      "physical_page": 29,
+      "printed_page": "22"
+    },
+    {
+      "text": "Bảng 5.10 Hạng mục và Phần cần làm tiếp",
+      "physical_page": 29,
+      "printed_page": "22"
+    },
+    {
+      "text": "5.9 Kết luận chương 5",
+      "physical_page": 30,
+      "printed_page": "23"
+    },
+    {
+      "text": "KẾT LUẬN",
+      "physical_page": 31,
+      "printed_page": "24"
+    },
+    {
+      "text": "TÀI LIỆU THAM KHẢO",
+      "physical_page": 32,
+      "printed_page": "25"
+    },
+    {
+      "text": "PHỤ LỤC A TÁI LẬP VÀ DANH MỤC EVIDENCE",
+      "physical_page": 33,
+      "printed_page": "26"
+    },
+    {
+      "text": "Bảng A.1 Lệnh tái lập theo môi trường",
+      "physical_page": 33,
+      "printed_page": "26"
+    },
+    {
+      "text": "Bảng A.2 Danh mục evidence nội bộ",
+      "physical_page": 33,
+      "printed_page": "26"
+    },
+    {
+      "text": "PHỤ LỤC B THÔNG TIN CẦN BỔ SUNG",
+      "physical_page": 34,
+      "printed_page": "27"
+    },
+    {
+      "text": "Bảng B.1 Mục trước khi nộp và Trạng thái",
+      "physical_page": 34,
+      "printed_page": "27"
+    }
+  ],
+  "deliverables": [
+    {
+      "name": "bao-cao-do-an.docx",
+      "sha256": "9249c15a9c5d3c85372e298703aba47cf1a957a9880b90b691028971ccb2fee4",
+      "bytes": 3745420
+    },
+    {
+      "name": "bao-cao-do-an.pdf",
+      "sha256": "6ce9275c8f4db27488462fc80deda49b661cf6298c025a76f8088aff25b24d6b",
+      "bytes": 803548
+    }
+  ]
+}
