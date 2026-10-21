@@ -77,7 +77,7 @@ commit trước sửa. Cuối phiên dùng [mẫu bàn giao](handoffs/TEMPLATE.m
 test/lệnh/exit code, file/API đổi, commit/PR, artifact/checksum, blocker và bước kế.
 Chỉ đóng issue đủ toàn bộ DoD. Không push/đóng issue hàng loạt để làm đẹp tiến độ.
 
-- Source giữ tại repo hiện có; nhánh `codex/…`.
+- Source giữ tại repo hiện có; nhánh mô tả `feat/…`, `fix/…`, `docs/…`, `test/…` theo AGENTS.md, không tạo nhánh generic `codex/…` mới.
 - Deliverables: `D:\Codex\outputs\face-mask-detection`.
 - Downloads: `D:\Codex\downloads\face-mask-detection`.
 - Data/runs/venv lớn: `D:\Codex\work\face-mask-detection`.

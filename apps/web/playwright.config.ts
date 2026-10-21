@@ -1,11 +1,12 @@
 import { defineConfig } from "@playwright/test";
 
 const compose = process.env.E2E_COMPOSE === "1";
+const realModel = process.env.E2E_REAL_MODEL === "1";
 const baseURL = compose ? "http://localhost:3000" : "http://localhost:3109";
 
 export default defineConfig({
   testDir: "./e2e",
-  testMatch: compose ? "compose.spec.js" : ["image.spec.js", "streams.spec.js"],
+  testMatch: compose ? "compose.spec.js" : realModel ? "real-model.spec.js" : ["image.spec.js", "streams.spec.js"],
   timeout: 60_000,
   expect: { timeout: 10_000 },
   workers: 1,

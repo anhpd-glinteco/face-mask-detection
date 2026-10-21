@@ -1,6 +1,8 @@
 # Yêu cầu và truy vết — P1
 
 Ngày: 17/10/2026. Actor duy nhất trong MVP: người sử dụng trình duyệt.
+Các ô “Hiện tại” bên dưới là snapshot P1/P6–P8, không phải trạng thái mới nhất.
+Xem [đối chiếu nghiệm thu sản phẩm 21/10](../product-acceptance.md) trước khi chọn việc tiếp theo.
 Model nhận diện trạng thái khẩu trang, không nhận diện danh tính hoặc người duy nhất.
 Thống kê đếm detection **trong frame**, không cộng thành số người duy nhất qua video.
 Các yêu cầu dưới đây là mục tiêu; trạng thái ở cột cuối không suy ra từ việc có tài liệu.
