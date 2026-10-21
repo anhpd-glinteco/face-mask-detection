@@ -39,7 +39,7 @@ không ép checkpoint thật trả empty để tạo bằng chứng giả. Các 
 invalid response/retry và lifecycle tiếp tục được kiểm bởi suite sẵn có.
 API/schema public, code sản phẩm, dependencies, dataset và weights không đổi.
 
-## Đối chiếu 14 issues đang mở đầu phiên
+## Đối chiếu 13 issues đang mở đầu phiên
 
 Đóng #6/#10/#11/#14 chỉ sau PR, CI HEAD cuối và ghi evidence/giới hạn vào issue.
 Các hàng khác giữ OPEN; không hạ tiêu chí hosted thành local để đóng issue.

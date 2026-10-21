@@ -21,7 +21,7 @@ chỉnh báo cáo P12, train hoặc phát hành weights/media. Deployment gate C
 
 ## GitHub reconciliation
 
-14 issues mở đầu phiên được đối chiếu từng DoD trong acceptance matrix.
+13 issues mở đầu phiên được đối chiếu từng DoD trong acceptance matrix.
 #6/#10/#11/#14 đủ evidence plumbing/integration để đóng sau khi PR và CI HEAD
 cuối được xác nhận; không đóng các issue đòi hosted/camera/quyền dữ liệu.
 
