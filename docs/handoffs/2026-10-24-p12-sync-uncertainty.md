@@ -48,7 +48,7 @@ trong repo: `docs/report/p12/sync-uncertainty-manifest.json`.
 Đây là QA của phiên biên soạn, không phải review độc lập. Review ngày 21/10 chỉ
 bao phủ báo cáo trước đồng bộ; không áp dụng kết luận đó cho nội dung mới/slide.
 Issue #26 giữ OPEN: còn MSSV/khóa/đóng góp và review bản mới/slide.
-NOT_RUN: toàn bộ suite sản phẩm, training/evaluation/benchmark lại, camera vật lý,
+NOT_RUN local: toàn bộ suite sản phẩm, training/evaluation/benchmark lại, camera vật lý,
 setup máy sạch, hosted HTTPS/rollback, P13. Deployment gate CLOSED.
 
 ## Kết phiên
@@ -56,4 +56,16 @@ setup máy sạch, hosted HTTPS/rollback, P13. Deployment gate CLOSED.
 Commit/push task-only và draft PR nhắm `docs/p12-report-template`; không merge/deploy.
 Trạng thái PR/CI/issue cuối phiên ghi trong `verification/final-state.json` ở output.
 Thay đổi có sẵn của `AGENTS.md` giữ nguyên, không stage; working tree task phải sạch.
-Thông tin remote sau công bố được cập nhật ở đây trước khi kết thúc.
+Đã push commit nội dung `eeee3000116f5a84360191573c07571e0d57b0ea` và mở
+[draft PR #50](https://github.com/anhpd-glinteco/face-mask-detection/pull/50),
+base `docs/p12-report-template`. [CI run 40076413531](https://github.com/anhpd-glinteco/face-mask-detection/actions/runs/40076413531)
+đạt 5/5 SUCCESS (web, inference, ML, E2E, Compose). CI này kiểm nhánh tài liệu
+với code nền của nó, không thay bằng chứng UI PR #49 hoặc QA Office ở trên.
+Ba negative checks mới đều PASS: từ chối report hash sai, cảnh báo vượt biên
+slide 11 và capture receipt thiếu workspace.
+
+Issue #26 được cập nhật [bằng chứng và phần còn thiếu](https://github.com/anhpd-glinteco/face-mask-detection/issues/26#issuecomment-6381749168),
+giữ OPEN; PR #50 vẫn draft, review pending. Commit tiếp theo chỉ ghi bàn giao này;
+remote/CI của final HEAD được kiểm riêng và lưu trong `verification/final-state.json`.
+Working tree sau commit nội dung chỉ còn ` M AGENTS.md` có sẵn. Web port 3212
+do phiên này mở đã dừng; worktree UI PR #49 không có thay đổi tracked.
