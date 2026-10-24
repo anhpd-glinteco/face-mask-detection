@@ -57,3 +57,5 @@ Khi chuyển chat, gửi:
 > khai hoàn thành model/deploy khi chưa có artifact và số đo thật.
 
 Docker local 24/10: [startup blocker #45](2026-10-24-docker-local-acceptance.md), draft PR #51; container/browser smoke NOT_RUN.
+
+Docker retest after user manual startup: local Compose/browser smoke PASS; #45 remains open for startup reliability (same handoff above).
