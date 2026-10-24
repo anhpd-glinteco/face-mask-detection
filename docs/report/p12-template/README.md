@@ -1,5 +1,28 @@
 # P12 — báo cáo theo mẫu người dùng
 
+## Bản đồng bộ mới — 24/10/2026
+
+Đầu ra mới: `D:\Codex\outputs\face-mask-detection\p12-sync-uncertainty-2026-10-24`.
+DOCX/PDF vẫn 34 trang, 6 hình, 27 bảng và 81 heading/caption/list entries đã refresh;
+giữ 15 package parts của mẫu và hashes bốn artifact P12 cũ.
+Ảnh mới lấy từ snapshot PR #49 chưa merge, có detection dưới 0,15 được giữ nhãn/score,
+đánh dấu “Chưa chắc chắn” và đếm riêng; API floor 0,001 và metrics P4/P11 giữ nguyên.
+Các ảnh chỉ là media synthetic/response fixture, không có camera thật.
+
+Đã rebuild bằng Word, chạy verifier và xem đủ 34 trang mới. Review độc lập 21/10
+bao phủ bản trước; bản đồng bộ này và 14 slide chưa có review độc lập.
+MSSV/khóa/đóng góp giữ “Cần bổ sung”. Issue #26 OPEN, deployment gate CLOSED.
+Hashes cùng slide và phạm vi kiểm chứng: [manifest mới](../p12/sync-uncertainty-manifest.json).
+
+```powershell
+./docs/report/p12-template/rebuild.ps1 -Output D:/Codex/outputs/face-mask-detection/p12-sync-uncertainty-2026-10-24 -Work D:/Codex/work/face-mask-detection/p12-sync-uncertainty-2026-10-24/report
+```
+
+Dùng thư mục mới cho lần tái tạo tiếp theo; hướng dẫn render bên dưới áp dụng
+với output mới. Bộ 21/10 và P12 cũ không bị ghi đè.
+
+## Bản trước đồng bộ — 21/10/2026
+
 Bản DOCX/PDF sau rà soát gồm 34 trang (bìa + 6 trang đầu + 27 trang nội dung), 5 chương,
 6 hình, 27 bảng. Mẫu chỉ quyết định hình thức; chức năng và tuyên bố của đề tài
 trong mẫu không phải yêu cầu của hệ thống khẩu trang. Bản P12 cũ và 14 slide giữ nguyên.

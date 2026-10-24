@@ -1,5 +1,49 @@
 # P12 Báo cáo và slide để review
 
+## Bộ đồng bộ uncertainty — 24/10/2026
+
+Đầu ra mới: `D:\Codex\outputs\face-mask-detection\p12-sync-uncertainty-2026-10-24`:
+`bao-cao-do-an.docx`, `bao-cao-do-an.pdf` (34 trang theo mẫu),
+`slide-thuyet-trinh.pptx`, `slide-thuyet-trinh.pdf` (14 slide, notes 600 giây).
+[Manifest mới](sync-uncertainty-manifest.json) ghi hashes và phạm vi kiểm chứng.
+Bộ 20/10 bên dưới và manifest cũ giữ nguyên; `bao-cao.md` ở thư mục này là nguồn
+27 trang lịch sử. Nguồn báo cáo hiện tại là `../p12-template/bao-cao.md`.
+
+Ảnh `assets/` đã chụp lại từ worktree PR #49, SHA
+`a341b6bdc101b09d89fddb713d1158bdf28ab32f` (PR còn draft, chưa merge).
+Fixture có confidence 0,98 / 0,15 / 0,149: cả ba workspace giữ 3 detection,
+đếm 2 đạt ngưỡng và 1 “Chưa chắc chắn”. Hai điểm cuối cùng đều hiển thị 15%,
+nhưng so sánh ngưỡng trước làm tròn. Script assert nhãn/điểm, count và stop tracks;
+không dùng model hoặc camera thật. Metrics P4/P11 và API floor 0,001 không đổi.
+
+Tái tạo: chạy web từ đúng snapshot PR #49 trên port riêng (ví dụ 3212), rồi chạy
+`capture-fixtures.mjs` với `P12_WEB_URL` trỏ tới web đó. Copy ảnh/capture receipt mới
+vào `assets/` trước khi rebuild báo cáo theo `../p12-template/README.md`.
+Resolve runtime bằng `load_workspace_dependencies`; đặt `P12_PRESENTATIONS_SKILL`
+tới skill hiện tại khi chạy `build_slides.mjs`. Dùng output/work mới, không ghi đè
+bộ lịch sử. Sau Word rebuild/verifier, slide finalizer và xuất PDF, chạy:
+
+```powershell
+& $runtimePython docs/report/p12/validate_p12.py --output $outputDir --template-report
+```
+
+`--template-report` đối chiếu report manifest đã được `verify_report.py` tạo,
+hash DOCX/PDF, metrics, notes/chart và fixture receipts. Verifier cũng từ chối
+layout warnings, bao gồm lỗi vượt biên slide 11 của bản đang dở.
+
+Phiên này Node/Artifact Tool thoát 1 sau dòng export dù receipt hợp lệ; không ghi
+bước đó là PASS. Self-check Python độc lập exit 0, PowerPoint 16 mở read-only,
+xuất PDF và 14 PNG thành công. PowerPoint COM cần đường dẫn Windows có dấu `\`;
+đường dẫn `/` từng làm SaveAs PDF lỗi. Không save lại PPTX bằng PowerPoint.
+Đã xem từng trang Word PDF và từng slide PowerPoint; không có lỗi clipping,
+chồng lấn hoặc glyph. Đây là QA của phiên biên soạn, chưa là review độc lập bản mới.
+
+Issue #26 giữ OPEN: còn MSSV/khóa/đóng góp và review bản đồng bộ/slide.
+Review ngày 21/10 chỉ bao phủ báo cáo trước đồng bộ; không chuyển kết luận đó
+sang bản mới. P13, camera vật lý và hosted HTTPS/rollback chưa làm; gate CLOSED.
+
+## Bộ lịch sử — 20/10/2026
+
 Bộ ngày 20/10/2026: **27 trang DOCX/PDF, 14 slide PPTX/PDF**, speaker notes gợi ý
 600 giây. Source sản phẩm được đối chiếu tại P11 `88687c9`; metric chất lượng P4,
 benchmark P11 run 3 (`42a0f76`). Đây chưa phải bản nghiệm thu của giảng viên.

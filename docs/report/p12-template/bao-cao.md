@@ -4,7 +4,7 @@ Nhóm xin trân trọng cảm ơn Trường Công nghệ thông tin và Truyền
 
 Báo cáo trình bày ứng dụng web phát hiện trạng thái đeo khẩu trang từ ảnh, video local và webcam. Nhóm ghi nhận các giới hạn về chất lượng mô hình, nguồn dữ liệu và điều kiện nghiệm thu còn thiếu. Những kết quả chưa kiểm chứng được nêu rõ để người đọc đánh giá đúng phạm vi thực hiện.
 
-Nhóm mong nhận được ý kiến góp ý về nội dung và hình thức để tiếp tục hoàn thiện đồ án. Phiên bản này chưa có review độc lập; thông tin MSSV, khóa đào tạo và đóng góp từng thành viên đang chờ xác nhận.
+Nhóm mong nhận được ý kiến góp ý về nội dung và hình thức để tiếp tục hoàn thiện đồ án. Bản trước khi đồng bộ đã được review độc lập bằng agent trên snapshot 21/10/2026; review chỉ bao phủ báo cáo theo mẫu 34 trang, không bao phủ slide hoặc nội dung được cập nhật trong phiên này. Thông tin MSSV, khóa đào tạo và đóng góp từng thành viên đang chờ xác nhận.
 
 Nhóm 1
 
@@ -145,7 +145,7 @@ Mục đích: xem detection của các frame được xử lý trong video local
 |---|---|
 | 1 | Chọn video; đọc metadata, tạo preview local; lỗi codec/file phải thông báo. |
 | 2 | Khi phát, sampler chỉ capture khi không có request đang chạy. |
-| 3 | Capture frame cùng source/session ID, frame ID và thời điểm video. |
+| 3 | Capture frame từ nguồn hiện tại và ghi nhận snapshot cùng thời điểm video. |
 | 4 | Gửi frame qua detect API, chờ xong trước khi xét frame kế tiếp; không queue. |
 | 5 | Chỉ nhận kết quả còn đúng session; hiển thị frame đã phân tích cùng overlay. |
 | 6 | Cập nhật thống kê của frame và processed FPS/latency; lặp khi còn phát. |
@@ -299,7 +299,7 @@ Giao diện có ba workspace dùng lại preview, kết quả, thông báo và t
 
 {{image}}
 
-Hình 4.1 Luồng ảnh với media synthetic không khuôn mặt và response fixture minh họa bbox. Hai nhãn trên hình là dữ liệu kiểm thử, không chứng minh khả năng nhận diện của checkpoint.
+Hình 4.1 Luồng ảnh với media synthetic không khuôn mặt và response fixture minh họa bbox. Ba nhãn trên hình là dữ liệu kiểm thử, không chứng minh khả năng nhận diện của checkpoint.
 
 ## 4.5 Giao diện webcam và khả năng tiếp cận
 
@@ -319,7 +319,7 @@ VideoWorkspace và WebcamWorkspace dùng chung sampler với cơ hội lấy m�
 
 ## 4.7 Kết luận chương 4
 
-API thật kiểm checkpoint; ba workspace dùng chung contract/sampler. Ngưỡng 0,15 và uncertain chưa được áp dụng vào UI/API.
+API thật kiểm checkpoint; ba workspace dùng chung contract/sampler. Ở snapshot PR #49 (chưa merge), confidence dưới 0,15 được giữ nguyên nhãn và điểm số, đồng thời đánh dấu “Chưa chắc chắn” và đếm riêng. Mốc 0,15 là ngưỡng trình bày; API vẫn nhận score từ 0,001 và không thêm lớp hay trường trạng thái vào contract. Đúng 0,15 được xem là đạt ngưỡng; so sánh trước khi làm tròn. [10]
 
 # CHƯƠNG 5 TRIỂN KHAI VÀ KIỂM THỬ HỆ THỐNG
 
@@ -378,7 +378,7 @@ Chỉ có 2/49 bbox `without_mask` và 1/12 bbox `mask_worn_incorrectly` ghép �
 | without_mask | 0,0190 | 0,0086 |
 | mask_worn_incorrectly | 0,0936 | 0,0340 |
 
-API/UI hiện không áp ngưỡng 0,15; API dùng score floor 0,001 và trả confidence. Do đó ảnh giao diện hoặc số detection API không thể đọc trực tiếp như kết quả PR/F1 tại ngưỡng vận hành. Muốn so sánh cần dùng đúng hậu xử lý và định nghĩa phép đo, đồng thời không tuning dựa trên test đã mở. [2,5]
+API vẫn dùng score floor 0,001 và trả confidence; UI dùng mốc 0,15 để đánh dấu, không loại detection thấp. [10] Do đó ảnh giao diện hoặc số detection API không thể đọc trực tiếp như kết quả PR/F1 tại ngưỡng vận hành. Muốn so sánh cần dùng đúng hậu xử lý và định nghĩa phép đo, đồng thời không tuning dựa trên test đã mở. [2,5]
 
 ## 5.5 Phân tích lỗi và hồi quy video
 
@@ -439,7 +439,7 @@ Phần mềm đã có đường ảnh/video/webcam tới adapter thật trong th
 | Hiệu năng | Budget local đạt trên workload synthetic | Tải đại diện và môi trường đích |
 | Container | CI no-model Compose đạt | Local runtime/checkpoint và setup độc lập |
 | Hosted preview | Chưa kiểm chứng | HTTPS, camera, rollback |
-| Tài liệu P12 | Bộ để review, có nguồn | Bìa, đóng góp và review độc lập |
+| Tài liệu P12 | Bộ đồng bộ để review, có nguồn | Thông tin nhóm và review bản mới/slide |
 
 ## 5.9 Kết luận chương 5
 
@@ -449,7 +449,7 @@ Kiểm thử phần mềm và latency local không khắc phục minority recall
 
 Đồ án đã xây dựng được ứng dụng web có ba đầu vào dùng chung contract ảnh, adapter SSDLite thật, kiểm tra checkpoint và các cơ chế quản lý tác vụ bất đồng bộ. Các lớp giao diện, API và ML có kiểm thử riêng; benchmark với checkpoint thật đã phát hiện một race video mà test fixture trước đó chưa bộc lộ. Việc tái hiện, sửa và kiểm chứng lại cho thấy cần kết hợp kiểm thử có kiểm soát với chạy stream dài. [3,5]
 
-Kết quả chất lượng là hạn chế lớn nhất của baseline. Test macro F1 0,2061 và mAP50:95 0,0820 đi cùng recall rất thấp ở hai lớp ít mẫu. Do đó ứng dụng hiện chỉ phù hợp trình diễn kỹ thuật nội bộ trong phạm vi được cho phép. Không có cơ sở đưa vào cảnh báo tự động hoặc quyết định về con người. Confidence hiển thị chưa được calibration và trạng thái `uncertain` chưa triển khai. [2]
+Kết quả chất lượng là hạn chế lớn nhất của baseline. Test macro F1 0,2061 và mAP50:95 0,0820 đi cùng recall rất thấp ở hai lớp ít mẫu. Đây là kết quả lịch sử của checkpoint và split P4, không phải đánh giá lại sau thay đổi UI. Do đó ứng dụng hiện chỉ phù hợp trình diễn kỹ thuật nội bộ trong phạm vi được cho phép. Không có cơ sở đưa vào cảnh báo tự động hoặc quyết định về con người. Confidence chưa được calibration; nhãn “Chưa chắc chắn” chỉ hỗ trợ trình bày, không khẳng định xác suất đúng. [2,10]
 
 # TÀI LIỆU THAM KHẢO
 
@@ -471,7 +471,9 @@ Kết quả chất lượng là hạn chế lớn nhất của baseline. Test ma
 
 [9] MDN Web Docs. MediaDevices getUserMedia. https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia. Truy cập 20/10/2026. Tham khảo quyền camera và secure context.
 
-Nguồn ảnh giao diện: script capture-fixtures.mjs của P12, media synthetic không khuôn mặt và response fixture. Nguồn sơ đồ: source P11, P12 biên tập. Không sử dụng ảnh dataset hoặc hình minh họa nhận diện người thật.
+[10] Nhóm đồ án. UI uncertainty presentation, PR #49, HEAD `a341b6bdc101b09d89fddb713d1158bdf28ab32f`; CI 5/5 SUCCESS. https://github.com/anhpd-glinteco/face-mask-detection/pull/49. Snapshot 21/10/2026. Ngưỡng 0,15 áp dụng ở lớp trình bày; API floor 0,001 và schema không đổi.
+
+Nguồn ảnh giao diện: script capture-fixtures.mjs của P12 chạy trên snapshot PR #49 ngày 24/10/2026, media synthetic không khuôn mặt và response fixture. Nguồn sơ đồ: source P11, P12 biên tập. Không sử dụng ảnh dataset hoặc hình minh họa nhận diện người thật.
 
 # PHỤ LỤC A TÁI LẬP VÀ DANH MỤC EVIDENCE
 
@@ -503,7 +505,7 @@ Kịch bản demo: ảnh synthetic, video local pause/seek, webcam giả lập s
 | --- | --- |
 | MSSV, khóa đào tạo và đóng góp cá nhân | Cần bổ sung và xác nhận |
 | Mẫu trình bày | Theo file tham chiếu được cung cấp; không coi là rubric học phần đã xác nhận |
-| Review độc lập | Chưa có minh chứng |
+| Review độc lập | Bản 21/10 đã được agent-review; bản đồng bộ và slide chưa được review độc lập |
 | Camera vật lý, HTTPS và rollback hosted | Chưa kiểm chứng |
 | Video demo và rehearsal P13 | Chưa thực hiện |
 
