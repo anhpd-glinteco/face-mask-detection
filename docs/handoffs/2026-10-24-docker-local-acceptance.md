@@ -43,3 +43,5 @@ modification until the engine runs. #24/#25 retain local container gaps. #43 cam
 Task-only documentation committed and pushed; draft PR targets the immediate
 predecessor. Final remote/CI/issue states and checksums are saved in the evidence
 folder. Main worktree's existing AGENTS.md modification remains untouched.
+
+Draft PR: https://github.com/anhpd-glinteco/face-mask-detection/pull/51. Issues #45/#24/#25 updated with fresh evidence; remain OPEN. CI is checked separately at final HEAD in final-state.json; local runtime remains BLOCKED regardless of CI.

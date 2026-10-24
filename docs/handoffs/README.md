@@ -55,3 +55,5 @@ Khi chuyển chat, gửi:
 > gần nhất, kiểm tra git status/branch/log trước khi sửa. Làm phiên kế tiếp theo
 > phụ thuộc, ghi bằng chứng và bàn giao; không làm lại phần đã xác minh, không
 > khai hoàn thành model/deploy khi chưa có artifact và số đo thật.
+
+Docker local 24/10: [startup blocker #45](2026-10-24-docker-local-acceptance.md), draft PR #51; container/browser smoke NOT_RUN.
