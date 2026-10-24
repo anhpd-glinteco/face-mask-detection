@@ -1,6 +1,39 @@
 {
   "source": "P12 synthetic UI response; face-free media; no real model or physical camera",
-  "requests": 9,
+  "uiRevision": "a341b6bdc101b09d89fddb713d1158bdf28ab32f",
+  "flows": [
+    {
+      "flow": "image",
+      "counts": "Tổng: 3 · Đạt ngưỡng: 2 · Chưa chắc chắn: 1",
+      "confidence": [
+        0.98,
+        0.15,
+        0.149
+      ],
+      "boundaryAndRoundedScoreChecked": true
+    },
+    {
+      "flow": "video",
+      "counts": "Tổng: 3 · Đạt ngưỡng: 2 · Chưa chắc chắn: 1",
+      "confidence": [
+        0.98,
+        0.15,
+        0.149
+      ],
+      "boundaryAndRoundedScoreChecked": true
+    },
+    {
+      "flow": "webcam",
+      "counts": "Tổng: 3 · Đạt ngưỡng: 2 · Chưa chắc chắn: 1",
+      "confidence": [
+        0.98,
+        0.15,
+        0.149
+      ],
+      "boundaryAndRoundedScoreChecked": true
+    }
+  ],
+  "requests": 11,
   "tracksEnded": true,
-  "date": "2026-10-20T07:59:00.869Z"
+  "date": "2026-10-24T07:52:02.881Z"
 }

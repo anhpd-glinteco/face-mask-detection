@@ -19,9 +19,10 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def main(output, evidence_root):
+def main(output, evidence_root, template_report=False):
     source = Path(__file__).parent
-    report = (source/'bao-cao.md').read_text(encoding='utf-8')
+    report_source = source.parent/'p12-template/bao-cao.md' if template_report else source/'bao-cao.md'
+    report = report_source.read_text(encoding='utf-8')
     slides = load(source/'slides.json')
     all_slides = json.dumps(slides, ensure_ascii=False)
     assert len(slides)==14 and sum(s['seconds'] for s in slides)==600
@@ -51,9 +52,15 @@ def main(output, evidence_root):
     report_pdf=PdfReader(output/'bao-cao-do-an.pdf')
     slide_pdf=PdfReader(output/'slide-thuyet-trinh.pdf')
     pages=report.split('<!-- page -->')
-    assert len(report_pdf.pages)==len(pages)==27
+    if template_report:
+        report_manifest=load(output/'manifest.json')
+        assert report_manifest['status']=='PASS' and report_manifest['pages']==len(report_pdf.pages)
+        for item in report_manifest['deliverables']:
+            assert item['sha256']==sha(output/item['name'])
+    else:
+        assert len(report_pdf.pages)==len(pages)==27
     assert len(slide_pdf.pages)==14
-    for number,(page,expected) in enumerate(zip(report_pdf.pages,pages),1):
+    for number,(page,expected) in enumerate(zip(report_pdf.pages,[] if template_report else pages),1):
         text=page.extract_text()
         title=re.search(r'^# (.+)',expected.strip(),re.M).group(1)
         normalize=lambda s:re.sub(r'\s+','',s)
@@ -78,13 +85,19 @@ def main(output, evidence_root):
         doc_ns={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
         styles=ET.fromstring(archive.read('word/styles.xml'))
         assert not styles.findall(".//w:style[@w:styleId='Title']//w:pBdr",doc_ns),'unexpected title border'
-        assert not ET.fromstring(archive.read('word/document.xml')).findall('.//w:pBdr',doc_ns)
+        if not template_report:
+            assert not ET.fromstring(archive.read('word/document.xml')).findall('.//w:pBdr',doc_ns)
     receipt=load(output/'qa/slides-validation.json')
     assert receipt['finalSha256']==sha(output/'slide-thuyet-trinh.pptx')
     assert receipt['packageIntegrity']['status']=='pass'
     assert receipt['presentationLayout']['finding_count']==0
+    assert not receipt['presentationLayout'].get('warnings'),receipt['presentationLayout'].get('warnings')
     capture=load(output/'assets/capture.json')
     assert capture['tracksEnded'] and capture['requests']>=3
+    if template_report:
+        assert capture['uiRevision']=='a341b6bdc101b09d89fddb713d1158bdf28ab32f'
+        assert [f['flow'] for f in capture['flows']]==['image','video','webcam']
+        assert all(f['boundaryAndRoundedScoreChecked'] for f in capture['flows'])
     # Verify local source references in notes while preserving cited historical artifact paths.
     root=source.parents[2]
     for slide in slides:
@@ -113,12 +126,13 @@ def main(output, evidence_root):
         records.append({'id':eid,'original':str(p),'copy':str(destination.relative_to(output)),'sha256':sha(p),'bytes':p.stat().st_size})
     for name in ['bao-cao-do-an.docx','bao-cao-do-an.pdf','slide-thuyet-trinh.pptx','slide-thuyet-trinh.pdf']:
         p=output/name;records.append({'deliverable':name,'sha256':sha(p),'bytes':p.stat().st_size})
-    result={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'source_p11':'88687c935f8cfe94036fb81bd4fb924fadd04776','report_pages':27,'slides':14,'speaker_seconds':600,'assertions':'passed','independent_review':False,'physical_camera':False,'deployment_gate':'CLOSED','records':records}
+    result={'timestamp_utc':datetime.now(timezone.utc).isoformat(),'source_p11':'88687c935f8cfe94036fb81bd4fb924fadd04776','report_pages':len(report_pdf.pages),'slides':14,'speaker_seconds':600,'assertions':'passed','independent_review':False,'physical_camera':False,'deployment_gate':'CLOSED','records':records}
     (output/'evidence-manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
-    print('PASS: 27 report pages, 14 slides, 600 seconds, original metric/notes/package checks and hashes.')
+    print(f'PASS: {len(report_pdf.pages)} report pages, 14 slides, 600 seconds, original metric/notes/package checks and hashes.')
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True)
     p.add_argument('--evidence-root',type=Path,default=Path('D:/Codex/outputs/face-mask-detection'))
-    args=p.parse_args();main(args.output,args.evidence_root)
+    p.add_argument('--template-report',action='store_true',help='Use the verified template report manifest instead of the historical 27-page report.')
+    args=p.parse_args();main(args.output,args.evidence_root,args.template_report)

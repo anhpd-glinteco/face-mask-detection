@@ -36,7 +36,7 @@ for(const [i,data] of slides.entries()) {
  text(s,'ĐỒ ÁN CHUYÊN NGÀNH  /  NHÓM 1',72,34,1000,25,16,dark?'#B9CDD8':'#526779');
  text(s,data.title,72,dark?140:89,1136,dark?160:78,dark?58:43,ink,true);
  text(s,`${String(i+1).padStart(2,'0')} / 14`,1120,670,90,25,16,dark?'#B9CDD8':'#526779');
- text(s,'P12 để review · Bằng chứng chốt 20/10/2026',72,670,1000,25,16,dark?'#B9CDD8':'#526779');
+ text(s,'P12 đồng bộ 24/10/2026 · Metrics P4/P11 lịch sử',72,670,1000,25,16,dark?'#B9CDD8':'#526779');
  if(data.kind==='cover') {
    text(s,data.subtitle,72,330,1080,70,32,'#DCE7EC');
    data.body.forEach((v,j)=>text(s,v,72,450+j*48,1100,40,25,'#FFFFFF'));

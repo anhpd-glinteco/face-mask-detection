@@ -1,0 +1,162 @@
+{
+  "timestamp_utc": "2026-10-24T07:54:47.768481+00:00",
+  "source_p11": "88687c935f8cfe94036fb81bd4fb924fadd04776",
+  "report_pages": 34,
+  "slides": 14,
+  "speaker_seconds": 600,
+  "assertions": "passed",
+  "independent_review": false,
+  "physical_camera": false,
+  "deployment_gate": "CLOSED",
+  "records": [
+    {
+      "id": "E01",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p4-evaluation\\validation\\decision.json",
+      "copy": "evidence\\E01-decision.json",
+      "sha256": "6c54c06e333ac51b1b519d5ca899c7df974a868fe1bfb6884d2a87bac2226151",
+      "bytes": 1819
+    },
+    {
+      "id": "E02",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p4-evaluation\\test\\report.json",
+      "copy": "evidence\\E02-report.json",
+      "sha256": "9543da41730442679bd9d76aaec21a558f9b413ae5c990ca75dbf767522c5092",
+      "bytes": 19426
+    },
+    {
+      "id": "E03",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\api-summary.json",
+      "copy": "evidence\\E03-api-summary.json",
+      "sha256": "321671f188f141cfd38835f8ae68f064740be10c88d74f35aa7edbb8dd6d9764",
+      "bytes": 394
+    },
+    {
+      "id": "E04",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\browser-summary.json",
+      "copy": "evidence\\E04-browser-summary.json",
+      "sha256": "040b46486c99ef788e227a4dfc85ed7f74578305339367b35c970e7b90d91c11",
+      "bytes": 1236
+    },
+    {
+      "id": "E05a",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\memory.json",
+      "copy": "evidence\\E05a-memory.json",
+      "sha256": "017745e17a9fadd0bd50443a311b865d4907a52732802b17f3c9f262f728a7ae",
+      "bytes": 92762
+    },
+    {
+      "id": "E05b",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p11-internal-regression\\real-model-run-3\\environment.json",
+      "copy": "evidence\\E05b-environment.json",
+      "sha256": "fbfbec44f677ad19a74d57c5da3b5458c61f83881b5c449221865b251a9b1984",
+      "bytes": 1355
+    },
+    {
+      "id": "E06",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p12-sync-uncertainty-2026-10-24\\p11-remote-snapshot.json",
+      "copy": "evidence\\E06-p11-remote-snapshot.json",
+      "sha256": "76e3c6c8b227b9dc60795a0e1b4d79750c64b2ceffe1db2a85b983fa26d14b52",
+      "bytes": 1665
+    },
+    {
+      "id": "E07",
+      "original": "D:\\Codex\\outputs\\face-mask-detection\\p12-sync-uncertainty-2026-10-24\\assets\\capture.json",
+      "copy": "evidence\\E07-capture.json",
+      "sha256": "078b171e74f1aff448e126db434ffccf8722e1d263b47c2f4a351d0d7b999039",
+      "bytes": 947
+    },
+    {
+      "deliverable": "bao-cao-do-an.docx",
+      "sha256": "1d26f0a3e69826125efbf19bc33831efa0bba0c4f9fa03856a332c26c19b73ce",
+      "bytes": 3764019
+    },
+    {
+      "deliverable": "bao-cao-do-an.pdf",
+      "sha256": "b332c14a1ad08a1002f04fab6980fba4288292e0d3c788aaa9ff2d86de371a46",
+      "bytes": 830169
+    },
+    {
+      "deliverable": "slide-thuyet-trinh.pptx",
+      "sha256": "3e37f97779b636eec0b4370ea108677517744c6866efff6a34b61300a169db73",
+      "bytes": 261221
+    },
+    {
+      "deliverable": "slide-thuyet-trinh.pdf",
+      "sha256": "adeabfe2b7ae7745e36ee562fda8d5236662d86a10a982611e4637d1f534cf4a",
+      "bytes": 272144
+    }
+  ],
+  "output_directory": "D:\\Codex\\outputs\\face-mask-detection\\p12-sync-uncertainty-2026-10-24",
+  "ui_revision": "a341b6bdc101b09d89fddb713d1158bdf28ab32f",
+  "ui_pr": "https://github.com/anhpd-glinteco/face-mask-detection/pull/49",
+  "ui_pr_merged": false,
+  "visual_review": {
+    "report_pages": 34,
+    "slides": 14,
+    "status": "PASS",
+    "independent": false,
+    "receipt_sha256": "4fe7635dea026e0aa5f0eecde830c5c87dcf6243e7466629b3276a137c690b3f"
+  },
+  "pipeline": {
+    "word_rebuild_and_verifier_exit": 0,
+    "slide_builder_exit": 1,
+    "slide_builder_last_line": "Exported 14 editable slides with 600 seconds of speaker notes.",
+    "slide_builder_status": "NONZERO; output accepted only after independent package/hash checks and native PowerPoint render",
+    "powerpoint_first_pdf_export": "FAIL with slash paths; corrected to Windows backslash paths",
+    "powerpoint_pdf_png_export_exit": 0,
+    "combined_python_verifier_exit": 0,
+    "physical_camera": false,
+    "product_tests_rerun": false,
+    "deployment_gate": "CLOSED"
+  },
+  "sources": [
+    {
+      "path": "docs/report/p12-template/bao-cao.md",
+      "sha256": "d94ca1fc85579772560087f20c88f34db3face45ec3c6d3b55744be60f6ee736"
+    },
+    {
+      "path": "docs/report/p12-template/build_report.py",
+      "sha256": "cc3b3e35d8922a22c0df9168245fc45a82030999f83e0112ae0a22c79748622a"
+    },
+    {
+      "path": "docs/report/p12-template/rebuild.ps1",
+      "sha256": "8484d8ec052d7e8c3969617e623df62425908c5fe4a01f457529a480bc7ac5a0"
+    },
+    {
+      "path": "docs/report/p12-template/verify_report.py",
+      "sha256": "f1c367804de1ca9e0ae1e8d1f2c7211a6d1e38f6c39d626c8504c4c4d0cf7038"
+    },
+    {
+      "path": "docs/report/p12/slides.json",
+      "sha256": "7a1b07abd4ec9103398b0e3cae7da313b837b9ab3fe8df663d437abe357a786a"
+    },
+    {
+      "path": "docs/report/p12/build_slides.mjs",
+      "sha256": "f2cc463a1cef5df04eb17907b421c837fd64d45d6e505df7798e0b8af10f9ae4"
+    },
+    {
+      "path": "docs/report/p12/capture-fixtures.mjs",
+      "sha256": "d039a6b954c0b2a8d63c6afc8e81ac5156993ee9502ef96bd2268326ced4a07d"
+    },
+    {
+      "path": "docs/report/p12/validate_p12.py",
+      "sha256": "ea61a96fe85bac3d7188014f1d41fd3e7ce4bda6bddc3fbeaaff76ae026ec367"
+    }
+  ],
+  "report_verifier_manifest_sha256": "25fd662bdc6ea584394d083b770074844bcb5d80b36476088dd75c7c56ff8852",
+  "slide_finalizer_receipt_sha256": "9bae811d49267e2a96ac926399194f064c3d73b89076636ac8c9fda212338536",
+  "validator_negative_checks": [
+    {
+      "case": "reject changed report hash",
+      "status": "PASS"
+    },
+    {
+      "case": "reject slide 11 boundary warning",
+      "status": "PASS"
+    },
+    {
+      "case": "reject missing workspace evidence",
+      "status": "PASS"
+    }
+  ]
+}
