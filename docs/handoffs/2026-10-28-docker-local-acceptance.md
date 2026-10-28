@@ -28,3 +28,7 @@ No product/API/dependency/test changes. No reset, reboot, elevation, WSL shutdow
 
 Local diagnostics produced no stdout/stderr or bundle path after 116 seconds; CLI terminated. No upload requested; collection completeness unverified.
 
+
+After stopping the CLI, its diagnostic child remained alive and held the redirected logs. Only verified task diagnostic child PIDs were then stopped; Docker backend was preserved. Flushed output identifies an intended temporary ZIP under `%LOCALAPPDATA%\Temp\E7B3B6A4-F76E-4343-BFB3-1603219A9375\20261028114402.zip` and warns collection may take 15 minutes. Collection was interrupted, so this is not a completed diagnostic bundle; no upload requested. Raw logs and cleanup outcome are in the evidence folder.
+
+Remote publication: task documentation pushed, draft PR #51 updated, #45/#24/#25 commented and remain OPEN. Verify final CI/remote receipt in `remote-final.json` in the evidence folder; CI is distinct from blocked local acceptance. Task worktree clean after commit; main worktree retains its pre-existing AGENTS.md change.
