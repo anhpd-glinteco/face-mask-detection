@@ -88,9 +88,11 @@ Phạm vi gồm một actor và ba nguồn ảnh/video/webcam, không tài kho�
 
 Actor nghiệp vụ duy nhất là người sử dụng trình duyệt. Browser, FastAPI và detector là thành phần thực hiện, không được đưa thành vai trò người dùng có tài khoản. Người dùng chủ động chọn media và có thể dừng hoặc đổi nguồn. Không có actor quản trị hoặc cơ sở dữ liệu MySQL như đề tài trong mẫu. [4,5]
 
+Biểu đồ use case được xây dựng bằng PlantUML. Nhóm mô tả tác nhân, các chức năng và quan hệ bằng mã nguồn UML, sau đó xuất sơ đồ thành hình để chèn vào báo cáo. Tác nhân chính là người sử dụng, với ba chức năng phân tích ảnh, video và webcam, cùng các thao tác xem kết quả và dừng hoặc đổi nguồn. Mã nguồn sơ đồ được lưu trong tệp `docs/report/diagrams/system.puml` của dự án. [11]
+
 {{usecases}}
 
-Hình Use case của ứng dụng khẩu trang, biên tập từ sơ đồ P1. Đây là sơ đồ chức năng; các điều kiện nghiệm thu camera thật, dữ liệu và deployment được đánh giá riêng ở chương 5.
+Hình Use case của ứng dụng khẩu trang. Nguồn: Nhóm thực hiện bằng PlantUML, từ sơ đồ P1. Đây là sơ đồ chức năng; các điều kiện nghiệm thu camera thật, dữ liệu và deployment được đánh giá riêng ở chương 5.
 
 ## 2.2 Yêu cầu chức năng và truy vết
 
@@ -473,6 +475,8 @@ Kết quả chất lượng là hạn chế lớn nhất của baseline. Test ma
 
 [10] Nhóm đồ án. UI uncertainty presentation, PR #49, HEAD `a341b6bdc101b09d89fddb713d1158bdf28ab32f`; CI 5/5 SUCCESS. https://github.com/anhpd-glinteco/face-mask-detection/pull/49. Snapshot 21/10/2026. Ngưỡng 0,15 áp dụng ở lớp trình bày; API floor 0,001 và schema không đổi.
 
+[11] PlantUML. Use case Diagram syntax and features. https://plantuml.com/use-case-diagram. Truy cập 01/11/2026.
+
 Nguồn ảnh giao diện: script capture-fixtures.mjs của P12 chạy trên snapshot PR #49 ngày 24/10/2026, media synthetic không khuôn mặt và response fixture. Nguồn sơ đồ: source P11, P12 biên tập. Không sử dụng ảnh dataset hoặc hình minh họa nhận diện người thật.
 
 # PHỤ LỤC A TÁI LẬP VÀ DANH MỤC EVIDENCE
@@ -496,6 +500,14 @@ Tái lập bằng môi trường đã pin và checkpoint đúng checksum, output
 | E05 | P11 memory.json, environment.json | Môi trường và sampled memory |
 | E06 | P11 release logs và PR #39 CI | Kiểm thử phần mềm lịch sử |
 | E07 | P12 fixture screenshots | Minh họa giao diện, không đo model |
+
+Để chỉnh sơ đồ use case, mở tệp `docs/report/diagrams/system.puml` bằng trình soạn thảo văn bản và sửa khối từ `@startuml use-cases` đến `@enduml`. Các từ khóa `actor`, `usecase` và `rectangle` lần lượt mô tả tác nhân, chức năng và biên hệ thống. Từ thư mục gốc dự án, chạy lệnh sau bằng Java và PlantUML JAR đã cài:
+
+```powershell
+java -Xmx256m -Djava.awt.headless=true -jar D:\Codex\downloads\face-mask-detection\tools\plantuml.jar -charset UTF-8 -tsvg docs/report/diagrams/system.puml
+```
+
+Lệnh xuất các sơ đồ trong tệp thành SVG. Sơ đồ use case nằm trong `docs/report/diagrams/use-cases.svg`; bản PNG dùng chèn báo cáo nằm trong `docs/report/p12-template/assets/usecases.png`. Khi sửa nguồn, cần xuất lại SVG và PNG trước khi tạo lại báo cáo.
 
 # PHỤ LỤC B THÔNG TIN CẦN BỔ SUNG
 
