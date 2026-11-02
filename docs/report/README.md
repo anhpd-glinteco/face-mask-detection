@@ -12,7 +12,11 @@ còn thiếu; chưa có review độc lập hoặc nghiệm thu. Các phần P1 
 Đồ án chuyên ngành Kỹ thuật phần mềm; GVHD: ThS. Vũ Thị Dương; nhóm 1.
 Thành viên: Phùng Đức Anh, Nguyễn Đình Luân Kiệt, Bùi Nguyên Hải,
 Bùi Ngọc Minh Hoàng. Lớp học phần theo Sheet: `2026IT6150003`.
-MSSV, khóa và thông tin bìa chưa có phải bổ sung trước xuất bản; không tự suy đoán.
+Thông tin lớp cập nhật theo ảnh người dùng cung cấp ngày 02/11/2026: `DACN_20261IT6150003`.
+MSSV: Phùng Đức Anh `2023607426`; Nguyễn Đình Luân Kiệt `2024605040`;
+Bùi Nguyên Hải `2022603861`; Bùi Ngọc Minh Hoàng `2022604035`.
+Khóa đào tạo chưa xác nhận; không suy từ MSSV. Nguồn báo cáo hiện tại là
+`p12-template/bao-cao.md`; phân công trong đó theo kế hoạch nhóm, không phải xác nhận tác giả từng commit.
 Ảnh bìa là tham chiếu hình thức, bỏ dòng “Bài kiểm tra 1” cho báo cáo cuối.
 
 Đây là **bộ tài liệu nguồn**, chưa phải báo cáo nghiệm thu. Không điền metrics,

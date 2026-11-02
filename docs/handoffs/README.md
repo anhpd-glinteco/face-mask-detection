@@ -1,5 +1,8 @@
 # Bàn giao các phiên
 
+**Mới nhất 02/11:** [Bộ nộp, webcam laptop và hai Sheet cập nhật](2026-11-02-submission.md).
+Các bảng lịch sử bên dưới không thay thế kết quả và giới hạn của phiên mới nhất.
+
 Đọc [kế hoạch](../plan.md) trước khi thực hiện. Đây là chỉ mục tiến độ, không là
 phần trăm hoàn thành sản phẩm.
 

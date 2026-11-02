@@ -50,7 +50,7 @@ def verify(reference,output,work,evidence):
     for bad in ['UniLend','Uni-Lend','Nguyễn Xuân Hoàng','Phạm Văn Hà','Dư Quốc An','20261IT6040001']:
         assert compact(bad) not in all_text,bad
     assert 'LỜI CẢM ƠN' not in texts[0] and 'LỜI CẢM ƠN' in texts[1]
-    for value in ['ThS. Vũ Thị Dương','2026IT6150003','Phùng Đức Anh','Nguyễn Đình Luân Kiệt','Bùi Nguyên Hải','Bùi Ngọc Minh Hoàng']:assert compact(value) in compact(texts[0])
+    for value in ['ThS. Vũ Thị Dương','DACN_20261IT6150003','Phùng Đức Anh','2023607426','Nguyễn Đình Luân Kiệt','2024605040','Bùi Nguyên Hải','2022603861','Bùi Ngọc Minh Hoàng','2022604035']:assert compact(value) in compact(texts[0])
     toc=[p.text for p in d.paragraphs if p.style.name.lower().startswith('toc')]
     chapter_entries=[e for e in receipt['entries'] if e['style']=='Heading 1' and e['text'].startswith('CHƯƠNG ')]
     assert len(chapter_entries)==5

@@ -100,9 +100,9 @@ def build(reference,source,output,work):
         s.paragraph_format.first_line_indent=Cm(0);s.paragraph_format.left_indent=Cm((i-1)*.5)
     replacements={8:'BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH',9:'KỸ THUẬT PHẦN MỀM',
       11:'XÂY DỰNG ỨNG DỤNG WEB PHÁT HIỆN TRẠNG THÁI ĐEO KHẨU TRANG',
-      12:'GVHD: ThS. Vũ Thị Dương',13:'Nhóm: 01',14:'Phùng Đức Anh — MSSV: Cần bổ sung',
-      15:'Nguyễn Đình Luân Kiệt — MSSV: Cần bổ sung',16:'Bùi Nguyên Hải — MSSV: Cần bổ sung',
-      17:'Bùi Ngọc Minh Hoàng — MSSV: Cần bổ sung',19:'Lớp: 2026IT6150003    Khóa: Cần bổ sung',21:'Hà Nội, năm 2026'}
+      12:'GVHD: ThS. Vũ Thị Dương',13:'Nhóm: 01',14:'Phùng Đức Anh — MSSV: 2023607426',
+      15:'Nguyễn Đình Luân Kiệt — MSSV: 2024605040',16:'Bùi Nguyên Hải — MSSV: 2022603861',
+      17:'Bùi Ngọc Minh Hoàng — MSSV: 2022604035',19:'Lớp: DACN_20261IT6150003    Khóa: Cần bổ sung',21:'Hà Nội, năm 2026'}
     from docx.text.paragraph import Paragraph
     for i,node in enumerate(cover):
         if i==18:continue
