@@ -60,4 +60,14 @@ for full physical-device/LED and performance acceptance, #24/#25 open for full D
 No merge, deploy, checkpoint publication, model tuning or Docker repair.
 Deployment gate **CLOSED**.
 
-Remote PR/CI and final local status are recorded after publication in the evidence root.
+Published draft PR [#53](https://github.com/anhpd-glinteco/face-mask-detection/pull/53),
+base `docs/use-case-tooling`. All 39 final report pages and both program-document
+pages were rendered and visually reviewed. Submission filenames are
+`DACN_1_BaoCao_v1.docx/.pdf` and `DACN_1_ChuongTrinh.docx/.pdf/.txt` in the output root.
+
+First CI run `41384909346`: inference, ML, E2E and Compose PASS; web FAIL during
+Turbopack's Google-font module resolution (`@vercel/turbopack-next/internal/font/google/font`).
+No product/dependency change was made. A single failed-job rerun was requested;
+current outcome and exact remote head are retained in `verification/final-state.json`.
+Issues #26 and #43 received evidence/limitations comments and remain OPEN.
+Task paths are committed/pushed; the only expected dirty file is the user's `AGENTS.md`.
