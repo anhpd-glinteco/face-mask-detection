@@ -1,5 +1,14 @@
 # P12 — báo cáo theo mẫu người dùng
 
+## Bản chỉnh văn phong và thông tin nhóm 02/11/2026
+
+Đầu ra mới: `D:/Codex/outputs/face-mask-detection/submission-2026-11-02/final-report-v2`.
+Word/verifier đạt 39 trang, 6 hình, 27 bảng và 81 mục danh sách; MSSV/lớp theo ảnh
+người dùng, phân công theo kế hoạch nhóm. Phụ lục B bổ sung webcam laptop thật,
+ghi rõ latency chưa đạt mục tiêu; bảng số đo P4/P11 lịch sử giữ nguyên.
+Xem [bàn giao](../../handoffs/2026-11-02-submission.md) để biết phạm vi QA,
+hai Sheet mới và các điều kiện còn thiếu. Các bộ trước bên dưới được giữ nguyên.
+
 ## Bản đồng bộ mới — 24/10/2026
 
 Đầu ra mới: `D:\Codex\outputs\face-mask-detection\p12-sync-uncertainty-2026-10-24`.

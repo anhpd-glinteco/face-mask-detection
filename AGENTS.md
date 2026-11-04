@@ -1,12 +1,14 @@
 # Session wrap-up
 
-For each completed implementation session in this repository, push the session
-branch, open or update its pull request, and reconcile the issues addressed by
-that session. This is the default workflow unless the user asks to skip a step.
+When implementation work is complete, automatically push the task branch,
+open or update its pull request, and reconcile the issues addressed by the
+session. This is the default workflow unless the user asks to skip a step.
 
-- Keep session changes on a `codex/` task branch. Check `git status` before
-committing; include only changes for the current task and leave unrelated user
-changes untouched. Commit task changes, then push the branch.
+- Name each task branch for the feature or fix it contains, using the
+  repository's branch naming convention; do not use a generic `codex/` prefix.
+  Check `git status` before committing; include only changes for the current task
+  and leave unrelated user changes untouched. Commit task changes, then push the
+  branch.
 - Open one PR for the branch, or update its existing PR. For stacked work, target
 the immediate predecessor branch. Keep the PR draft while review is pending;
 never merge or deploy unless the user explicitly asks.

@@ -1,5 +1,9 @@
 # Kế hoạch hoàn thành Face Mask Detection — 27/10/2026
 
+**Cập nhật 02/11/2026:** hạn nộp mới là 08/11; chốt nội bộ 05/11.
+Ưu tiên hoàn thiện bài nộp và webcam laptop, giữ baseline hiện tại, hoãn cải thiện
+model. Xem [kế hoạch bộ nộp](submission.md). Lịch P0–P13 bên dưới giữ làm lịch sử.
+
 Ngày chốt: 17/10/2026 (Asia/Saigon). Đây là kế hoạch thực thi đã được nhóm yêu cầu;
 không phải báo cáo kết quả hoàn thành. Trạng thái thực tế ở [bàn giao](handoffs/README.md)
 và [bảng hiện trạng](handoffs/2026-10-17-baseline.md).
