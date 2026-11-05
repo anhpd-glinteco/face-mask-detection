@@ -108,12 +108,25 @@ describe("image overlay", () => {
 
 it("marks low confidence with text and dashed boxes and resets styling after resize", () => {
   const mixed = { ...result, detections: result.detections.map((d, i) => ({ ...d, confidence: [.1499, .15, .1501][i] })) };
-  render(<ImagePreview {...props} result={mixed} />);
-  expect(context.fillText.mock.calls[0][0]).toContain("Chưa chắc chắn");
-  expect(context.fillText.mock.calls[0][0]).toContain("Có khẩu trang 15%");
-  expect(context.setLineDash.mock.calls).toEqual([[[6, 4]], [[]], [[]]]);
+  render(<ImagePreview {...props} result={mixed} showUncertain />);
+  expect(context.fillText.mock.calls[2][0]).toContain("Chưa chắc chắn");
+  expect(context.fillText.mock.calls[2][0]).toContain("Có khẩu trang 15%");
+  expect(context.setLineDash.mock.calls).toEqual([[[]], [[]], [[6, 4]]]);
   context.setLineDash.mockClear();
   size = { width: 300, height: 200 };
   resize();
-  expect(context.setLineDash.mock.calls).toEqual([[[6, 4]], [[]], [[]]]);
+  expect(context.setLineDash.mock.calls).toEqual([[[]], [[]], [[6, 4]]]);
+});
+
+it("draws two accepted boxes out of one hundred and redraws the expanded group", () => {
+  const detections = Array.from({length:100}, (_, i) => ({...result.detections[0], confidence:i<2?.8:.01}));
+  const data = {...result, detections};
+  const {rerender} = render(<ImagePreview {...props} result={data} />);
+  expect(context.strokeRect).toHaveBeenCalledTimes(2);
+  context.strokeRect.mockClear();
+  rerender(<ImagePreview {...props} result={data} showUncertain />);
+  expect(context.strokeRect).toHaveBeenCalledTimes(100);
+  context.strokeRect.mockClear();
+  rerender(<ImagePreview {...props} result={data} />);
+  expect(context.strokeRect).toHaveBeenCalledTimes(2);
 });

@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, expect, it } from "vitest";
 import { DetectionResult } from "./DetectionResult";
 import type { DetectionResponse } from "@/lib/inference";
@@ -9,26 +9,29 @@ const result: DetectionResponse = { schema_version: "1.0", image: { width: 100, 
   { class_id: 2, label: "without_mask", confidence: .15, bbox: { x1: 0, y1: 0, x2: 10, y2: 10 } },
   { class_id: 3, label: "mask_worn_incorrectly", confidence: .1501, bbox: { x1: 0, y1: 0, x2: 10, y2: 10 } },
 ] };
-it("uses raw confidence at the boundary, preserves all labels and separates counts", () => {
-  render(<DetectionResult result={result} phase="success" />);
-  const rows = screen.getAllByRole("listitem");
-  expect(rows).toHaveLength(3);
-  expect(within(rows[0]).getByText(/Chưa chắc chắn/)).toBeInTheDocument();
-  expect(rows[0]).toHaveTextContent("1. Có khẩu trang");
-  expect(rows[0]).toHaveTextContent("15%");
-  expect(rows[1]).not.toHaveTextContent("Chưa chắc chắn");
-  expect(rows[1]).toHaveTextContent("Không có khẩu trang");
-  expect(rows[2]).not.toHaveTextContent("Chưa chắc chắn");
-  expect(rows[2]).toHaveTextContent("Đeo sai cách");
-  expect(screen.getByLabelText("Thống kê detection")).toHaveTextContent("Tổng: 3 · Đạt ngưỡng: 2 · Chưa chắc chắn: 1");
-});
-it("keeps all low-confidence detections without reporting an empty result", () => {
-  render(<DetectionResult result={{ ...result, detections: result.detections.map(d => ({ ...d, confidence: .001 })) }} phase="success" />);
+it("filters raw boundary scores and reveals weak rows with shared numbering", async () => {
+  const { rerender } = render(<DetectionResult result={result} phase="success" />);
+  expect(screen.getAllByRole("listitem")).toHaveLength(2);
+  expect(screen.getAllByRole("listitem")[0]).toHaveTextContent("1. Không có khẩu trang");
+  rerender(<DetectionResult result={result} phase="success" showUncertain />);
   expect(screen.getAllByRole("listitem")).toHaveLength(3);
-  expect(screen.getByLabelText("Thống kê detection")).toHaveTextContent("Đạt ngưỡng: 0 · Chưa chắc chắn: 3");
+  expect(screen.getAllByRole("listitem")[2]).toHaveTextContent("3. Có khẩu trang");
+  expect(screen.getAllByRole("listitem")[2]).toHaveTextContent("Chưa chắc chắn");
 });
-it("reports zero counts for an empty response", () => {
+it("shows a distinct empty accepted group while retaining weak raw predictions", () => {
+  render(<DetectionResult result={{ ...result, detections: result.detections.map(d => ({ ...d, confidence: .001 })) }} phase="success" />);
+  expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+  expect(screen.getByText("Chưa có phát hiện đạt ngưỡng")).toBeInTheDocument();
+  expect(screen.getByLabelText("Thống kê detection")).toHaveTextContent("0 phát hiện đạt ngưỡng trong frame · 3 chưa chắc chắn");
+});
+it("reports an empty response", () => {
   render(<DetectionResult result={{ ...result, detections: [] }} phase="success" />);
   expect(screen.getByText("Không phát hiện đối tượng")).toBeInTheDocument();
-  expect(screen.getByLabelText("Thống kê detection")).toHaveTextContent("Tổng: 0 · Đạt ngưỡng: 0 · Chưa chắc chắn: 0");
+});
+it("renders two accepted predictions out of one hundred until expanded", () => {
+  const detections = Array.from({ length: 100 }, (_, i) => ({ ...result.detections[0], confidence: i < 2 ? .8 : .01 }));
+  const { rerender } = render(<DetectionResult result={{ ...result, detections }} phase="success" />);
+  expect(screen.getAllByRole("listitem")).toHaveLength(2);
+  rerender(<DetectionResult result={{ ...result, detections }} phase="success" showUncertain />);
+  expect(screen.getAllByRole("listitem")).toHaveLength(100);
 });

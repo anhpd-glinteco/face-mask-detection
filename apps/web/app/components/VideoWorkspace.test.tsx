@@ -43,7 +43,7 @@ function select(name = "clip.webm", type = "video/webm") {
 async function flush() { await act(async () => { await vi.advanceTimersByTimeAsync(0); }); }
 
 describe("local video", () => {
-  it("sends only a JPEG frame, displays the analyzed timestamp and clears results on pause", async () => {
+  it("sends only a JPEG frame, displays the analyzed timestamp and keeps the final result on pause", async () => {
     render(<VideoWorkspace active />);
     const video = select();
     fireEvent.playing(video);
@@ -55,10 +55,12 @@ describe("local video", () => {
     expect(screen.getByText(/Frame đã phân tích · 1.25 giây/)).toBeInTheDocument();
     expect(screen.getByText("Không phát hiện đối tượng")).toBeInTheDocument();
     paused = true; fireEvent.pause(video);
-    expect(screen.queryByRole("region", { name: "Frame đã phân tích" })).not.toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Frame đã phân tích" })).toHaveTextContent("Đã dừng — kết quả frame cuối");
     await act(async () => { await vi.advanceTimersByTimeAsync(2000); });
     expect(detect).toHaveBeenCalledTimes(1);
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:video-frame.jpg");
+    expect(URL.revokeObjectURL).not.toHaveBeenCalledWith("blob:video-frame.jpg");
+    fireEvent.ended(video);
+    expect(screen.getByRole("region", { name: "Frame đã phân tích" })).toHaveTextContent("Đã dừng — kết quả frame cuối");
   });
 
   it("invalidates encoding on seek and holds the lock until encoding settles", async () => {

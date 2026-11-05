@@ -12,3 +12,8 @@ export function presentDetection(detection: { label: MaskLabel; confidence: numb
   const uncertain = detection.confidence < OPERATING_THRESHOLD;
   return { uncertain, text: `${LABELS[detection.label]} ${Math.round(detection.confidence * 100)}%${uncertain ? " · Chưa chắc chắn" : ""}` };
 }
+
+export function visibleDetections<T extends { confidence: number }>(detections: T[], showUncertain: boolean) {
+  const accepted = detections.filter(d => d.confidence >= OPERATING_THRESHOLD);
+  return showUncertain ? [...accepted, ...detections.filter(d => d.confidence < OPERATING_THRESHOLD)] : accepted;
+}

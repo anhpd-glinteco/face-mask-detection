@@ -46,6 +46,7 @@ function validateFile(file: File): string | null {
 }
 
 export default function Home() {
+  const [showUncertain, setShowUncertain] = useState(false);
   const [mode, setMode] = useState<Mode>("image");
   const [phase, setPhase] = useState<DetectionPhase>("idle");
   const [file, setFile] = useState<File | null>(null);
@@ -88,6 +89,7 @@ export default function Home() {
   }
 
   function selectFile(nextFile: File) {
+    setShowUncertain(false);
     requestRef.current?.abort();
     requestIdRef.current += 1;
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
@@ -175,6 +177,7 @@ export default function Home() {
                 setError(null);
                 setDimensions(null);
                 setPhase("idle");
+                setShowUncertain(false);
                 setMode(item.id);
               }}
             >
@@ -197,13 +200,13 @@ export default function Home() {
 
             <div className={`media-stage ${previewUrl ? "has-preview" : ""}`}>
               {previewUrl && file ? (
-                  <ImagePreview key={previewUrl} file={file} previewUrl={previewUrl} result={visibleResult} isLoading={isBusy} onReplace={() => inputRef.current?.click()} onDimensions={(width, height) => setDimensions({ width, height })} onError={previewError} />
+                  <ImagePreview showUncertain={showUncertain} key={previewUrl} file={file} previewUrl={previewUrl} result={visibleResult} isLoading={isBusy} onReplace={() => inputRef.current?.click()} onDimensions={(width, height) => setDimensions({ width, height })} onError={previewError} />
               ) : (
-                <div className="empty-stage">
-                  <div className="upload-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 5v14M5 12h14" strokeLinecap="round" /></svg></div>
-                  <h2>Chọn ảnh để bắt đầu</h2>
-                  <p>Ảnh JPEG, PNG hoặc WebP · tối đa {formatBytes(MAX_UPLOAD_BYTES)}</p>
-                </div>
+                <button type="button" className="empty-stage" onClick={() => inputRef.current?.click()}>
+                  <span className="upload-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 5v14M5 12h14" strokeLinecap="round" /></svg></span>
+                  <span className="upload-title">Chọn ảnh để bắt đầu</span>
+                  <span className="upload-help">Ảnh JPEG, PNG hoặc WebP · tối đa {formatBytes(MAX_UPLOAD_BYTES)}</span>
+                </button>
               )}
             </div>
 
@@ -218,7 +221,7 @@ export default function Home() {
         <aside hidden={mode !== "image"} className="result-panel" aria-labelledby="result-title">
           <div className="panel-kicker">KẾT QUẢ PHÂN TÍCH</div>
           <h2 id="result-title">Trạng thái phát hiện</h2>
-          <DetectionResult result={visibleResult} phase={displayPhase} />
+          <DetectionResult showUncertain={showUncertain} onShowUncertain={setShowUncertain} result={visibleResult} phase={displayPhase} />
           <details className="model-details">
             <summary>Thông tin mô hình</summary>
             <dl>
