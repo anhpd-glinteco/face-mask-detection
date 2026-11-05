@@ -211,7 +211,8 @@ def run(args):
     runtime = provenance()['runtime']
     if (checkpoint['schema_version'] != 1 or checkpoint['mode'] != 'real-train'
             or not (1 <= checkpoint['next_epoch'] <= config['training']['epochs'])
-            or (not config.get('initialization') and checkpoint['next_epoch'] != 30)
+            or (not config.get('initialization') and
+                (checkpoint['next_epoch'] != 30 or config['training']['epochs'] != 30))
             or checkpoint['config'] != config or checkpoint['config_sha256'] != digest(config)
             or checkpoint['provenance']['runtime'] != runtime
             or checkpoint['dataset']['manifest_sha256'] != sha256(args.manifest)
