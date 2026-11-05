@@ -1,16 +1,264 @@
 [
-  {"title":"Phát hiện trạng thái\nđeo khẩu trang","subtitle":"Ứng dụng web với ảnh, video local và webcam","kind":"cover","seconds":20,"body":["Đồ án chuyên ngành Kỹ thuật phần mềm · Nhóm 1","GVHD: ThS. Vũ Thị Dương","Bản chuẩn bị bảo vệ · 04/11/2026"],"source":"docs/report/README.md; docs/regression-report.md","notes":"Giới thiệu tên đề tài, nhóm và giảng viên. Đây là phiên bản nội bộ có giới hạn chất lượng model và quyền dữ liệu, chưa phải nghiệm thu công khai. MSSV, khóa và đóng góp cần nhóm xác nhận trong báo cáo."},
-  {"title":"Bài toán và người sử dụng","kind":"text","seconds":35,"body":["Người dùng cần xem vị trí, nhãn và confidence của từng detection.","Ba trạng thái: có khẩu trang, không khẩu trang, đeo sai.","Không nhận diện danh tính hoặc đếm người duy nhất qua nhiều frame.","Kết quả phục vụ quan sát kỹ thuật trong phạm vi đồ án."],"source":"docs/report/requirements.md; docs/model-card.md; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Giải thích một ảnh có thể có nhiều đối tượng nên cần bbox thay vì nhãn chung cho cả ảnh. Confidence chưa được calibration thành xác suất đúng trong môi trường thực. Không dùng kết quả để xử phạt hoặc quyết định về con người. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."},
-  {"title":"Mục tiêu và tiêu chí kiểm chứng","kind":"text","seconds":35,"body":["Ba đầu vào dùng chung API nhận ảnh.","Video và webcam xử lý nối tiếp, bỏ kết quả cũ, cleanup khi dừng.","Tách kiểm thử phần mềm, chất lượng model và hiệu năng.","Budget nội bộ: warm p95 ≤ 1 giây, cold ready ≤ 30 giây, lỗi ≤ 1%."],"source":"docs/plan.md; docs/regression-report.md","notes":"Nêu các budget là mục tiêu demo ban đầu, áp dụng cho workload đã mô tả. Không coi CI xanh là chứng minh chất lượng detector. Lượt 02/11 vượt budget: webcam p95 1.391 ms (63 request), video smoke p95 1.267 ms (5 request)."},
-  {"title":"Kiến trúc local đã triển khai","kind":"architecture","seconds":45,"body":["Browser giữ nguồn media và gửi từng frame qua HTTP localhost.","FastAPI decode ảnh, kiểm readiness và gọi adapter.","Adapter nạp checkpoint theo checksum, trả bbox ảnh gốc và timing.","Không database hoặc lịch sử media. HTTPS công khai chưa kiểm chứng."],"source":"apps/web/lib/frame-sampler.ts; services/inference/app/main.py; services/inference/app/detector.py","notes":"Nguồn code P11 88687c9. Giải thích đường request và response. Browser gọi API trực tiếp theo URL lúc build. Sampler có nhịp 200 ms, busy lock và generation. Abort ở client không bảo đảm computation server bị hủy tức thời. Không mô tả HTTPS như môi trường đã chạy."},
-  {"title":"Dữ liệu curated và giới hạn nguồn","kind":"table","seconds":40,"headers":["Split","Ảnh","BBox"],"rows":[["Train","670","3.045"],["Validation","98","565"],["Test","75","360"],["Tổng curated","843","3.970"]],"body":["Quyền từng ảnh và scene independence chưa xác minh.","562 ảnh retained còn unresolved; chỉ cho phép thí nghiệm nội bộ."],"source":"docs/dataset-card.md; ml/reports/p2-curated-audit.json","notes":"Nguồn gốc có 853 ảnh. Curated sửa 12 bbox trong 11 XML và loại cả 10 ảnh duplicate conflict. Không thay byte ảnh retained. Audit kỹ thuật đạt không chứng minh quyền dùng. Không phát hành media hoặc weights; p3_ready=false vẫn giữ nguyên."},
-  {"title":"Baseline SSDLite trên CPU","kind":"text","seconds":40,"body":["SSDLite320 MobileNetV3 Large, học từ đầu, không pretrained weights.","Seed 42, batch 2, SGD và StepLR, giữ checkpoint epoch 30.","Inference CPU hai luồng, RGB float [0,1], bbox ảnh gốc.","Ngưỡng đánh giá 0,15; API dùng score floor 0,001."],"source":"ml/configs/internal-baseline.json; docs/model-card.md; https://arxiv.org/abs/1512.02325; https://arxiv.org/abs/1905.02244; https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html","notes":"Giải thích chọn kiến trúc gọn có sẵn để làm baseline CPU, chưa có thực nghiệm so sánh nhiều detector. Checkpoint epoch 30 không được gọi là best epoch. API kiểm checksum, metadata và tensor hữu hạn trước load. Tài liệu TorchVision stable hiện 0.29; thực nghiệm dùng 0.24.0. Không lấy metric pretrained từ tài liệu làm kết quả đồ án."},
-  {"title":"Luồng ảnh","kind":"image","asset":"image.png","seconds":35,"body":["Chọn ảnh, kiểm đầu vào, gửi multipart và render overlay.","Dưới 0,15: giữ nhãn/score, đánh dấu “Chưa chắc chắn”.","Ảnh này dùng media không khuôn mặt và response fixture."],"source":"docs/report/p12/capture-fixtures.mjs; apps/web/e2e/image-fixture.js; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Ảnh chụp P12 minh họa giao diện. Các bbox, nhãn và confidence trong ảnh là fixture, không phải đầu ra model thật. Khi đổi ảnh, response cũ không được ghi đè nguồn mới. Empty success và lỗi 503 có ý nghĩa khác nhau. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."},
-  {"title":"Video local và vòng đời frame","kind":"image","asset":"video.png","seconds":45,"body":["Chỉ gửi frame ảnh, không upload cả video.","Busy lock giữ đến khi tác vụ settle; không tạo backlog.","UI đếm riêng detection chưa chắc chắn trong frame hiện tại.","Hình minh họa dùng media synthetic và response fixture."],"source":"apps/web/app/components/VideoWorkspace.tsx; apps/web/lib/frame-sampler.ts; docs/regression-report.md; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Giải thích snapshot hiển thị riêng để không gắn bbox cũ vào video live. Stop tăng generation và abort request. Race cũ khiến UI khóa lỗi dù playback tiếp tục. Test fail trước sửa, pass sau sửa và run 3 kiểm chứng lại. Ảnh trên slide chỉ minh họa UI, tách khỏi benchmark model thật. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."},
-  {"title":"Webcam và cleanup","kind":"image","asset":"webcam.png","seconds":40,"body":["Chỉ mở sau thao tác Bắt đầu, không thu âm.","Dừng, đổi tab hoặc unmount phải stop tracks.","Fixture kiểm tra quyền, retry và response muộn.","Chưa nghiệm thu camera vật lý hoặc HTTPS công khai."],"source":"apps/web/app/components/WebcamWorkspace.tsx; docs/report/p12/capture-fixtures.mjs; https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Hình là webcam giả lập từ video không khuôn mặt, response fixture. Không có camera vật lý được mở trong P12. MDN xác định quyền và secure context là điều kiện API; chúng không chứng minh ứng dụng đã kiểm chứng hosted camera. Thống kê là detection/frame, không phải người duy nhất. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."},
-  {"title":"Chất lượng test còn thấp","kind":"quality","seconds":60,"body":["Test 75 ảnh, 360 bbox. Ngưỡng 0,15 chọn trên validation.","Macro F1 0,2061 · AP50 0,1792 · mAP50:95 0,0820.","Recall: không khẩu trang 2/49, đeo sai 1/12 bbox.","Chưa đủ tin cậy để cảnh báo hoặc quyết định về con người."],"source":"docs/model-card.md; P4 test/report.json; P4 validation/decision.json; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Biểu đồ là F1 theo lớp: with_mask 0.4494, without_mask 0.0635, mask_worn_incorrectly 0.1053. PR/F1 dùng matching cùng lớp IoU 0.5, AP nội suy 101 điểm. Evaluator nội bộ không phải official COCO evaluator. Minority support nhỏ; chưa có khoảng tin cậy hoặc domain-shift test. Metrics P4 là lịch sử; thay đổi UI không đánh giá lại model. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."},
-  {"title":"Kiểm chứng phần mềm P11","kind":"table","seconds":40,"headers":["Suite","Kết quả","Phạm vi"],"rows":[["Frontend","81 tests","UI, client, sampler"],["Backend","24 tests","Contract và loader"],["ML","37 tests","Data và evaluator"],["Benchmark unit","3 tests","Phép đo và readiness"],["Browser fixture","4 tests","Chromium desktop/mobile"]],"body":["5 CI jobs P11 đạt tại snapshot 20/10/2026.","Fixture và CI không thay camera thật hoặc review độc lập."],"source":"docs/regression-report.md; https://github.com/anhpd-glinteco/face-mask-detection/pull/39","notes":"Các số là kết quả P11, không phải P12 chạy lại toàn bộ. Backend dùng weights synthetic. CI Compose không weights, còn P11 native smoke kiểm 503/CORS. Docker local P11 bị thiếu engine pipe. Tránh cộng số test thành bằng chứng chất lượng model."},
-  {"title":"Hiệu năng local P11 sau fix","kind":"table","seconds":50,"headers":["Phép đo","Mẫu","Kết quả"],"rows":[["Cold readiness p95","5/5","3.567,03 ms"],["Warm HTTP p95","100/100","36,89 ms"],["Video hiển thị","296 / 60,31 s","4,91 FPS"],["Webcam hiển thị","301 / 60,37 s","4,99 FPS"]],"body":["i5-13500H, CPU 2 luồng, checkpoint thật, media synthetic.","Nhịp sampler 200 ms; FPS này không phải trần tốc độ detector."],"source":"docs/regression-report.md; P11 real-model-run-3/api-summary.json; P11 real-model-run-3/browser-summary.json","notes":"Warm error rate 0%, không unexpected request failure/UI alert/page error; một video stop abort tách riêng. Webcam có 302 response nhưng 301 display samples. API/web sampled working set 356.83/102.09 MiB, JS heap 7.96 MiB; heap không phải tổng browser memory. Cold là process-cold, không xóa OS cache. Không suy diễn thành workload người thật hoặc host công khai."},
-  {"title":"Giới hạn và điều kiện nghiệm thu","kind":"text","seconds":35,"body":["Quyền dữ liệu và scene independence còn thiếu.","Hai lớp ít mẫu còn yếu; nhãn “Chưa chắc chắn” không thay calibration.","Webcam thật 60,39 giây. Kiểm tra đèn và ngắt thiết bị còn thiếu.","Deployment gate CLOSED. Không phát hành media hoặc weights."],"source":"docs/dataset-card.md; docs/model-card.md; docs/handoffs/2026-10-20-p11-internal-regression.md; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Nhắc lại latency tốt không khắc phục recall thấp. Các issue còn thiếu DoD tiếp tục mở. Tiếp theo ưu tiên dữ liệu có quyền rõ, cải thiện baseline theo quy trình validation/test rồi kiểm chứng môi trường đích. Không deploy chỉ để có URL trình diễn. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."},
-  {"title":"Demo và kết luận","kind":"text","seconds":80,"body":["Ảnh: chọn nguồn, xem snapshot và giải thích loại response.","Video: phát, pause/seek, quan sát kết quả rồi dừng.","Webcam: cấp quyền, bắt đầu, dừng và kiểm tra đèn camera.","Đã có hệ thống và evidence nội bộ. Cần cải thiện model, dữ liệu và nghiệm thu."],"source":"docs/report/p12/bao-cao.md, Phụ lục B; docs/regression-report.md; https://github.com/anhpd-glinteco/face-mask-detection/pull/49 (a341b6b, 21/10/2026)","notes":"Dành khoảng một phút cho thao tác hoặc trình bày ảnh fallback. Nêu rõ nếu đang dùng fixture. Không giả lập kết quả model thành công khi API 503. Demo model thật chỉ trong phạm vi nội bộ được cho phép, giữ giới hạn chất lượng. Dùng PR #49 tại a341b6b trên localhost. Chuyển sang demo ảnh nếu video hoặc webcam gián đoạn. Video ghi hình còn chờ nhóm. Kết luận với phần đạt/chưa đạt, mời câu hỏi. Tổng thời lượng gợi ý của 14 slide là 600 giây. Confidence < 0,15 giữ nhãn/score, đánh dấu “Chưa chắc chắn” và đếm riêng; đúng 0,15 đạt ngưỡng. Đây là trình bày UI, không phải lớp thứ tư; API floor 0,001 và schema giữ nguyên. Confidence chưa calibration."}
+  {
+    "title": "Phát hiện trạng thái\nđeo khẩu trang",
+    "subtitle": "Ứng dụng web với ảnh, video local và webcam",
+    "kind": "cover",
+    "seconds": 20,
+    "body": [
+      "Đồ án chuyên ngành Kỹ thuật phần mềm · Nhóm 1",
+      "GVHD: ThS. Vũ Thị Dương",
+      "Bản tổng hợp kết quả local ngày 05/11/2026"
+    ],
+    "source": "Báo cáo đồ án nhóm 1, bản tổng hợp kết quả local ngày 05/11/2026.",
+    "notes": "Giới thiệu đề tài và nhóm theo thông tin trên bìa báo cáo. Phân công được trình bày theo kế hoạch nhóm; khóa đào tạo cần được xác nhận."
+  },
+  {
+    "title": "Bài toán và người sử dụng",
+    "kind": "text",
+    "seconds": 35,
+    "body": [
+      "Người dùng cần xem vị trí, nhãn và confidence của từng detection.",
+      "Ba trạng thái: có khẩu trang, không khẩu trang, đeo sai.",
+      "Không nhận diện danh tính hoặc đếm người duy nhất qua nhiều frame.",
+      "Kết quả phục vụ quan sát kỹ thuật trong phạm vi đồ án."
+    ],
+    "source": "Yêu cầu đồ án và báo cáo chương 1. https://github.com/anhpd-glinteco/face-mask-detection/tree/84758d8/docs/report",
+    "notes": "Giải thích một ảnh có thể có nhiều đối tượng nên cần bbox thay vì nhãn chung cho cả ảnh. Confidence chưa được calibration thành xác suất đúng trong môi trường thực. Không dùng kết quả để xử phạt hoặc quyết định về con người. "
+  },
+  {
+    "title": "Mục tiêu và tiêu chí kiểm chứng",
+    "kind": "text",
+    "seconds": 35,
+    "body": [
+      "Ảnh, video và webcam dùng chung API phân tích ảnh.",
+      "Kết quả gắn với frame đã xử lý và timestamp.",
+      "Giữ frame cuối sau Dừng hoặc pause để xem lại.",
+      "Ngưỡng hiển thị 0,15; threshold đánh giá 0,25."
+    ],
+    "source": "Báo cáo chương 4 và 5. https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
+    "notes": "Nêu các budget là mục tiêu demo ban đầu, áp dụng cho workload đã mô tả. Không coi CI xanh là chứng minh chất lượng detector. Lượt 02/11 vượt budget: webcam p95 1.391 ms (63 request), video smoke p95 1.267 ms (5 request)."
+  },
+  {
+    "title": "Kiến trúc local đã triển khai",
+    "kind": "architecture",
+    "seconds": 45,
+    "body": [
+      "Browser giữ nguồn media và gửi từng frame qua HTTP localhost.",
+      "FastAPI decode ảnh, kiểm readiness và gọi adapter.",
+      "Adapter nạp checkpoint theo checksum, trả bbox ảnh gốc và timing.",
+      "Không database hoặc lịch sử media. HTTPS công khai chưa kiểm chứng."
+    ],
+    "source": "Kiến trúc và HTTP sampling ADR. https://github.com/anhpd-glinteco/face-mask-detection/tree/84758d8/docs/adr",
+    "notes": "Nguồn code P11 88687c9. Giải thích đường request và response. Browser gọi API trực tiếp theo URL lúc build. Sampler có nhịp 200 ms, busy lock và generation. Abort ở client không bảo đảm computation server bị hủy tức thời. Không mô tả HTTPS như môi trường đã chạy."
+  },
+  {
+    "title": "Dữ liệu curated và giới hạn nguồn",
+    "kind": "table",
+    "seconds": 40,
+    "headers": [
+      "Split",
+      "Ảnh",
+      "BBox"
+    ],
+    "rows": [
+      [
+        "Train",
+        "670",
+        "3.045"
+      ],
+      [
+        "Validation",
+        "98",
+        "565"
+      ],
+      [
+        "Test",
+        "75",
+        "360"
+      ],
+      [
+        "Tổng curated",
+        "843",
+        "3.970"
+      ]
+    ],
+    "body": [
+      "843 ảnh curated, split train/validation/test 670/98/75.",
+      "Quyền từng ảnh và scene independence còn thiếu."
+    ],
+    "source": "Nguồn dữ liệu https://www.kaggle.com/datasets/andrewmvd/face-mask-detection ; báo cáo mục dữ liệu và split.",
+    "notes": "Baseline P4 khởi tạo ngẫu nhiên được giữ làm mốc. Bản bổ sung dùng pretrained COCO, chạy đủ 30 epoch với SGD lr 0,001 và seed 42. Kiểm tra khởi tạo xác nhận 428 tensor được nạp và 48 tensor classification mới. Giữ nguyên split; quyền ảnh và scene independence vẫn còn thiếu."
+  },
+  {
+    "title": "Fine-tune SSDLite từ COCO",
+    "kind": "text",
+    "seconds": 40,
+    "body": [
+      "Giữ kiến trúc SSDLite320 MobileNetV3 Large.",
+      "Nạp backbone và hồi quy từ COCO_V1.",
+      "Đầu phân loại mới cho ba lớp và background.",
+      "30 epoch, chọn epoch 10 trên validation."
+    ],
+    "source": "TorchVision 0.24 SSDLite API https://docs.pytorch.org/vision/0.24/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html ; thí nghiệm https://github.com/anhpd-glinteco/face-mask-detection/pull/54",
+    "notes": "Baseline P4 khởi tạo từ đầu được giữ làm mốc. Thí nghiệm bổ sung dùng pretrained COCO_V1 chính thức của TorchVision 0.24.0. Kiểm tra khởi tạo xác nhận 428 tensor được nạp và 48 tensor phân loại mới. Dùng CPU hai luồng, batch 2, seed 42, SGD lr 0,001 và giảm lr tại epoch 20. Chọn bằng validation mAP50:95, sau đó chọn threshold 0,25 trước lượt test của thí nghiệm."
+  },
+  {
+    "title": "Luồng ảnh",
+    "kind": "image",
+    "asset": "image.png",
+    "seconds": 35,
+    "body": [
+      "Click vùng chọn ảnh hoặc nút Chọn ảnh.",
+      "Mặc định hiện detection đạt mốc 0,15.",
+      "Nhóm chưa chắc chắn có thể mở để đối chiếu."
+    ],
+    "source": "Giao diện và test https://github.com/anhpd-glinteco/face-mask-detection/pull/55 ; ảnh minh họa dữ liệu kiểm thử có kiểm soát.",
+    "notes": "Ảnh minh họa giao diện dùng media tổng hợp không khuôn mặt và phản hồi kiểm thử có kiểm soát. Kết quả trong hình không dùng để đo chất lượng model. Mặc định chỉ hiện detection đạt ngưỡng 0,15; nhóm dự đoán yếu có thể mở để xem. Số đếm thuộc một frame. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
+  },
+  {
+    "title": "Video local và vòng đời frame",
+    "kind": "image",
+    "asset": "video.png",
+    "seconds": 45,
+    "body": [
+      "Đọc video local và gửi từng frame JPEG.",
+      "Pause giữ frame cuối và timestamp.",
+      "Tua hoặc đổi nguồn xóa kết quả cũ."
+    ],
+    "source": "HTTP frame sampling và giao diện https://github.com/anhpd-glinteco/face-mask-detection/pull/55 ; ảnh minh họa dữ liệu kiểm thử có kiểm soát.",
+    "notes": "Ảnh minh họa giao diện dùng media tổng hợp không khuôn mặt và phản hồi kiểm thử có kiểm soát. Kết quả trong hình không dùng để đo chất lượng model. Mặc định chỉ hiện detection đạt ngưỡng 0,15; nhóm dự đoán yếu có thể mở để xem. Số đếm thuộc một frame. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
+  },
+  {
+    "title": "Webcam và cleanup",
+    "kind": "image",
+    "asset": "webcam.png",
+    "seconds": 40,
+    "body": [
+      "Chỉ mở sau Bắt đầu và cấp quyền, không thu âm.",
+      "Dừng tắt camera, giữ frame cuối để xem.",
+      "Camera laptop thật có lượt kiểm tra riêng hơn 60 giây."
+    ],
+    "source": "MDN getUserMedia https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia ; kiểm chứng local https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
+    "notes": "Ảnh minh họa giao diện dùng media tổng hợp không khuôn mặt và phản hồi kiểm thử có kiểm soát. Kết quả trong hình không dùng để đo chất lượng model. Mặc định chỉ hiện detection đạt ngưỡng 0,15; nhóm dự đoán yếu có thể mở để xem. Số đếm thuộc một frame. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
+  },
+  {
+    "title": "Chất lượng cải thiện và hạn chế",
+    "kind": "quality",
+    "seconds": 60,
+    "body": [
+      "Fine-tune test macro F1 0,3240; P4 đạt 0,2061.",
+      "mAP50:95 tăng từ 0,0820 lên 0,1333.",
+      "Đeo sai chỉ phát hiện đúng 1/12 bbox test.",
+      "Mục tiêu chất lượng 0,80 chưa đạt."
+    ],
+    "source": "Báo cáo mục 5.5 và thí nghiệm https://github.com/anhpd-glinteco/face-mask-detection/pull/54",
+    "notes": "Biểu đồ F1 test theo lớp là 0,5684; 0,2609; 0,1429 tại threshold 0,25, IoU 0,5. Validation chọn checkpoint epoch 10 và threshold trước lượt test của thí nghiệm. Test đã từng dùng ở P4, nên đây là so sánh trên tập đã sử dụng. Evaluator nội bộ có giới hạn; confidence của một detection không đồng nghĩa độ chính xác hệ thống."
+  },
+  {
+    "title": "Kiểm chứng phần mềm local",
+    "kind": "table",
+    "seconds": 40,
+    "headers": [
+      "Suite",
+      "Kết quả",
+      "Phạm vi"
+    ],
+    "rows": [
+      [
+        "Frontend",
+        "87 tests",
+        "UI, client, sampler"
+      ],
+      [
+        "Backend fine-tune",
+        "25 tests",
+        "API và loader"
+      ],
+      [
+        "ML fine-tune",
+        "39 tests",
+        "Train và đánh giá"
+      ],
+      [
+        "Browser",
+        "8 tests",
+        "Desktop và mobile"
+      ],
+      [
+        "CI bản UI",
+        "5 jobs đạt",
+        "Build và hồi quy"
+      ]
+    ],
+    "body": [
+      "File chooser thật qua click, Enter và Space.",
+      "100 detection thô, mặc định 2 box khi chỉ 2 đạt ngưỡng."
+    ],
+    "source": "Kiểm thử thí nghiệm https://github.com/anhpd-glinteco/face-mask-detection/pull/54 ; kiểm thử giao diện https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
+    "notes": "87 unit tests và 8 browser tests thuộc bản giao diện ngày 05/11. Backend 25 và ML 39 thuộc thí nghiệm fine-tune cùng ngày. P11 giữ bảng lịch sử trong báo cáo. Kiểm thử phần mềm tách khỏi đánh giá chất lượng nhận diện và quan sát camera vật lý."
+  },
+  {
+    "title": "Hiệu năng local ngày 05/11",
+    "kind": "table",
+    "seconds": 50,
+    "headers": [
+      "Phép đo",
+      "Mẫu",
+      "Kết quả"
+    ],
+    "rows": [
+      [
+        "Video thử nghiệm",
+        "Trên 60 giây",
+        "HTTP p95 175,68 ms"
+      ],
+      [
+        "Webcam laptop",
+        "Trên 60 giây",
+        "HTTP p95 204,48 ms"
+      ],
+      [
+        "Video request",
+        "299 thành công",
+        "Gồm thao tác điều khiển"
+      ],
+      [
+        "Webcam request",
+        "220 thành công",
+        "Gồm bật lại"
+      ]
+    ],
+    "body": [
+      "CPU i5-13500H, hai luồng, checkpoint fine-tune.",
+      "Nguồn camera 30 FPS; FPS xử lý là số đo khác."
+    ],
+    "source": "Báo cáo mục 5.10, lượt đo local 05/11/2026. https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
+    "notes": "Đây là lượt local sau sửa giao diện. So sánh tải và thời điểm đo trước khi diễn giải với P11. Webcam thật USB2.0 HD UVC WebCam 640×480; track cleanup đạt và người vận hành xác nhận đèn tắt. Các request chủ động hủy được ghi riêng. Không lưu media khuôn mặt."
+  },
+  {
+    "title": "Giới hạn và điều kiện nghiệm thu",
+    "kind": "text",
+    "seconds": 35,
+    "body": [
+      "Quyền dữ liệu và scene independence còn thiếu.",
+      "Recall hai lớp ít mẫu vẫn thấp.",
+      "Cần kiểm tra thêm ánh sáng và khoảng cách.",
+      "Điều kiện triển khai công khai chưa đạt."
+    ],
+    "source": "Báo cáo mục hạn chế, Dataset Card và Model Card. https://github.com/anhpd-glinteco/face-mask-detection/pull/54",
+    "notes": "Phạm vi đã kiểm chứng là local. Chưa có kết quả trên máy mới, ma trận điều kiện camera hoặc nghiệm thu đầy đủ trình duyệt nhúng. Model có thể tự tin nhưng dự đoán sai. Nhóm cần xác nhận thông tin còn thiếu và tự ghi video demo hoàn chỉnh."
+  },
+  {
+    "title": "Demo và kết luận",
+    "kind": "text",
+    "seconds": 80,
+    "body": [
+      "Ảnh chọn file và xem nhóm dự đoán rõ ràng.",
+      "Video pause và giữ frame cuối.",
+      "Webcam cấp quyền, Dừng và kiểm tra đèn.",
+      "Trình bày kết quả đạt và hạn chế còn lại."
+    ],
+    "source": "File hướng dẫn chương trình và báo cáo kết luận. Mã nguồn https://github.com/anhpd-glinteco/face-mask-detection/tree/84758d86d9fc7046abf17708e551242e33f1e723",
+    "notes": "Chạy demo local đúng commit và checkpoint đã ghi trong file chương trình. Khi API chưa sẵn sàng, kiểm tra readiness thay vì diễn giải thành không có mặt. Dùng luồng ảnh làm phương án dự phòng khi camera hoặc video gián đoạn. Video demo hoàn chỉnh cần nhóm tự ghi. Tổng thời lượng gợi ý là 600 giây."
+  }
 ]
