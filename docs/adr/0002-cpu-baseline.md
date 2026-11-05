@@ -1,5 +1,23 @@
 # ADR 0002 — SSDLite320 MobileNetV3 cho baseline CPU
 
+## Thí nghiệm transfer learning — 05/11/2026
+
+Config `ml/configs/pretrained-internal.json` dùng weights SSDLite COCO_V1 chính thức
+của TorchVision 0.24.0. Nạp backbone và regression head, khởi tạo lại toàn bộ
+classification head cho bốn lớp. Trainer kiểm tra SHA-256 và toàn bộ tensor keys.
+Nguồn, checksum và điều kiện sử dụng được lưu trong config và checkpoint.
+Weights COCO chịu điều kiện dữ liệu nguồn tại https://cocodataset.org/#termsofuse.
+Phạm vi hiện tại là thí nghiệm nội bộ, quyền phân phối weights chưa được xác nhận.
+
+`model.weights=None` mô tả bước dựng kiến trúc bốn lớp. Trước batch train đầu,
+trainer nạp file COCO được chỉ định trong `initialization` và kiểm tra tensor.
+Receipt thực tế xác nhận 428 tensor được nạp và 48 tensor classification mới.
+Inference dựng cùng kiến trúc rồi nạp checkpoint fine-tune hoàn chỉnh từ đĩa.
+
+Giữ split và baseline cũ. SGD lr 0,001, CPU hai luồng, 30 epoch, chọn checkpoint
+bằng validation mAP50:95 từng epoch. Test P4 đã được xem trước đây, kết quả mới
+chỉ là phép so sánh trên tập đã sử dụng. Quyết định scratch bên dưới là lịch sử.
+
 Ngày: 17/10/2026. Kiến trúc/config đã chọn; **chưa được phép bắt đầu P3**.
 Issues: #7, phụ thuộc #2/#3 và contract hiện có.
 

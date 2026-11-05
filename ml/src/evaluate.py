@@ -192,7 +192,7 @@ def write_summary(output, report):
     ranked = sorted(report['errors']['images'], key=lambda r: -sum(r[k] for k in ('missed', 'wrong_class', 'localization', 'extra')))
     lines += ['| ' + row['image'] + ' | ' + ' | '.join(str(row[k]) for k in ('missed', 'wrong_class', 'localization', 'extra')) + ' |'
               for row in ranked[:10]]
-    lines += ['', 'Full per-image error counts and numeric metrics: report.json.', '', '## Limitations', ''] + LIMITATIONS
+    lines += ['', 'Full per-image error counts and numeric metrics: report.json.', '', '## Limitations', ''] + report['limitations']
     (output / 'summary.md').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     bars = []
     for i, (label, row) in enumerate(report['operating']['per_class'].items()):
@@ -210,7 +210,9 @@ def run(args):
     checkpoint = torch.load(args.checkpoint, map_location='cpu', weights_only=True)
     runtime = provenance()['runtime']
     if (checkpoint['schema_version'] != 1 or checkpoint['mode'] != 'real-train'
-            or checkpoint['next_epoch'] != 30 or config['training']['epochs'] != 30
+            or not (1 <= checkpoint['next_epoch'] <= config['training']['epochs'])
+            or (not config.get('initialization') and
+                (checkpoint['next_epoch'] != 30 or config['training']['epochs'] != 30))
             or checkpoint['config'] != config or checkpoint['config_sha256'] != digest(config)
             or checkpoint['provenance']['runtime'] != runtime
             or checkpoint['dataset']['manifest_sha256'] != sha256(args.manifest)
@@ -261,6 +263,10 @@ def run(args):
               'config': config, 'training_provenance': checkpoint['provenance'],
               'evaluation_provenance': provenance(),
               'validation_decision_sha256': args.decision_sha256 if decision else None}
+    if config.get('initialization'):
+        report['limitations'] = [line for line in LIMITATIONS if not line.startswith('fixed final epoch')]
+        report['limitations'].append('Test split was previously evaluated for P4; comparison is not a new holdout.')
+        report['selected_epoch'] = checkpoint['next_epoch']
     output.mkdir(parents=True, exist_ok=True)
     save_json(output / 'predictions.json', samples)
     report['predictions_sha256'] = sha256(output / 'predictions.json')

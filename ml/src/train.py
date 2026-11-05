@@ -39,6 +39,11 @@ def validate_config(config):
             or model["weights"] is not None or model["weights_backbone"] is not None
             or model["num_classes"] != 4 or model["input_size"] != [320, 320]):
         raise ValueError("only the scratch SSDLite baseline and existing class map are supported")
+    if "initialization" in config:
+        init = config["initialization"]
+        if (init["weights"] != "SSDLite320_MobileNet_V3_Large_Weights.COCO_V1"
+                or len(init["sha256"]) != 64):
+            raise ValueError("unsupported pretrained initialization")
     if (training["device"] != "cpu" or training["batch_size"] != 2
             or training["num_workers"] != 0 or training["optimizer"] != "SGD"
             or training["scheduler"]["name"] != "StepLR"):
@@ -231,6 +236,41 @@ def provenance():
                         "torch_threads": torch.get_num_threads()}}
 
 
+def load_pretrained(model, initialization):
+    payload = Path(initialization["path"]).read_bytes()
+    if hashlib.sha256(payload).hexdigest() != initialization["sha256"]:
+        raise ValueError("pretrained checksum mismatch")
+    import io
+    source = torch.load(io.BytesIO(payload), map_location="cpu", weights_only=True)
+    target = model.state_dict()
+    excluded = {key for key in target if key.startswith("head.classification_head.")}
+    retained = {key: value for key, value in source.items() if not key.startswith("head.classification_head.")}
+    if set(retained) != set(target) - excluded:
+        raise ValueError("pretrained tensor keys mismatch")
+    if any(not torch.isfinite(value).all() for value in source.values()):
+        raise ValueError("non-finite pretrained tensor")
+    missing, unexpected = model.load_state_dict(retained, strict=False)
+    expected_missing = {key for key in excluded if not key.endswith('.num_batches_tracked')}
+    if set(missing) != expected_missing or unexpected:
+        raise ValueError("pretrained classification exclusion mismatch")
+    if any(not torch.equal(model.state_dict()[key], value) for key, value in retained.items()):
+        raise ValueError("pretrained parameters were not loaded")
+    return {"loaded_tensors": len(retained), "excluded_tensors": sorted(excluded), **initialization}
+
+
+def validation_map(model, data):
+    from evaluate import clean_prediction, prepare, average_precision
+    samples = []
+    model.eval()
+    with torch.inference_mode():
+        for images, targets in data.batches("validation"):
+            for image, target, prediction in zip(images, targets, model(images)):
+                clean, _ = clean_prediction(prediction, image.shape[-1], image.shape[-2])
+                samples.append({"truth": {key: value.tolist() for key, value in target.items()},
+                                "prediction": clean})
+    return average_precision(prepare(samples))["map50_95"]
+
+
 def run(config, output, resume=None, model_factory=ssdlite320_mobilenet_v3_large, data=None, real_smoke=False):
     validate_config(config)
     mode = ("real-smoke" if real_smoke else "real-train") if data else "synthetic-smoke"
@@ -272,6 +312,10 @@ def run(config, output, resume=None, model_factory=ssdlite320_mobilenet_v3_large
     np.random.seed(config["seed"])
     torch.manual_seed(config["seed"])
     model = model_factory(weights=None, weights_backbone=None, num_classes=4).cpu()
+    initialization = checkpoint.get("initialization") if checkpoint else None
+    if not checkpoint and config.get("initialization"):
+        initialization = load_pretrained(model, config["initialization"])
+    best_map = checkpoint.get("best_map", -1.0) if checkpoint else -1.0
     training = config["training"]
     optimizer = torch.optim.SGD(model.parameters(), lr=training["learning_rate"],
                                 momentum=training["momentum"], weight_decay=training["weight_decay"])
@@ -291,15 +335,25 @@ def run(config, output, resume=None, model_factory=ssdlite320_mobilenet_v3_large
         validation_batches = data.batches("validation", 2 if real_smoke else None) if data else config["smoke"]["max_validation_batches"]
         losses = train_epoch(model, optimizer, train_batches)
         prediction_checks = check_predictions(model, validation_batches)
+        score = validation_map(model, data) if config.get("initialization") and data and not real_smoke else None
         scheduler.step()
         history.append({"epoch": epoch, "batch_losses": losses, "prediction_checks": prediction_checks,
                         "seconds": time.perf_counter() - started,
                         "next_learning_rate": scheduler.get_last_lr()})
+        if score is not None:
+            history[-1]["validation_map50_95"] = score
         checkpoint = {"schema_version": 1, "mode": mode, identity_key: identity,
                       "config": config, "config_sha256": digest(config), "provenance": metadata,
                       "next_epoch": epoch + 1, "model": model.state_dict(),
                       "optimizer": optimizer.state_dict(), "scheduler": scheduler.state_dict(),
                       "rng": rng_state(), "history": history}
+        if initialization:
+            checkpoint["initialization"] = initialization
+            checkpoint["validation_map50_95"] = score
+            checkpoint["best_map"] = max(best_map, score) if score is not None else best_map
+        if score is not None and score > best_map:
+            atomic_write(output / "best.pt", lambda handle: torch.save(checkpoint, handle))
+            best_map = score
         atomic_write(checkpoint_path, lambda handle: torch.save(checkpoint, handle))
         print(json.dumps({"mode": mode, "epoch": epoch + 1, "epochs": epochs,
                           "seconds": history[-1]["seconds"], "batches": len(losses)}), flush=True)
@@ -316,12 +370,17 @@ def run(config, output, resume=None, model_factory=ssdlite320_mobilenet_v3_large
                                   "no mAP/checkpoint selection/test evaluation; final epoch only",
                                   "checkpoint.pt is authoritative if report writing is interrupted"]
         report["split_counts"] = {k: len(v) for k, v in data.records.items()}
+        if config.get("initialization"):
+            report["limitations"][2] = "best epoch selected using validation mAP50:95; test not accessed during training"
+            report["initialization"] = initialization
+            report["best_map"] = best_map
     atomic_write(output / ("real-report.json" if data else "synthetic-report.json"), lambda handle: handle.write(
         (json.dumps(report, indent=2, allow_nan=False) + "\n").encode()))
     return report
 
 
 def main():
+    torch.set_num_threads(2)
     parser = argparse.ArgumentParser(description=__doc__)
     modes = parser.add_mutually_exclusive_group(required=True)
     modes.add_argument("--synthetic-smoke", action="store_true")
