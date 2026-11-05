@@ -25,7 +25,7 @@ The dependency junction requires the local Webpack build. CI retains its configu
 
 ## Limits and publication
 
-The specific Start-button failure in the Codex embedded browser remains unverified. Standalone Chromium fixtures and physical-camera checks do not establish that embedded-browser issue is resolved. Physical unplug and new human LED observation are NOT_RUN unless separately confirmed by the user. Earlier LED confirmation belongs to the preceding experiment.
+The specific Start-button failure in the Codex embedded browser remains unverified. Standalone Chromium fixtures and physical-camera checks do not establish that embedded-browser issue is resolved. Physical unplug remains NOT_RUN. The user confirmed in this chat after the new rehearsal that the camera LED turned off. The raw automation receipt retains its combined unplug/LED NOT_RUN item; this human observation is recorded separately.
 
 This change filters presentation. It does not provide identity tracking or improve model accuracy. Model/data deployment gate remains CLOSED. Broader regression/device issues remain open.
 
