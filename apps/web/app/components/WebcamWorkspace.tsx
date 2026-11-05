@@ -22,6 +22,7 @@ export function WebcamWorkspace() {
   const generationRef = useRef(0);
   const snapshotUrlRef = useRef<string | null>(null);
   const samplerRef = useRef<ReturnType<typeof createFrameSampler<FrameSnapshot>> | null>(null);
+  const [showUncertain, setShowUncertain] = useState(false);
   const [phase, setPhase] = useState<"idle" | "opening" | "running">("idle");
   const [error, setError] = useState<string | null>(null);
   const [statistics, setStatistics] = useState(EMPTY_FRAME_STATISTICS);
@@ -34,14 +35,18 @@ export function WebcamWorkspace() {
     streamRef.current = null;
     stream?.getTracks().forEach((track) => { track.onended = null; track.stop(); });
     if (videoRef.current) videoRef.current.srcObject = null;
+  }, []);
+
+  function clearSnapshot() {
     if (snapshotUrlRef.current) URL.revokeObjectURL(snapshotUrlRef.current);
     snapshotUrlRef.current = null;
-  }, []);
+    setSnapshot(null);
+    setShowUncertain(false);
+  }
 
   function stop() {
     release();
     setPhase("idle");
-    setSnapshot(null);
   }
 
   useEffect(() => {
@@ -60,19 +65,21 @@ export function WebcamWorkspace() {
       onError(caught) {
         release();
         setPhase("idle");
-        setSnapshot(null);
+        clearSnapshot();
         setError(messageForError(caught));
       },
     });
     samplerRef.current = sampler;
     return () => {
       release();
+      if (snapshotUrlRef.current) URL.revokeObjectURL(snapshotUrlRef.current);
       samplerRef.current = null;
     };
   }, [release]);
 
   async function start() {
     stop();
+    clearSnapshot();
     setError(null);
     setStatistics(EMPTY_FRAME_STATISTICS);
     if (!window.isSecureContext) {
@@ -96,6 +103,7 @@ export function WebcamWorkspace() {
       stream.getVideoTracks().forEach((track) => {
         track.onended = () => {
           stop();
+          clearSnapshot();
           setError("Camera đã ngắt kết nối. Hãy kết nối lại rồi bấm Bắt đầu.");
         };
       });
@@ -108,6 +116,7 @@ export function WebcamWorkspace() {
     } catch (caught) {
       if (generation !== generationRef.current) return;
       stop();
+      clearSnapshot();
       setError(cameraError(caught));
     }
   }
@@ -123,17 +132,17 @@ export function WebcamWorkspace() {
       <video ref={videoRef} muted playsInline aria-label="Camera trực tiếp" onPlaying={() => {
         if (streamRef.current) samplerRef.current?.start();
       }} onError={() => {
-        stop();
+        stop(); clearSnapshot();
         setError("Không thể đọc hình ảnh camera. Hãy bấm Bắt đầu để thử lại.");
       }} />
     </div>
     <FrameStatistics statistics={statistics} />
     {snapshot && <section aria-label="Frame đã phân tích">
-      <h3>Frame đã phân tích · {snapshot.timestamp.toFixed(2)} giây</h3>
-      <ImagePreview key={snapshot.url} file={snapshot.file} previewUrl={snapshot.url} result={snapshot.result}
+      <h3>{phase === "idle" ? "Đã dừng — kết quả frame cuối" : "Frame đã phân tích"} · {snapshot.timestamp.toFixed(2)} giây</h3>
+      <ImagePreview showUncertain={showUncertain} key={snapshot.url} file={snapshot.file} previewUrl={snapshot.url} result={snapshot.result}
         replaceLabel="Dừng camera" isLoading={false} onReplace={stop} onDimensions={() => undefined}
-        onError={() => { stop(); setError("Không thể đọc snapshot. Hãy bấm Bắt đầu để thử lại."); }} />
-      <DetectionResult phase="success" result={snapshot.result} />
+        onError={() => { stop(); clearSnapshot(); setError("Không thể đọc snapshot. Hãy bấm Bắt đầu để thử lại."); }} />
+      <DetectionResult showUncertain={showUncertain} onShowUncertain={setShowUncertain} phase="success" result={snapshot.result} />
       <p className="helper-text">Số lượng chỉ thuộc frame này, không phải tổng người trước camera.</p>
     </section>}
   </section>;

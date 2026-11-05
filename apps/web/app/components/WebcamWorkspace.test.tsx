@@ -47,8 +47,8 @@ describe("webcam", () => {
     fireEvent.click(screen.getByRole("button", { name: "Dừng" }));
     expect(track.stop).toHaveBeenCalledTimes(1);
     expect(video.srcObject).toBeNull();
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:webcam-frame.jpg");
-    expect(screen.queryByRole("region", { name: "Frame đã phân tích" })).not.toBeInTheDocument();
+    expect(URL.revokeObjectURL).not.toHaveBeenCalledWith("blob:webcam-frame.jpg");
+    expect(screen.getByRole("region", { name: "Frame đã phân tích" })).toHaveTextContent("Đã dừng — kết quả frame cuối");
     expect(vi.getTimerCount()).toBe(0);
   });
 

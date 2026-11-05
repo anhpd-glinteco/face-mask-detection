@@ -42,8 +42,11 @@ test('video and webcam sampling, errors, stale results and cleanup', async ({ pa
   });
   const camera=()=>page.getByRole('region',{name:'Phân tích webcam',exact:true});
   async function snapshot() {
+    if (!await page.getByRole('button', {name: 'Xem dự đoán chưa chắc chắn (1)'}).getAttribute('aria-expanded').then(v=>v==='true')) {
+      await page.getByRole('button', {name: 'Xem dự đoán chưa chắc chắn (1)'}).click();
+    }
     await expect(page.locator('.detection-uncertain')).toContainText('Chưa chắc chắn');
-    await expect(page.getByLabel('Thống kê detection')).toHaveText('Tổng: 2 · Đạt ngưỡng: 1 · Chưa chắc chắn: 1');
+    await expect(page.getByLabel('Thống kê detection')).toHaveText('1 phát hiện đạt ngưỡng trong frame · 1 chưa chắc chắn');
     await page.getByRole('region',{name:'Frame đã phân tích',exact:true}).waitFor();
     await page.waitForFunction(()=>{
       const image=[...document.querySelectorAll('.video-workspace img')].find(e=>e.getBoundingClientRect().width>0);
@@ -82,6 +85,7 @@ test('video and webcam sampling, errors, stale results and cleanup', async ({ pa
       await page.screenshot({path:testInfo.outputPath('webcam.png'),fullPage:true});
       await camera().getByRole('button',{name:'Dừng',exact:true}).click();
       await tracksEnded();
+      await expect(camera().getByRole('region',{name:'Frame đã phân tích'})).toContainText('Đã dừng — kết quả frame cuối');
       const frozen=await camera().getByRole('region',{name:'Thống kê lấy mẫu'}).innerText();
       const count=requests; await page.waitForTimeout(450);
       assert(requests===count,'requests after stop');
@@ -132,7 +136,7 @@ test('video and webcam sampling, errors, stale results and cleanup', async ({ pa
     await fulfill(videoPending.route,videoPending.body).catch(()=>{});
     await page.waitForTimeout(250);
     assert(requests===videoCount,'request after video pause');
-    assert(await page.getByRole('region',{name:'Frame đã phân tích',exact:true}).count()===0,'stale video snapshot');
+    await expect(page.getByRole('region',{name:'Frame đã phân tích',exact:true})).toContainText('Đã dừng — kết quả frame cuối');
     results.push({name:'video-backpressure-pause-stale',status:'PASS'});
     scenario='success';
     await page.getByRole('button',{name:'Webcam',exact:true}).click();

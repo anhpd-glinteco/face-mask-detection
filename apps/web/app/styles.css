@@ -151,3 +151,7 @@ h2 { margin-bottom: 8px; font-size: 16px; line-height: 24px; }
 .status-uncertain { background: #6150a3; }
 .detection-list .detection-uncertain { border: 1px dashed #6150a3; }
 .uncertainty-badge { display: block; color: #6150a3; font-weight: 600; }
+
+.empty-stage { width: 100%; min-height: inherit; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.upload-title { display: block; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.upload-help { display: block; color: var(--secondary); font-size: 13px; }

@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useRef, useState } from "react";
 import type { DetectionResponse } from "@/lib/inference";
-import { presentDetection } from "@/lib/detection-labels";
+import { presentDetection, visibleDetections } from "@/lib/detection-labels";
 
 interface ImagePreviewProps {
   file: File;
   previewUrl: string;
   isLoading: boolean;
+  showUncertain?: boolean;
   onReplace: () => void;
   replaceLabel?: string;
   result: DetectionResponse | null;
@@ -18,7 +19,7 @@ function formatBytes(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export function ImagePreview({ file, previewUrl, isLoading, onReplace, replaceLabel = "Thay ảnh", result, onDimensions, onError }: ImagePreviewProps) {
+export function ImagePreview({ file, previewUrl, isLoading, onReplace, replaceLabel = "Thay ảnh", result, onDimensions, onError, showUncertain = false }: ImagePreviewProps) {
   const [dimensions, setDimensions] = useState<string | null>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -48,7 +49,7 @@ export function ImagePreview({ file, previewUrl, isLoading, onReplace, replaceLa
         without_mask: tokens.getPropertyValue("--danger"),
         mask_worn_incorrectly: tokens.getPropertyValue("--warning"),
       };
-      result.detections.forEach((detection, index) => {
+      visibleDetections(result.detections, showUncertain).forEach((detection, index) => {
         const { x1, y1, x2, y2 } = detection.bbox;
         const presentation = presentDetection(detection);
         const color = presentation.uncertain ? "#6150a3" : colors[detection.label].trim();
@@ -79,7 +80,7 @@ export function ImagePreview({ file, previewUrl, isLoading, onReplace, replaceLa
       observer.disconnect();
       window.removeEventListener("resize", draw);
     };
-  }, [result]);
+  }, [result, showUncertain]);
   return (
     <div className="preview-frame">
       <div className="preview-toolbar">

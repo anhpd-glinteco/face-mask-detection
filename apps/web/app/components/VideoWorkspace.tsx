@@ -12,6 +12,7 @@ export function VideoWorkspace({ active }: { active: boolean }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const sourceRef = useRef<string | null>(null);
   const snapshotUrlRef = useRef<string | null>(null);
+  const [showUncertain, setShowUncertain] = useState(false);
   const [statistics, setStatistics] = useState(EMPTY_FRAME_STATISTICS);
   const [source, setSource] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -27,6 +28,7 @@ export function VideoWorkspace({ active }: { active: boolean }) {
     setPreviousActive(active);
     setSource(null);
     setSnapshot(null);
+    setShowUncertain(false);
     setReady(false);
     setRunning(false);
     setError(null);
@@ -69,9 +71,15 @@ export function VideoWorkspace({ active }: { active: boolean }) {
   }, []);
 
   function clearSnapshot() {
+    setShowUncertain(false);
     if (snapshotUrlRef.current) URL.revokeObjectURL(snapshotUrlRef.current);
     snapshotUrlRef.current = null;
     setSnapshot(null);
+  }
+
+  function pause() {
+    samplerRef.current?.stop();
+    setRunning(false);
   }
 
   function invalidate() {
@@ -132,7 +140,7 @@ export function VideoWorkspace({ active }: { active: boolean }) {
         {/* The local media has no authored caption track; analysis remains available as text below. */}
         <video key={source} ref={videoRef} src={source} controls playsInline preload="metadata" aria-label="Video đã chọn"
           onLoadedData={() => setReady(true)} onPlaying={start} onSeeked={start}
-          onPause={invalidate} onSeeking={invalidate} onEnded={invalidate}
+          onPause={pause} onSeeking={invalidate} onEnded={pause}
           onError={() => {
             invalidate();
             blockedRef.current = true;
@@ -153,15 +161,15 @@ export function VideoWorkspace({ active }: { active: boolean }) {
       <FrameStatistics statistics={statistics} />
       <p role="status">{running ? "Đang phân tích từng frame…" : "Phát video để phân tích frame."}</p>
       {snapshot && <section aria-label="Frame đã phân tích">
-        <h3>Frame đã phân tích · {snapshot.timestamp.toFixed(2)} giây</h3>
-        <ImagePreview key={snapshot.url} file={snapshot.file} previewUrl={snapshot.url} result={snapshot.result} replaceLabel="Thay video"
+        <h3>{running ? "Frame đã phân tích" : "Đã dừng — kết quả frame cuối"} · {snapshot.timestamp.toFixed(2)} giây</h3>
+        <ImagePreview showUncertain={showUncertain} key={snapshot.url} file={snapshot.file} previewUrl={snapshot.url} result={snapshot.result} replaceLabel="Thay video"
           isLoading={false} onReplace={() => document.getElementById("video-input")?.click()}
           onDimensions={() => undefined} onError={() => {
             invalidate();
             blockedRef.current = true;
             setError("Không thể đọc snapshot. Vui lòng thử lại.");
           }} />
-        <DetectionResult phase="success" result={snapshot.result} />
+        <DetectionResult showUncertain={showUncertain} onShowUncertain={setShowUncertain} phase="success" result={snapshot.result} />
         <p className="helper-text">Số lượng chỉ thuộc frame này, không phải tổng người trong video.</p>
       </section>}
     </section>
