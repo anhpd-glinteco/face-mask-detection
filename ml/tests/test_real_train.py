@@ -13,6 +13,25 @@ from test_train import train, TinyDetector
 
 
 class RealTrainerTests(unittest.TestCase):
+    def test_pretrained_best_epoch_and_offline_resume(self):
+        self.config['initialization'] = {
+            'weights': 'SSDLite320_MobileNet_V3_Large_Weights.COCO_V1',
+            'path': 'missing-offline.pt', 'sha256': 'a' * 64}
+        self.config['training']['epochs'] = 2
+        data = train.ManifestData(self.dataset, self.manifest, self.config)
+        output = self.root / 'pretrained'
+        with patch.object(train, 'load_pretrained', return_value=self.config['initialization']) as loader, \
+                patch.object(train, 'validation_map', side_effect=[0.2, 0.1]):
+            train.run(self.config, output, model_factory=TinyDetector, data=data)
+            loader.assert_called_once()
+        best = torch.load(output / 'best.pt', weights_only=True)
+        last = torch.load(output / 'checkpoint.pt', weights_only=True)
+        self.assertEqual(best['next_epoch'], 1)
+        self.assertEqual(last['next_epoch'], 2)
+        self.assertEqual(last['best_map'], 0.2)
+        with patch.object(train, 'load_pretrained', side_effect=AssertionError('offline resume opened weights')):
+            train.run(self.config, output, output / 'checkpoint.pt', model_factory=TinyDetector, data=data)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
