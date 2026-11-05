@@ -7,50 +7,50 @@
     {
       "file": "DACN_1_BaoCao_v1.docx",
       "version": "local-2026-11-05",
-      "bytes": 3767727,
-      "sha256": "5ac02ca0da5c32d6f977a76eab38aa2d43d1630618fc5eb1315eed1d285fe533"
+      "bytes": 3767986,
+      "sha256": "b15f748a4a6f41a9c18d3fa6835023148fcd7209b4e2f9738e8e33a51ffdb5be"
     },
     {
       "file": "DACN_1_BaoCao_v1.pdf",
       "version": "local-2026-11-05",
-      "bytes": 1099995,
-      "sha256": "bb1b2efcd6d6815f1fbb31cff8682a28cce096fd873d0b650555acaf66fd4e6b"
+      "bytes": 1101757,
+      "sha256": "fff7c0994bc0ba03ee775b4641981cef91998e72eb19b2f0fd48924c2f64221c"
     },
     {
       "file": "DACN_1_ThuyetTrinh.pptx",
       "version": "local-2026-11-05",
-      "bytes": 253860,
-      "sha256": "5247d2e04b23d7768eb80ee739b89fd1b4af5f7000d80ff8746e11b38dcd111e"
+      "bytes": 254247,
+      "sha256": "da6871ceee748565a3e246bd5ecdd66a8aee510de2d290b72698098732a4d4f1"
     },
     {
       "file": "DACN_1_ThuyetTrinh.pdf",
       "version": "local-2026-11-05",
-      "bytes": 373214,
-      "sha256": "dbf7d228bef7a3286626ec5ed67a0d5e510a26939dcc3f7c525441fe23418a38"
+      "bytes": 378651,
+      "sha256": "54b1c16173e5cd558d78ac7239b83aaf63d893033b153d510172937013b57e16"
     },
     {
       "file": "DACN_1_ChuongTrinh.docx",
       "version": "local-2026-11-05",
-      "bytes": 26666,
-      "sha256": "cd5dd44745111a48916e87db0ac6b8934ded51cf2eed3c34ff0f35dfa95906dd"
+      "bytes": 26781,
+      "sha256": "585b64f26674eace7703f6fa75faa29d71735ed86b77bace4f6c5549a4998d34"
     },
     {
       "file": "DACN_1_ChuongTrinh.pdf",
       "version": "local-2026-11-05",
-      "bytes": 266129,
-      "sha256": "326cb292d94256045544cd4e591de7ae64f736e92df54508407d7e01d708f429"
+      "bytes": 270122,
+      "sha256": "2942a9e608daa0863698fc05b6c7ff7b5460483879a9bd2b3b54c7cae7db1dd3"
     },
     {
       "file": "DACN_1_ChuongTrinh.txt",
       "version": "local-2026-11-05",
-      "bytes": 4512,
-      "sha256": "2f0408bc881215a4d1e12c46dfcd3251fe67152582b203b4ca147c1d4a81b1e5"
+      "bytes": 4720,
+      "sha256": "115aa6ce8d630cca153000bbf4681ce94ea29f00e57ea83d09576f27ac47260e"
     }
   ],
   "pdf_checks": {
     "DACN_1_BaoCao_v1.pdf": {
       "pages": 42,
-      "links": 96
+      "links": 95
     },
     "DACN_1_ThuyetTrinh.pdf": {
       "pages": 14,

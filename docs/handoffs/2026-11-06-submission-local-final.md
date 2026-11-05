@@ -5,7 +5,7 @@
 - Nhánh tài liệu `docs/submission-local-final`, từ `feat/pretrained-ssdlite` tại `90cad7ed65a8f518d5b463e3f7dba2071a88008d`; PR draft nhắm nhánh tiền nhiệm. Không thay đổi runtime, weights hoặc frontend.
 - Bộ xuất mới: `D:/Codex/outputs/face-mask-detection/submission-local-2026-11-05`. Ngày xuất thực tế 06/11/2026; giữ tên thư mục theo kế hoạch đã duyệt.
 - 7 tài liệu: báo cáo DOCX/PDF 42 trang, PPTX/PDF 14 slide, chương trình DOCX/PDF/TXT 2 trang; README, manifest và ZIP. Checksum từng file ở `docs/report/submission-local-manifest.json`.
-- ZIP SHA-256: `1d6a4cc4c6f5274ca7fd91cd07f89f6036990a47ff61f1e2b4437b52f223c44d`.
+- ZIP SHA-256 sau rà văn phong: `4eff6b840dd35a42291fc79498d9475cfc86ba49d1786adfbdd50d3fc8dd6032`.
 - Frontend được hướng dẫn: `84758d86d9fc7046abf17708e551242e33f1e723`; checkpoint `7f96ce3ad9dc4a312134a6e011310e79699bb042b5237f5517e5282ec5c8504e`, chuẩn bị riêng, không có trong ZIP/repository.
 
 ## Thay đổi nội dung
@@ -30,6 +30,14 @@ Hình UI được chụp lại trên frontend 84758d8 với response kiểm th�
 Hồ sơ kỹ thuật riêng: `D:/Codex/work/face-mask-detection/submission-local-2026-11-05`, gồm Word receipts, source metrics, PNG QA, slide validators, build logs, package-verification.json và ZIP roundtrip. Hướng dẫn tái tạo ở `docs/report/submission-local.md`.
 
 ## Còn mở
+
+### Rà văn phong theo yêu cầu bổ sung
+
+Đã dùng Humanizer rà toàn bộ nguồn báo cáo, nội dung/notes 14 slide và hướng dẫn chương trình. Sửa các đoạn dạng log, câu bị động hoặc lặp ý; diễn đạt rõ hơn lỗi lấy mẫu video, kết quả đo bộ nhớ và giới hạn chất lượng. Giữ thuật ngữ, tên công nghệ cần thiết, số liệu, lệnh chạy, mã nguồn định danh và nguồn tham khảo. Bản xuất vẫn 42 trang báo cáo, 14 slide, 2 trang hướng dẫn.
+
+Kiểm tra tự động xác nhận mọi token số, code block, inline code và URL trong báo cáo/hướng dẫn không đổi; bảng dữ liệu, thời lượng và nguồn tham khảo slide không đổi. Notes được đối chiếu đủ 14/14. Word verifier, slide package/layout và ZIP/content/metadata checks chạy lại đạt. Xem lại 29 trang báo cáo, 11 slide và 2 trang hướng dẫn có hình render thay đổi; các trang còn lại trùng hash PNG với bản đã xem. Hồ sơ riêng có `humanizer-verification.json` và bản trước chỉnh. Đây là biên tập văn phong, không phải bằng chứng về người viết hay phép kiểm tra máy phát hiện AI.
+
+Lượt xuất slide sau sửa văn phong ghi đủ output và receipts nhưng Node trả exit 1; package/layout đã kiểm tra độc lập và PDF render thành công. Giữ lỗi exporter như giới hạn công cụ, không đánh dấu exit đó là thành công. CI commit ghi kết quả `50168e0` trước lượt sửa văn phong đạt 5/5; CI của commit văn phong được lưu trong `final-state.json` sau push.
 
 Issue #26 cần nhóm duyệt bản cuối, xác nhận khóa đào tạo, BM124 và phân công thực tế. Issue #27 chưa có video demo hoàn chỉnh. Không đóng hai issue này. #24/#43/#44 tiếp tục giữ giới hạn trong các phiên bàn giao trước; phiên này không nghiệm thu thêm model/camera.
 

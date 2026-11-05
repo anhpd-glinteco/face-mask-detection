@@ -17,13 +17,13 @@
     "kind": "text",
     "seconds": 35,
     "body": [
-      "Người dùng cần xem vị trí, nhãn và confidence của từng detection.",
+      "Hiển thị vị trí, nhãn và độ tin cậy của từng phát hiện.",
       "Ba trạng thái: có khẩu trang, không khẩu trang, đeo sai.",
-      "Không nhận diện danh tính hoặc đếm người duy nhất qua nhiều frame.",
+      "Ứng dụng chưa nhận diện danh tính hoặc đếm người qua nhiều khung hình.",
       "Kết quả phục vụ quan sát kỹ thuật trong phạm vi đồ án."
     ],
     "source": "Yêu cầu đồ án và báo cáo chương 1. https://github.com/anhpd-glinteco/face-mask-detection/tree/84758d8/docs/report",
-    "notes": "Giải thích một ảnh có thể có nhiều đối tượng nên cần bbox thay vì nhãn chung cho cả ảnh. Confidence chưa được calibration thành xác suất đúng trong môi trường thực. Không dùng kết quả để xử phạt hoặc quyết định về con người. "
+    "notes": "Một ảnh có thể có nhiều đối tượng, vì vậy kết quả cần có bbox cho từng vùng thay vì một nhãn chung cho cả ảnh. Confidence chưa được hiệu chuẩn thành xác suất đúng trong môi trường thực. Phạm vi sử dụng không bao gồm xử phạt hoặc quyết định về con người."
   },
   {
     "title": "Mục tiêu và tiêu chí kiểm chứng",
@@ -31,25 +31,25 @@
     "seconds": 35,
     "body": [
       "Ảnh, video và webcam dùng chung API phân tích ảnh.",
-      "Kết quả gắn với frame đã xử lý và timestamp.",
-      "Giữ frame cuối sau Dừng hoặc pause để xem lại.",
-      "Ngưỡng hiển thị 0,15; threshold đánh giá 0,25."
+      "Kết quả gắn với khung hình đã xử lý và mốc thời gian.",
+      "Giữ khung hình cuối sau Dừng hoặc tạm dừng để xem lại.",
+      "Ngưỡng hiển thị 0,15; ngưỡng đánh giá 0,25."
     ],
     "source": "Báo cáo chương 4 và 5. https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
-    "notes": "Nêu các budget là mục tiêu demo ban đầu, áp dụng cho workload đã mô tả. Không coi CI xanh là chứng minh chất lượng detector. Lượt 02/11 vượt budget: webcam p95 1.391 ms (63 request), video smoke p95 1.267 ms (5 request)."
+    "notes": "Các ngưỡng hiệu năng là mục tiêu demo ban đầu, gắn với tải thử đã mô tả. CI kiểm tra hoạt động phần mềm; chất lượng detector được đánh giá riêng. Lượt 02/11 vượt mục tiêu: webcam p95 1.391 ms (63 request), video smoke p95 1.267 ms (5 request)."
   },
   {
     "title": "Kiến trúc local đã triển khai",
     "kind": "architecture",
     "seconds": 45,
     "body": [
-      "Browser giữ nguồn media và gửi từng frame qua HTTP localhost.",
-      "FastAPI decode ảnh, kiểm readiness và gọi adapter.",
-      "Adapter nạp checkpoint theo checksum, trả bbox ảnh gốc và timing.",
-      "Không database hoặc lịch sử media. HTTPS công khai chưa kiểm chứng."
+      "Trình duyệt giữ nguồn media, gửi từng khung hình qua HTTP localhost.",
+      "FastAPI giải mã ảnh, kiểm tra readiness và gọi adapter.",
+      "Adapter kiểm checksum, nạp checkpoint, trả bbox và thời gian xử lý.",
+      "Không có cơ sở dữ liệu hay lịch sử media. HTTPS công khai chưa kiểm chứng."
     ],
     "source": "Kiến trúc và HTTP sampling ADR. https://github.com/anhpd-glinteco/face-mask-detection/tree/84758d8/docs/adr",
-    "notes": "Nguồn code P11 88687c9. Giải thích đường request và response. Browser gọi API trực tiếp theo URL lúc build. Sampler có nhịp 200 ms, busy lock và generation. Abort ở client không bảo đảm computation server bị hủy tức thời. Không mô tả HTTPS như môi trường đã chạy."
+    "notes": "Mã nguồn P11 88687c9 mô tả đường đi của yêu cầu và phản hồi. Trình duyệt gọi API trực tiếp theo URL lúc build. Bộ lấy mẫu có nhịp 200 ms, dùng busy lock và generation để tránh chồng tác vụ và nhận kết quả cũ. Hủy yêu cầu ở client không bảo đảm phép tính trên server dừng ngay. HTTPS chưa có lượt chạy được kiểm chứng."
   },
   {
     "title": "Dữ liệu curated và giới hạn nguồn",
@@ -84,7 +84,7 @@
     ],
     "body": [
       "843 ảnh curated, split train/validation/test 670/98/75.",
-      "Quyền từng ảnh và scene independence còn thiếu."
+      "Chưa xác minh đủ quyền từng ảnh và tính độc lập giữa các cảnh."
     ],
     "source": "Nguồn dữ liệu https://www.kaggle.com/datasets/andrewmvd/face-mask-detection ; báo cáo mục dữ liệu và split.",
     "notes": "Baseline P4 khởi tạo ngẫu nhiên được giữ làm mốc. Bản bổ sung dùng pretrained COCO, chạy đủ 30 epoch với SGD lr 0,001 và seed 42. Kiểm tra khởi tạo xác nhận 428 tensor được nạp và 48 tensor classification mới. Giữ nguyên split; quyền ảnh và scene independence vẫn còn thiếu."
@@ -108,38 +108,38 @@
     "asset": "image.png",
     "seconds": 35,
     "body": [
-      "Click vùng chọn ảnh hoặc nút Chọn ảnh.",
-      "Mặc định hiện detection đạt mốc 0,15.",
-      "Nhóm chưa chắc chắn có thể mở để đối chiếu."
+      "Bấm vùng chọn ảnh hoặc nút Chọn ảnh.",
+      "Mặc định hiển thị các phát hiện đạt ngưỡng 0,15.",
+      "Mở nhóm chưa chắc chắn để xem dự đoán yếu."
     ],
     "source": "Giao diện và test https://github.com/anhpd-glinteco/face-mask-detection/pull/55 ; ảnh minh họa dữ liệu kiểm thử có kiểm soát.",
-    "notes": "Ảnh minh họa giao diện dùng media tổng hợp không khuôn mặt và phản hồi kiểm thử có kiểm soát. Kết quả trong hình không dùng để đo chất lượng model. Mặc định chỉ hiện detection đạt ngưỡng 0,15; nhóm dự đoán yếu có thể mở để xem. Số đếm thuộc một frame. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
+    "notes": "Ảnh minh họa dùng media tổng hợp không có khuôn mặt và phản hồi kiểm thử có kiểm soát, không đo chất lượng model. Mặc định chỉ hiện các phát hiện đạt ngưỡng 0,15. Khi cần đối chiếu, mở nhóm dự đoán yếu; số đếm thuộc một frame. Timestamp cho biết thời điểm đã phân tích. Thao tác Dừng hoặc pause giữ kết quả cuối."
   },
   {
-    "title": "Video local và vòng đời frame",
+    "title": "Video local và xử lý khung hình",
     "kind": "image",
     "asset": "video.png",
     "seconds": 45,
     "body": [
-      "Đọc video local và gửi từng frame JPEG.",
-      "Pause giữ frame cuối và timestamp.",
+      "Đọc video local, gửi từng khung hình JPEG.",
+      "Tạm dừng giữ khung hình cuối và mốc thời gian.",
       "Tua hoặc đổi nguồn xóa kết quả cũ."
     ],
     "source": "HTTP frame sampling và giao diện https://github.com/anhpd-glinteco/face-mask-detection/pull/55 ; ảnh minh họa dữ liệu kiểm thử có kiểm soát.",
-    "notes": "Ảnh minh họa giao diện dùng media tổng hợp không khuôn mặt và phản hồi kiểm thử có kiểm soát. Kết quả trong hình không dùng để đo chất lượng model. Mặc định chỉ hiện detection đạt ngưỡng 0,15; nhóm dự đoán yếu có thể mở để xem. Số đếm thuộc một frame. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
+    "notes": "Với video, giải thích cách lấy mẫu và hiển thị kết quả của một frame đã phân tích. Ảnh minh họa dùng media tổng hợp không có khuôn mặt và phản hồi kiểm thử có kiểm soát, không đo chất lượng model. Các phát hiện đạt 0,15 hiện mặc định, dự đoán yếu nằm trong nhóm có thể mở. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
   },
   {
-    "title": "Webcam và cleanup",
+    "title": "Webcam và thao tác Dừng",
     "kind": "image",
     "asset": "webcam.png",
     "seconds": 40,
     "body": [
-      "Chỉ mở sau Bắt đầu và cấp quyền, không thu âm.",
-      "Dừng tắt camera, giữ frame cuối để xem.",
+      "Camera chỉ mở sau Bắt đầu và cấp quyền; không thu âm.",
+      "Dừng tắt camera và giữ khung hình cuối để xem.",
       "Camera laptop thật có lượt kiểm tra riêng hơn 60 giây."
     ],
     "source": "MDN getUserMedia https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia ; kiểm chứng local https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
-    "notes": "Ảnh minh họa giao diện dùng media tổng hợp không khuôn mặt và phản hồi kiểm thử có kiểm soát. Kết quả trong hình không dùng để đo chất lượng model. Mặc định chỉ hiện detection đạt ngưỡng 0,15; nhóm dự đoán yếu có thể mở để xem. Số đếm thuộc một frame. Timestamp chỉ thời điểm đã phân tích; Dừng hoặc pause giữ kết quả cuối."
+    "notes": "Ảnh webcam trong slide chỉ minh họa giao diện bằng media tổng hợp không có khuôn mặt và phản hồi kiểm thử có kiểm soát, không đánh giá chất lượng model. Số đếm thuộc một frame, timestamp chỉ thời điểm đã phân tích. Ngưỡng mặc định là 0,15; có thể mở nhóm dự đoán yếu để xem thêm. Dừng hoặc pause giữ kết quả cuối."
   },
   {
     "title": "Chất lượng cải thiện và hạn chế",
@@ -191,8 +191,8 @@
       ]
     ],
     "body": [
-      "File chooser thật qua click, Enter và Space.",
-      "100 detection thô, mặc định 2 box khi chỉ 2 đạt ngưỡng."
+      "Mở hộp chọn tệp bằng click, Enter và Space.",
+      "Với 100 dự đoán, chỉ hiện 2 bbox khi có 2 đạt ngưỡng."
     ],
     "source": "Kiểm thử thí nghiệm https://github.com/anhpd-glinteco/face-mask-detection/pull/54 ; kiểm thử giao diện https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
     "notes": "87 unit tests và 8 browser tests thuộc bản giao diện ngày 05/11. Backend 25 và ML 39 thuộc thí nghiệm fine-tune cùng ngày. P11 giữ bảng lịch sử trong báo cáo. Kiểm thử phần mềm tách khỏi đánh giá chất lượng nhận diện và quan sát camera vật lý."
@@ -230,17 +230,17 @@
     ],
     "body": [
       "CPU i5-13500H, hai luồng, checkpoint fine-tune.",
-      "Nguồn camera 30 FPS; FPS xử lý là số đo khác."
+      "Camera cấp nguồn 30 FPS; tốc độ xử lý được đo riêng."
     ],
     "source": "Báo cáo mục 5.10, lượt đo local 05/11/2026. https://github.com/anhpd-glinteco/face-mask-detection/pull/55",
-    "notes": "Đây là lượt local sau sửa giao diện. So sánh tải và thời điểm đo trước khi diễn giải với P11. Webcam thật USB2.0 HD UVC WebCam 640×480; track cleanup đạt và người vận hành xác nhận đèn tắt. Các request chủ động hủy được ghi riêng. Không lưu media khuôn mặt."
+    "notes": "Đây là lượt đo local sau khi sửa giao diện. Tải thử và thời điểm đo khác P11 nên cần xem cùng điều kiện chạy. Webcam thật USB2.0 HD UVC WebCam 640×480 đã đạt kiểm tra giải phóng track; người vận hành xác nhận đèn tắt. Các request chủ động hủy được ghi riêng. Không lưu media khuôn mặt."
   },
   {
     "title": "Giới hạn và điều kiện nghiệm thu",
     "kind": "text",
     "seconds": 35,
     "body": [
-      "Quyền dữ liệu và scene independence còn thiếu.",
+      "Chưa xác minh đủ quyền dữ liệu và tính độc lập giữa các cảnh.",
       "Recall hai lớp ít mẫu vẫn thấp.",
       "Cần kiểm tra thêm ánh sáng và khoảng cách.",
       "Điều kiện triển khai công khai chưa đạt."
@@ -253,9 +253,9 @@
     "kind": "text",
     "seconds": 80,
     "body": [
-      "Ảnh chọn file và xem nhóm dự đoán rõ ràng.",
-      "Video pause và giữ frame cuối.",
-      "Webcam cấp quyền, Dừng và kiểm tra đèn.",
+      "Chọn ảnh, xem kết quả và nhóm chưa chắc chắn.",
+      "Tạm dừng video để đọc kết quả khung hình cuối.",
+      "Cấp quyền webcam, bấm Dừng rồi kiểm tra đèn.",
       "Trình bày kết quả đạt và hạn chế còn lại."
     ],
     "source": "File hướng dẫn chương trình và báo cáo kết luận. Mã nguồn https://github.com/anhpd-glinteco/face-mask-detection/tree/84758d86d9fc7046abf17708e551242e33f1e723",
