@@ -41,6 +41,21 @@ def test_real_loader_and_inference(checkpoint):
         assert all(value >= 0 for value in result["timing_ms"].values())
 
 
+def test_pretrained_provenance_does_not_require_initial_weights(checkpoint, tmp_path):
+    _, _, original = checkpoint
+    data = copy.deepcopy(original)
+    data['config']['initialization'] = {
+        'weights': 'SSDLite320_MobileNet_V3_Large_Weights.COCO_V1',
+        'path': str(tmp_path / 'absent-coco-weights.pth'), 'sha256': 'a' * 64}
+    data['config_sha256'] = hashlib.sha256(
+        json.dumps(data['config'], sort_keys=True).encode()).hexdigest()
+    path = tmp_path / 'finetuned-fixture.pt'
+    torch.save(data, path)
+    checksum = hashlib.sha256(path.read_bytes()).hexdigest()
+    detector = Detector(str(path), checksum)
+    assert detector.metadata['version'] == checksum
+
+
 @pytest.mark.parametrize("fault", ["checksum", "missing", "corrupt", "class_map", "architecture", "state", "nan", "config_digest"])
 def test_load_failures_are_unready(checkpoint, tmp_path, monkeypatch, fault):
     path, checksum, original = checkpoint

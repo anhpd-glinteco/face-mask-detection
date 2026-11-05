@@ -1,5 +1,50 @@
 # Model Card
 
+## Thí nghiệm COCO fine-tune — 05/11/2026
+
+Đã chạy đủ 30 epoch trên CPU hai luồng với config
+`ml/configs/pretrained-internal.json`, SGD lr 0,001 và seed 42. Khởi tạo từ weights
+SSDLite COCO_V1 chính thức của TorchVision 0.24.0, nạp 428 tensor backbone/regression
+và giữ 48 tensor classification mới. Dataset và split 670/98/75 giữ nguyên.
+Checkpoint tốt nhất theo validation mAP50:95 là **epoch 10**.
+
+Checkpoint: `D:/Codex/outputs/face-mask-detection/pretrained-2026-11-05/train/best.pt`.
+SHA-256: `7f96ce3ad9dc4a312134a6e011310e79699bb042b5237f5517e5282ec5c8504e`.
+Baseline P4 vẫn nguyên checksum. Tổng thời gian ghi trong history là 12.813,99 giây,
+bao gồm khoảng thời gian Windows ngủ; median epoch là 399,69 giây.
+
+Threshold **0,25** được chọn trên validation rồi khóa trước lượt test duy nhất
+của thí nghiệm này. Test P4 đã được xem trước đây, kết quả dưới đây là phép so sánh
+trên tập đã sử dụng. Evaluator nội bộ giữ phương pháp P4, score floor 0,001 và cap
+100 detection mỗi ảnh.
+
+| Split / model | Macro F1 | AP50 | mAP50:95 |
+| --- | ---: | ---: | ---: |
+| Validation / P4 lịch sử | 0,1771 | 0,1153 | 0,0495 |
+| Validation / COCO fine-tune | 0,3351 | 0,3047 | 0,1460 |
+| Test / P4 lịch sử | 0,2061 | 0,1792 | 0,0820 |
+| Test / COCO fine-tune | 0,3240 | 0,2684 | 0,1333 |
+
+Mục tiêu validation macro F1 ≥0,80 và precision/recall từng lớp ≥0,80 **FAIL**.
+
+| Lớp trên validation | Số bbox | Precision | Recall | F1 |
+| --- | ---: | ---: | ---: | ---: |
+| with_mask | 479 | 0,6098 | 0,4405 | 0,5115 |
+| without_mask | 72 | 0,6129 | 0,2639 | 0,3689 |
+| mask_worn_incorrectly | 14 | 0,5000 | 0,0714 | 0,1250 |
+
+Lớp đeo sai bỏ sót 13/14 bbox validation và 11/12 bbox test ở threshold đã khóa.
+Error analysis test ghi 185 missed, 4 wrong-class, 57 localization và 61 extra;
+các loại lỗi có quy tắc đếm riêng trong report. Quyền dữ liệu và scene independence
+chưa xác minh, deployment gate **CLOSED**, #44 tiếp tục mở.
+
+Candidate được kiểm tra riêng qua API cổng 8220 và frontend PR #49 tại `a341b6b`
+cổng 3111. UI dùng ngưỡng trình bày uncertainty 0,15, metrics dùng threshold 0,25.
+Candidate giữ vai trò thí nghiệm, bản P4 tiếp tục là mốc demo cũ.
+Artifacts, quyết định threshold và predictions ở
+`D:/Codex/outputs/face-mask-detection/pretrained-2026-11-05/{validation,test}`.
+Xem [handoff](handoffs/2026-11-05-pretrained-ssdlite.md) cho kiểm chứng runtime.
+
 Status, 20/10/2026: **baseline nội bộ đã train/đánh giá; API có adapter SSDLite thật,
 không còn fallback stub**. Thiếu/sai weights thì health 200, ready/detect 503;
 P10 đã chạy checkpoint P4 qua browser→API local, P11 kiểm chứng lại riêng.

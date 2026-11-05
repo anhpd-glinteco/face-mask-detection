@@ -20,17 +20,30 @@ class RealTrainerTests(unittest.TestCase):
         self.config['training']['epochs'] = 2
         data = train.ManifestData(self.dataset, self.manifest, self.config)
         output = self.root / 'pretrained'
+        original_epoch = train.train_epoch
+        calls = 0
+
+        def interrupted_epoch(*args):
+            nonlocal calls
+            calls += 1
+            if calls == 2:
+                raise RuntimeError('simulated interruption')
+            return original_epoch(*args)
+
         with patch.object(train, 'load_pretrained', return_value=self.config['initialization']) as loader, \
-                patch.object(train, 'validation_map', side_effect=[0.2, 0.1]):
-            train.run(self.config, output, model_factory=TinyDetector, data=data)
+                patch.object(train, 'validation_map', return_value=0.2), \
+                patch.object(train, 'train_epoch', side_effect=interrupted_epoch):
+            with self.assertRaisesRegex(RuntimeError, 'interruption'):
+                train.run(self.config, output, model_factory=TinyDetector, data=data)
             loader.assert_called_once()
+        with patch.object(train, 'load_pretrained', side_effect=AssertionError('offline resume opened weights')), \
+                patch.object(train, 'validation_map', return_value=0.1):
+            train.run(self.config, output, output / 'checkpoint.pt', model_factory=TinyDetector, data=data)
         best = torch.load(output / 'best.pt', weights_only=True)
         last = torch.load(output / 'checkpoint.pt', weights_only=True)
         self.assertEqual(best['next_epoch'], 1)
         self.assertEqual(last['next_epoch'], 2)
         self.assertEqual(last['best_map'], 0.2)
-        with patch.object(train, 'load_pretrained', side_effect=AssertionError('offline resume opened weights')):
-            train.run(self.config, output, output / 'checkpoint.pt', model_factory=TinyDetector, data=data)
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
