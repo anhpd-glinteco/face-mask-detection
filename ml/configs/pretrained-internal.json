@@ -1,0 +1,69 @@
+{
+  "experiment": "ssdlite320-coco-finetune",
+  "status": "internal-experiment; rights and scene independence unverified",
+  "seed": 42,
+  "runtime": {
+    "python": "3.12",
+    "torch": "2.9.0",
+    "torchvision": "0.24.0"
+  },
+  "model": {
+    "builder": "torchvision.models.detection.ssdlite320_mobilenet_v3_large",
+    "weights": null,
+    "weights_backbone": null,
+    "num_classes": 4,
+    "input_size": [
+      320,
+      320
+    ]
+  },
+  "class_map": {
+    "0": "__background__",
+    "1": "with_mask",
+    "2": "without_mask",
+    "3": "mask_worn_incorrectly"
+  },
+  "training": {
+    "device": "cpu",
+    "batch_size": 2,
+    "num_workers": 0,
+    "epochs": 30,
+    "optimizer": "SGD",
+    "learning_rate": 0.001,
+    "momentum": 0.9,
+    "weight_decay": 0.0005,
+    "scheduler": {
+      "name": "StepLR",
+      "step_size": 20,
+      "gamma": 0.1
+    }
+  },
+  "smoke": {
+    "epochs": 1,
+    "max_train_batches": 5,
+    "max_validation_batches": 2
+  },
+  "evaluation": {
+    "select_checkpoint_on": "validation map50:95 each epoch; ties retain earlier epoch",
+    "test_after_selection_only": true
+  },
+  "data": {
+    "dataset": "andrewmvd/face-mask-detection",
+    "version": 1,
+    "manifest": "manifest.json",
+    "require_technical_checks_passed": true,
+    "require_manual_data_approval": true,
+    "usage": "internal-experiment",
+    "manifest_sha256": "a2236fd6bd445de1aa9ea9e52547b01bf2a8ab7e25ba87008e59795c3130a3b3",
+    "approval_scope": "user-authorized internal experiment; not verified image rights or deploy approval"
+  },
+  "initialization": {
+    "usage": "internal experiment; COCO source terms apply; no redistribution approval",
+    "terms": "https://cocodataset.org/#termsofuse",
+    "torchvision": "0.24.0",
+    "weights": "SSDLite320_MobileNet_V3_Large_Weights.COCO_V1",
+    "path": "D:/Codex/downloads/face-mask-detection/pretrained/ssdlite320_mobilenet_v3_large_coco-a79551df.pth",
+    "sha256": "a79551df90c79834bcd3bb3845ef9d966b5449a3a9b2833ae8404778ca5d65d2",
+    "url": "https://download.pytorch.org/models/ssdlite320_mobilenet_v3_large_coco-a79551df.pth"
+  }
+}
