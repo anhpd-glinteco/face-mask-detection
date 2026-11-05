@@ -37,4 +37,7 @@ Camera unplug NOT_RUN; ma trận ba trạng thái theo ánh sáng/khoảng cách
 
 ## Trạng thái từ xa
 
-PR draft, CI và trạng thái working tree được cập nhật sau push. Không dùng kết quả CI lịch sử để thay cho CI của nhánh tài liệu.
+- [Draft PR #56](https://github.com/anhpd-glinteco/face-mask-detection/pull/56), base `feat/pretrained-ssdlite`, đã push nguồn tại `b5e8ab96856cb11c062e2bb28cc100652a0a7e8d`.
+- [CI run 42074760137](https://github.com/anhpd-glinteco/face-mask-detection/actions/runs/42074760137): **5/5 SUCCESS** trên commit nguồn trên (web, inference, ML, E2E, Compose). Commit tiếp theo chỉ ghi kết quả bàn giao; kiểm tra CI HEAD cuối ở tab Checks của PR và `final-state.json` trong hồ sơ kỹ thuật riêng.
+- Issue [#26](https://github.com/anhpd-glinteco/face-mask-detection/issues/26#issuecomment-6664670746) và [#27](https://github.com/anhpd-glinteco/face-mask-detection/issues/27#issuecomment-6664671602) đã cập nhật minh chứng và giữ OPEN.
+- Remote SHA khớp local; working tree repository chính và worktree frontend sạch trước commit ghi kết quả này. Không merge/deploy. GitHub integration đọc được nhưng từ chối tạo PR/comment (403); đã dùng GitHub CLI được đăng nhập để hoàn tất trong cùng phạm vi được phép.
