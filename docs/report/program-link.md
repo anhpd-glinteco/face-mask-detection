@@ -1,6 +1,6 @@
 # Chương trình đồ án nhóm 1
 
-Đề tài xây dựng ứng dụng web phát hiện trạng thái đeo khẩu trang.
+Đề tài xây dựng ứng dụng web phát hiện trạng thái đeo khẩu trang. Nhóm 1, khóa K18, lớp học phần 20261IT6150003.
 
 Repository https://github.com/anhpd-glinteco/face-mask-detection
 

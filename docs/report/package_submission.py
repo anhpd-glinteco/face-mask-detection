@@ -12,7 +12,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from pypdf import PdfReader, PdfWriter
 
 FORBIDDEN = re.compile(r'codex|chatgpt|openai|\b[A-Za-z]:[/\\]|file:///', re.I)
-VERSION = 'local-2026-11-05'
+VERSION = 'local-final-2026-11-07'
 FILES = ['DACN_1_BaoCao_v1.docx', 'DACN_1_BaoCao_v1.pdf',
          'DACN_1_ThuyetTrinh.pptx', 'DACN_1_ThuyetTrinh.pdf',
          'DACN_1_ChuongTrinh.docx', 'DACN_1_ChuongTrinh.pdf', 'DACN_1_ChuongTrinh.txt']
@@ -124,13 +124,13 @@ else:
             assert not FORBIDDEN.search(path.read_text(encoding='utf-8'))
     records = [{'file': name, 'version': VERSION, 'bytes': (output / name).stat().st_size,
                 'sha256': sha(output / name)} for name in FILES]
-    manifest = {'version': VERSION, 'results_date': '2026-11-05', 'export_date': '2026-11-06',
+    manifest = {'version': VERSION, 'results_date': '2026-11-05', 'export_date': '2026-11-07',
                 'frontend_commit': '84758d86d9fc7046abf17708e551242e33f1e723',
                 'files': records, 'pdf_checks': receipts}
     (output / 'manifest-delivery.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
-    checklist = '# Bộ nộp đồ án nhóm 1\n\nPhiên bản ' + VERSION + '. Xuất ngày 06/11/2026, tổng hợp kết quả đến 05/11/2026.\n\n'
+    checklist = '# Bộ nộp đồ án nhóm 1\n\nPhiên bản ' + VERSION + '. Xuất ngày 07/11/2026, tổng hợp kết quả đến 05/11/2026.\n\n'
     checklist += 'Báo cáo 42 trang; slide 14 trang; hướng dẫn chương trình 2 trang. Các bản PDF là bản xem cố định. DOCX/PPTX dùng để chỉnh sửa.\n\n'
-    checklist += 'Checkpoint được nhóm chuẩn bị riêng theo checksum trong hướng dẫn, không nằm trong ZIP. Thông tin khóa đào tạo, yêu cầu BM124 và video demo cần nhóm bổ sung; nhóm cần duyệt nội dung trước khi nộp. Quyền dữ liệu và điều kiện triển khai công khai chưa đạt.\n\n'
+    checklist += 'Checkpoint được nhóm chuẩn bị riêng theo checksum trong hướng dẫn, không nằm trong ZIP. Nhóm 1, khóa K18, lớp học phần 20261IT6150003; phân công đã cập nhật theo xác nhận và GitHub. BM124 là tài liệu riêng tên DACN-1-BM124, cần mẫu gốc để điền. Video demo chưa hoàn tất. Quyền dữ liệu và điều kiện triển khai công khai chưa đạt.\n\n'
     checklist += '## Danh sách và SHA-256\n\n' + '\n'.join(f"- `{r['file']}` · {VERSION} · `{r['sha256']}`" for r in records)
     checklist += '\n\nManifest liệt kê checksum của bảy tài liệu. README và manifest không tự băm chính chúng. ZIP chỉ chứa bộ nộp; hồ sơ kiểm chứng kỹ thuật lưu riêng.\n'
     (output / 'README-GIAO-NHAN.md').write_text(checklist, encoding='utf-8')

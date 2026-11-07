@@ -1,50 +1,50 @@
 {
-  "version": "local-2026-11-05",
+  "version": "local-final-2026-11-07",
   "results_date": "2026-11-05",
-  "export_date": "2026-11-06",
+  "export_date": "2026-11-07",
   "frontend_commit": "84758d86d9fc7046abf17708e551242e33f1e723",
   "files": [
     {
       "file": "DACN_1_BaoCao_v1.docx",
-      "version": "local-2026-11-05",
-      "bytes": 3767986,
-      "sha256": "b15f748a4a6f41a9c18d3fa6835023148fcd7209b4e2f9738e8e33a51ffdb5be"
+      "version": "local-final-2026-11-07",
+      "bytes": 3768042,
+      "sha256": "22d9879b6273af1b1c701a7605a5982a03dbdcb0c612f5dfc73febb545d3a1ed"
     },
     {
       "file": "DACN_1_BaoCao_v1.pdf",
-      "version": "local-2026-11-05",
-      "bytes": 1101757,
-      "sha256": "fff7c0994bc0ba03ee775b4641981cef91998e72eb19b2f0fd48924c2f64221c"
+      "version": "local-final-2026-11-07",
+      "bytes": 1101919,
+      "sha256": "5e4af90399d97d76121f881829d990b76fa055bb7bd998f82bf5d006582b5fe7"
     },
     {
       "file": "DACN_1_ThuyetTrinh.pptx",
-      "version": "local-2026-11-05",
-      "bytes": 254247,
-      "sha256": "da6871ceee748565a3e246bd5ecdd66a8aee510de2d290b72698098732a4d4f1"
+      "version": "local-final-2026-11-07",
+      "bytes": 254316,
+      "sha256": "a2b84dff4b6ada233aafe78a77a1e0fe88d70ba1e349d9ad21de4771f4fc4bcc"
     },
     {
       "file": "DACN_1_ThuyetTrinh.pdf",
-      "version": "local-2026-11-05",
-      "bytes": 378651,
-      "sha256": "54b1c16173e5cd558d78ac7239b83aaf63d893033b153d510172937013b57e16"
+      "version": "local-final-2026-11-07",
+      "bytes": 379260,
+      "sha256": "1551ae86c82720c7e41a7ab0007c397154d869bafd3f5efc8575eeecff4b6e54"
     },
     {
       "file": "DACN_1_ChuongTrinh.docx",
-      "version": "local-2026-11-05",
-      "bytes": 26781,
-      "sha256": "585b64f26674eace7703f6fa75faa29d71735ed86b77bace4f6c5549a4998d34"
+      "version": "local-final-2026-11-07",
+      "bytes": 26842,
+      "sha256": "6dd8907948c2effa779edff0935ae4ec90e5ec38c8beb19ad1046c16176be126"
     },
     {
       "file": "DACN_1_ChuongTrinh.pdf",
-      "version": "local-2026-11-05",
-      "bytes": 270122,
-      "sha256": "2942a9e608daa0863698fc05b6c7ff7b5460483879a9bd2b3b54c7cae7db1dd3"
+      "version": "local-final-2026-11-07",
+      "bytes": 270311,
+      "sha256": "a01e1cf34621b73893202cc5c026a9f2a5d111bcac3ef31b42d1a89d53596288"
     },
     {
       "file": "DACN_1_ChuongTrinh.txt",
-      "version": "local-2026-11-05",
-      "bytes": 4720,
-      "sha256": "115aa6ce8d630cca153000bbf4681ce94ea29f00e57ea83d09576f27ac47260e"
+      "version": "local-final-2026-11-07",
+      "bytes": 4775,
+      "sha256": "8cab4f48c2b568b671154cfabc2047458b4346a9cb3da8893f2149b68c460f10"
     }
   ],
   "pdf_checks": {

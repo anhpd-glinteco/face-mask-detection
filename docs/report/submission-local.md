@@ -1,6 +1,6 @@
 # Tạo lại bộ nộp local
 
-Nguồn báo cáo nằm ở `p12-template/bao-cao.md`, slide ở `p12/slides.json`, hướng dẫn chương trình ở `program-link.md`. Giữ mẫu báo cáo tham chiếu và bố cục 14 slide. Nội dung tổng hợp kết quả đến 05/11/2026; bản xuất này được tạo ngày 06/11/2026.
+Nguồn báo cáo nằm ở `p12-template/bao-cao.md`, slide ở `p12/slides.json`, hướng dẫn chương trình ở `program-link.md`. Giữ mẫu báo cáo tham chiếu và bố cục 14 slide. Nội dung tổng hợp kết quả đến 05/11/2026; bản xuất này được tạo ngày 07/11/2026.
 
 ## Môi trường xuất tài liệu
 
@@ -37,4 +37,4 @@ Chỉ tiếp tục khi builder và receipts hợp lệ. Xuất `DACN_1_ThuyetTri
 
 Kiểm tra tự động không thay cho xem từng trang. Mở DOCX bằng Word, cập nhật mục lục, xuất PDF rồi render và xem mọi trang/slide ở kích thước đọc được. Kiểm tra font tiếng Việt, bảng, hình, ngắt trang, đường dẫn và nội dung notes. PDF báo cáo xuất từ Word là bản phân trang chuẩn; phần mềm văn phòng khác có thể phân trang DOCX khác. Kiểm tra bản chương trình giữ đúng commit frontend và SHA-256 checkpoint.
 
-Tách toàn bộ logs, receipts, ảnh QA và bản nháp khỏi bộ nộp. ZIP không chứa checkpoint hoặc dataset. Checkpoint phải được nhóm chuẩn bị riêng theo hướng dẫn chương trình. Trước khi nộp, nhóm vẫn cần xác nhận khóa đào tạo, yêu cầu BM124, phân công thực tế và video demo; giữ nguyên các kết quả FAIL/NOT_RUN và giới hạn chất lượng đã ghi.
+Tách toàn bộ logs, receipts, ảnh QA và bản nháp khỏi bộ nộp. ZIP không chứa checkpoint hoặc dataset. Checkpoint phải được nhóm chuẩn bị riêng theo hướng dẫn chương trình. Trước khi nộp, nhóm còn cần bổ sung mẫu gốc BM124 và hoàn thành video demo; giữ nguyên các kết quả FAIL/NOT_RUN và giới hạn chất lượng đã ghi.

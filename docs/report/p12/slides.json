@@ -5,12 +5,12 @@
     "kind": "cover",
     "seconds": 20,
     "body": [
-      "Đồ án chuyên ngành Kỹ thuật phần mềm · Nhóm 1",
+      "Đồ án chuyên ngành Kỹ thuật phần mềm · Nhóm 1 · K18 · Lớp 20261IT6150003",
       "GVHD: ThS. Vũ Thị Dương",
       "Bản tổng hợp kết quả local ngày 05/11/2026"
     ],
     "source": "Báo cáo đồ án nhóm 1, bản tổng hợp kết quả local ngày 05/11/2026.",
-    "notes": "Giới thiệu đề tài và nhóm theo thông tin trên bìa báo cáo. Phân công được trình bày theo kế hoạch nhóm; khóa đào tạo cần được xác nhận."
+    "notes": "Nhóm 1, khóa K18, lớp học phần 20261IT6150003. Phùng Đức Anh phụ trách FE, Hoàng phối hợp FE và phụ trách kiểm thử, hiệu năng, Docker, CI. Kiệt và Hải đồng phụ trách dữ liệu, ML và inference; cả nhóm cùng làm báo cáo, slide, nghiệm thu và video demo."
   },
   {
     "title": "Bài toán và người sử dụng",
@@ -246,7 +246,7 @@
       "Điều kiện triển khai công khai chưa đạt."
     ],
     "source": "Báo cáo mục hạn chế, Dataset Card và Model Card. https://github.com/anhpd-glinteco/face-mask-detection/pull/54",
-    "notes": "Phạm vi đã kiểm chứng là local. Chưa có kết quả trên máy mới, ma trận điều kiện camera hoặc nghiệm thu đầy đủ trình duyệt nhúng. Model có thể tự tin nhưng dự đoán sai. Nhóm cần xác nhận thông tin còn thiếu và tự ghi video demo hoàn chỉnh."
+    "notes": "Phạm vi đã kiểm chứng là local. Chưa có kết quả trên máy mới, ma trận điều kiện camera hoặc nghiệm thu đầy đủ trình duyệt nhúng. Model có thể tự tin nhưng dự đoán sai. Nhóm còn cần bổ sung đúng mẫu BM124 và tự ghi video demo hoàn chỉnh."
   },
   {
     "title": "Demo và kết luận",

@@ -73,16 +73,16 @@ Nhóm xác định yêu cầu từ ba luồng sử dụng, các tình huống l�
 
 Nhóm thực hiện đồ án theo từng phiên, bắt đầu từ phân tích yêu cầu, thiết kế kiến trúc, kiểm tra dữ liệu rồi huấn luyện và đánh giá baseline. Sau đó, nhóm tích hợp suy luận với ba luồng giao diện, kiểm thử tích hợp và hồi quy, đo hiệu năng, rồi hoàn thiện tài liệu. Mỗi phiên có đầu ra, pull request (PR) và ghi chú bàn giao. Nhóm đối chiếu công việc đã làm với điều kiện hoàn thành và bằng chứng kiểm thử; ngày dự kiến trong kế hoạch chỉ dùng để theo dõi tiến độ. [4]
 
-| Vai trò theo kế hoạch nhóm | Thành viên | Công việc được phân công |
+| Vai trò | Thành viên | Công việc được phân công |
 | --- | --- | --- |
-| ML và inference | Nguyễn Đình Luân Kiệt, Bùi Nguyên Hải | Kiệt chuẩn bị, kiểm tra và chia dữ liệu; Hải cấu hình huấn luyện, đánh giá baseline và tích hợp suy luận. Hai bạn cùng rà kết quả và model card. |
-| Web | Phùng Đức Anh, Bùi Ngọc Minh Hoàng | Anh xây dựng giao diện ảnh và kết nối API; Hoàng phụ trách video, webcam và bộ lấy mẫu khung hình. Hai bạn phối hợp xử lý lỗi và kiểm thử giao diện. |
-| Điều phối QA và triển khai | Bùi Ngọc Minh Hoàng | Tổng hợp kiểm thử, CI, Docker và benchmark; theo dõi lỗi môi trường và ghi điều kiện nghiệm thu còn thiếu. |
-| Tài liệu và nghiệm thu | Cả nhóm | Anh tổng hợp báo cáo, slide và hồ sơ tuần; Kiệt, Hải rà dữ liệu và số đo model; Hoàng rà số liệu kiểm thử, hướng dẫn chạy và kịch bản demo. |
+| FE | Phùng Đức Anh | Phụ trách giao diện ảnh, video, webcam, kết nối API, hiển thị kết quả và thống kê theo khung hình. Phối hợp với Hoàng theo các issue #11 đến #18. |
+| Phối hợp FE, kiểm thử và triển khai | Bùi Ngọc Minh Hoàng | Phối hợp FE theo các issue #11 đến #18; phụ trách kiểm thử, hiệu năng, Docker và CI theo các issue #19 đến #23. |
+| Dữ liệu, ML và inference | Nguyễn Đình Luân Kiệt, Bùi Nguyên Hải | Đồng phụ trách kiểm tra nguồn dữ liệu, chia tập, API contract, FastAPI, cấu hình mô hình, đánh giá và tích hợp trọng số theo phân công trên GitHub. |
+| Tài liệu và nghiệm thu | Cả nhóm | Cùng hoàn thiện báo cáo, slide, kiểm thử nghiệm thu và video demo. |
 
 ## 1.5 Kết luận chương 1
 
-Ứng dụng phục vụ một tác nhân với ba nguồn ảnh, video và webcam, không có tài khoản hoặc cơ sở dữ liệu. Bảng phân công mô tả trách nhiệm của từng thành viên theo kế hoạch nhóm; kết quả thực hiện được đối chiếu với tài liệu và bằng chứng ở các chương sau.
+Ứng dụng phục vụ một tác nhân với ba nguồn ảnh, video và webcam, không có tài khoản hoặc cơ sở dữ liệu. Bảng phân công mô tả trách nhiệm của từng thành viên theo phân công đã xác nhận; kết quả thực hiện được đối chiếu với tài liệu và bằng chứng ở các chương sau.
 
 # CHƯƠNG 2 PHÂN TÍCH VÀ ĐẶC TẢ YÊU CẦU PHẦN MỀM
 
@@ -573,10 +573,10 @@ Lượt chạy bổ sung có 63 request webcam thành công, gồm cả thao tá
 
 | Mục trước khi nộp | Trạng thái |
 | --- | --- |
-| Thông tin nhóm | MSSV và lớp đã đối chiếu ảnh danh sách ngày 02/11/2026; khóa đào tạo chưa xác nhận. Phân công được tổng hợp theo kế hoạch nhóm. |
+| Thông tin nhóm | MSSV đã đối chiếu danh sách nhóm. Khóa K18, lớp học phần 20261IT6150003, nhóm 1 và vai trò FE của Phùng Đức Anh đã được xác nhận; các nhiệm vụ đồng phụ trách theo GitHub. |
 | Mẫu trình bày | Theo file tham chiếu được cung cấp; không coi là rubric học phần đã xác nhận |
 | Rà soát bản nộp | Đã đối chiếu số liệu và kiểm tra trình bày; nhóm cần duyệt nội dung và slide phiên bản cuối. |
 | Camera vật lý và môi trường đích | Camera laptop có lượt kiểm tra local ngày 05/11; dừng track và đèn camera đã kiểm tra. HTTPS, rollback và ma trận chất lượng theo điều kiện thực tế còn thiếu. |
 | Video demo và rehearsal P13 | Đã chạy thử ba luồng local; chưa ghi video demo, chưa xác nhận nghiệm thu đầy đủ. |
 
-Khóa đào tạo và yêu cầu BM124 cần được nhóm đối chiếu với thông báo học phần. Video demo hoàn chỉnh còn cần nhóm tự ghi và kiểm tra. Bản báo cáo dành chỗ để nhóm và giảng viên xác nhận theo quy định học phần.
+BM124 là tài liệu nộp riêng theo thông báo lớp, đặt tên DACN-1-BM124. Chưa có mẫu gốc để điền biểu mẫu. Video demo hoàn chỉnh còn cần nhóm tự ghi và kiểm tra. Bản báo cáo dành chỗ để nhóm và giảng viên xác nhận theo quy định học phần.

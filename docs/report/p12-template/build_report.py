@@ -102,7 +102,7 @@ def build(reference,source,output,work):
       11:'XÂY DỰNG ỨNG DỤNG WEB PHÁT HIỆN TRẠNG THÁI ĐEO KHẨU TRANG',
       12:'GVHD: ThS. Vũ Thị Dương',13:'Nhóm: 01',14:'Phùng Đức Anh — MSSV: 2023607426',
       15:'Nguyễn Đình Luân Kiệt — MSSV: 2024605040',16:'Bùi Nguyên Hải — MSSV: 2022603861',
-      17:'Bùi Ngọc Minh Hoàng — MSSV: 2022604035',19:'Lớp: DACN_20261IT6150003    Khóa: Cần bổ sung',21:'Hà Nội, năm 2026'}
+      17:'Bùi Ngọc Minh Hoàng — MSSV: 2022604035',19:'Lớp: 20261IT6150003    Khóa: K18',21:'Hà Nội, năm 2026'}
     from docx.text.paragraph import Paragraph
     for i,node in enumerate(cover):
         if i==18:continue
