@@ -3,10 +3,11 @@ import path from 'node:path';
 import {createRequire} from 'node:module';
 import {fileURLToPath,pathToFileURL} from 'node:url';
 const here=path.dirname(fileURLToPath(import.meta.url));
-const output=path.resolve(process.argv[2] ?? 'D:/Codex/outputs/face-mask-detection/p12-report-slides');
-const work=path.resolve(process.argv[3] ?? 'D:/Codex/work/face-mask-detection/p12-build');
-const skill=process.env.P12_PRESENTATIONS_SKILL ?? 'C:/Users/ASUS/.codex/plugins/cache/openai-primary-runtime/presentations/26.1015.12040/skills/presentations';
-const runtime=process.env.P12_RUNTIME_PYTHON ?? 'C:/Users/ASUS/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe';
+const output=path.resolve(process.argv[2] ?? 'artifacts/submission/slides-output');
+const work=path.resolve(process.argv[3] ?? '.work/submission/slides');
+const skill=process.env.P12_PRESENTATIONS_SKILL;
+const runtime=process.env.P12_RUNTIME_PYTHON;
+if (!skill || !runtime) throw Error('Set P12_PRESENTATIONS_SKILL and P12_RUNTIME_PYTHON; see docs/report/submission-local.md');
 const require=createRequire(path.join(work,'package.json'));
 process.env.RUNTIME_NODE_MODULES ??= path.join(work,'node_modules');
 const {Presentation,PresentationFile}=await import(pathToFileURL(require.resolve('@oai/artifact-tool')).href);
@@ -36,7 +37,7 @@ for(const [i,data] of slides.entries()) {
  text(s,'ĐỒ ÁN CHUYÊN NGÀNH  /  NHÓM 1',72,34,1000,25,16,dark?'#B9CDD8':'#526779');
  text(s,data.title,72,dark?140:89,1136,dark?160:78,dark?58:43,ink,true);
  text(s,`${String(i+1).padStart(2,'0')} / 14`,1120,670,90,25,16,dark?'#B9CDD8':'#526779');
- text(s,'P12 đồng bộ 24/10/2026 · Metrics P4/P11 lịch sử',72,670,1000,25,16,dark?'#B9CDD8':'#526779');
+ text(s,'Kết quả local ngày 05/11/2026 · Nhóm 1',72,670,1000,25,16,dark?'#B9CDD8':'#526779');
  if(data.kind==='cover') {
    text(s,data.subtitle,72,330,1080,70,32,'#DCE7EC');
    data.body.forEach((v,j)=>text(s,v,72,450+j*48,1100,40,25,'#FFFFFF'));
@@ -45,7 +46,7 @@ for(const [i,data] of slides.entries()) {
    data.body.forEach((v,j)=>text(s,v,72,535+j*50,1136,45,26));
  } else if(data.kind==='image') {
    const bytes=await fs.readFile(path.join(output,'assets',data.asset));
-   s.images.add({blob:bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),contentType:'image/png',alt:'Ảnh giao diện dùng media synthetic không khuôn mặt và response fixture',fit:'contain',position:{left:650,top:180,width:558,height:450}});
+   s.images.add({blob:bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),contentType:'image/png',alt:'Ảnh minh họa dùng media tổng hợp và phản hồi kiểm thử có kiểm soát',fit:'contain',position:{left:650,top:180,width:558,height:450}});
    data.body.forEach((v,j)=>text(s,v,72,195+j*105,520,94,27));
  } else if(data.kind==='architecture') {
    const labels=['Browser\nCapture và sampler','FastAPI\nDecode và readiness','SSDLite adapter\nChecksum và CPU'];
@@ -56,16 +57,16 @@ for(const [i,data] of slides.entries()) {
    });
    data.body.forEach((v,j)=>text(s,v,72,365+j*62,1136,55,27));
  } else if(data.kind==='quality') {
-   s.charts.add('bar',{position:{left:72,top:190,width:560,height:360},categories:['Có khẩu trang','Không khẩu trang','Đeo sai'],series:[{name:'F1 test',values:[.4494,.0635,.1053],fill:'#2A6C86'}],hasLegend:false,dataLabels:{showValue:true,position:'outEnd',numberFormatCode:'0.00%',textStyle:{fontSize:20}},xAxis:{textStyle:{fontSize:18}},yAxis:{min:0,max:1,numberFormatCode:'0%',textStyle:{fontSize:18}}});
+   s.charts.add('bar',{position:{left:72,top:190,width:560,height:360},categories:['Có khẩu trang','Không khẩu trang','Đeo sai'],series:[{name:'F1 test',values:[.5684,.2609,.1429],fill:'#2A6C86'}],hasLegend:false,dataLabels:{showValue:true,position:'outEnd',numberFormatCode:'0.00%',textStyle:{fontSize:20}},xAxis:{textStyle:{fontSize:18}},yAxis:{min:0,max:1,numberFormatCode:'0%',textStyle:{fontSize:18}}});
    data.body.forEach((v,j)=>text(s,v,680,200+j*100,528,94,27));
-   text(s,'F1 theo lớp tại confidence 0,15 và IoU 0,5',72,575,560,55,22);
+   text(s,'F1 test fine-tune tại threshold 0,25 và IoU 0,5',72,575,560,55,22);
  } else {
    data.body.forEach((v,j)=>{
      text(s,String(j+1).padStart(2,'0'),72,205+j*102,65,50,28,'#2A6C86',true);
      text(s,v,160,205+j*102,1040,90,30);
    });
  }
- s.speakerNotes.text=`Thời lượng gợi ý: ${data.seconds} giây.\n${data.notes}\nNguồn: ${data.source}\nSnapshot source P11: 88687c935f8cfe94036fb81bd4fb924fadd04776.`;
+ s.speakerNotes.text=`Thời lượng gợi ý: ${data.seconds} giây.\n${data.notes}\nNguồn: ${data.source}`;
  await fs.writeFile(path.join(output,'qa/slides',`slide-${String(i+1).padStart(2,'0')}.png`),new Uint8Array(await (await deck.export({slide:s,format:'png',scale:1})).arrayBuffer()));
 }
 const candidate=path.join(work,'candidate.pptx');

@@ -12,9 +12,11 @@ Nhóm 1
 
 Đồ án xây dựng ứng dụng web cho phép người dùng phân tích ảnh, video trên máy và hình ảnh từ webcam. Kết quả gồm vùng phát hiện, nhãn trạng thái đeo khẩu trang và độ tin cậy. Giao diện được xây dựng bằng Next.js, kết nối với API FastAPI và mô hình SSDLite320 MobileNetV3 Large chạy trên CPU. Với video và webcam, trình duyệt lấy mẫu từng khung hình rồi gửi qua HTTP. Mỗi bộ lấy mẫu chờ tác vụ hiện tại hoàn tất trước khi xử lý tiếp; máy chủ không lưu lịch sử ảnh hoặc video. [1–4]
 
-Nhóm đã kiểm thử tự động giao diện, định dạng dữ liệu trao đổi, vòng đời xử lý và các tình huống lỗi. Phiên P11 ghi nhận 81 kiểm thử frontend, 24 kiểm thử backend, 37 kiểm thử ML, 3 kiểm thử công cụ đo hiệu năng và 4 kiểm thử trình duyệt dùng fixture. Khi chạy video, nhóm phát hiện lỗi tranh chấp thời điểm xử lý lúc nguồn phát tạm chưa sẵn sàng. Kiểm thử tái hiện lỗi thất bại trước khi sửa và đạt sau khi sửa; nhóm tiếp tục kiểm tra bằng chạy hồi quy và đo hiệu năng. Những kết quả này phản ánh hoạt động của phần mềm, còn chất lượng nhận diện được đánh giá riêng. [3]
+Nhóm đã kiểm thử tự động giao diện, định dạng dữ liệu trao đổi, vòng đời xử lý và các tình huống lỗi. Ở phiên P11, kết quả gồm 81 kiểm thử frontend, 24 kiểm thử backend, 37 kiểm thử ML, 3 kiểm thử công cụ đo hiệu năng và 4 kiểm thử trình duyệt dùng dữ liệu có kiểm soát. Khi chạy video, nhóm phát hiện lỗi xảy ra do thời điểm lấy mẫu trùng lúc nguồn phát chưa sẵn sàng. Bài kiểm thử tái hiện lỗi thất bại trước khi sửa và đạt sau khi sửa. Nhóm sau đó chạy lại các luồng và đo hiệu năng; chất lượng nhận diện được đánh giá riêng. [3]
 
-Baseline nội bộ có test macro F1 0,2061 và mAP50:95 0,0820; recall hai lớp ít mẫu thấp. P11 đo warm HTTP p95 36,89 ms, video/webcam hiển thị 4,91/4,99 FPS với checkpoint thật trên media synthetic. Quyền từng ảnh, scene independence và camera vật lý chưa xác minh; deployment gate CLOSED. [1–3]
+Mô hình baseline nội bộ đạt test macro F1 0,2061 và mAP50:95 0,0820, với recall thấp ở hai lớp ít mẫu. Tại P11, warm HTTP p95 là 36,89 ms; video/webcam hiển thị 4,91/4,99 FPS khi dùng checkpoint thật trên dữ liệu tổng hợp. P11 chưa kiểm tra camera vật lý. Đến ngày 05/11, nhóm đã thử camera laptop thật trên localhost và kiểm tra thao tác dừng. Quyền sử dụng từng ảnh và tính độc lập giữa các cảnh (scene independence) còn chưa xác minh đầy đủ, nên điều kiện triển khai công khai chưa đạt. [1–3]
+
+Ngày 05/11, nhóm bổ sung thí nghiệm với trọng số pretrained COCO, huấn luyện 30 epoch và chọn checkpoint epoch 10. Test macro F1 đạt 0,3240, mAP50:95 đạt 0,1333; chất lượng theo lớp vẫn chưa đạt mục tiêu. Camera laptop được thử trên môi trường local hơn 60 giây. Giao diện mới mặc định ẩn dự đoán yếu và giữ khung hình cuối sau khi Dừng. Các kết quả kiểm thử phần mềm và đo hiệu năng được ghi kèm điều kiện chạy trong phần thực nghiệm. [12,13]
 
 # MỤC LỤC
 
@@ -30,8 +32,8 @@ Baseline nội bộ có test macro F1 0,2061 và mAP50:95 0,0820; recall hai l�
 | AP | Average Precision | Độ chính xác trung bình theo đường precision–recall |
 | mAP | Mean Average Precision | AP trung bình theo lớp và ngưỡng IoU |
 | FPS | Frames per second | Frame xử lý/hiển thị mỗi giây trong khoảng đo |
-| Fixture | Test fixture | Đầu vào hoặc response kiểm thử có kiểm soát |
-| Synthetic | Synthetic media | Media tổng hợp, không phải camera vật lý |
+| Dữ liệu kiểm thử có kiểm soát | Test fixture | Đầu vào hoặc response kiểm thử có kiểm soát |
+| Media tổng hợp | Synthetic media | Media được tạo để kiểm thử, không phải camera vật lý |
 | Readiness | Model readiness | Trạng thái model đã nạp để phục vụ |
 
 # DANH MỤC HÌNH VẼ
@@ -54,33 +56,33 @@ Trong một ảnh có thể xuất hiện nhiều người với trạng thái �
 
 Ứng dụng hỗ trợ ba nguồn đầu vào với cùng định dạng yêu cầu phân tích ảnh. Người dùng gửi ảnh trực tiếp; với video và webcam, trình duyệt chỉ gửi khung hình được trích ra. API trả kích thước ảnh, thông tin mô hình, danh sách phát hiện và thời gian xử lý. Trình duyệt kiểm tra phản hồi rồi hiển thị kết quả trên đúng ảnh hoặc khung hình đã gửi. Máy chủ vì thế chỉ xử lý từng ảnh, không cần nhận cả video hay quản lý phiên truyền hình ảnh liên tục. [4,5]
 
-| Nhóm mục tiêu | Điều kiện kiểm chứng | Trạng thái tại P11 |
+| Nhóm mục tiêu | Điều kiện kiểm chứng | Trạng thái kiểm chứng |
 | --- | --- | --- |
-| Ảnh | Upload, lỗi đầu vào, overlay, đổi ảnh | Fixture và đường HTTP local có evidence |
-| Video | Lấy mẫu nối tiếp, pause/seek, loại kết quả cũ | Regression và benchmark synthetic đạt sau fix |
-| Webcam | Start/stop, quyền, track cleanup | Browser giả lập đạt; chưa camera vật lý |
+| Ảnh | Tải ảnh, lỗi đầu vào, vẽ bbox, đổi ảnh | Đã kiểm tra với dữ liệu có kiểm soát và HTTP local |
+| Video | Lấy mẫu nối tiếp, pause/seek, loại kết quả cũ | Kiểm thử hồi quy và đo với dữ liệu tổng hợp đạt sau sửa |
+| Webcam | Start/stop, quyền, track cleanup | Kiểm thử có kiểm soát tại P11; bổ sung camera thật ngày 05/11 |
 | Chất lượng | Metric ba lớp trên test đã khóa | Đã đo; chất lượng thấp |
-| Hiệu năng | Cold, warm và hai stream 60 giây | Local CPU, workload synthetic |
-| Công khai | HTTPS, camera thật, quyền dữ liệu | Chưa đạt, gate đóng |
+| Hiệu năng | Cold, warm và hai stream 60 giây | Local CPU, workload tổng hợp |
+| Công khai | HTTPS, camera thật, quyền dữ liệu | Chưa đạt điều kiện triển khai |
 
 ## 1.3 Khảo sát và cơ sở lựa chọn giải pháp
 
-Nhóm chưa thực hiện khảo sát người dùng bằng bảng hỏi hoặc phỏng vấn có dữ liệu lưu trữ. Việc phân tích nhu cầu dựa trên đặc tả ba luồng sử dụng, các tình huống lỗi và tài nguyên sẵn có của dự án. Báo cáo không đưa vào các biểu đồ hay tỷ lệ khảo sát từ đề tài trong mẫu. Cơ sở lựa chọn giải pháp hiện mới dừng ở yêu cầu kỹ thuật, chưa có kết quả nghiên cứu nhu cầu thực địa. [4]
+Nhóm xác định yêu cầu từ ba luồng sử dụng, các tình huống lỗi và tài nguyên sẵn có của dự án. Nhóm chưa thực hiện khảo sát bằng bảng hỏi hoặc phỏng vấn có dữ liệu lưu trữ, nên chưa có kết quả nghiên cứu nhu cầu thực địa. Những biểu đồ và tỷ lệ khảo sát của đề tài trong mẫu không được sử dụng cho đồ án này. [4]
 
 ## 1.4 Quy trình phát triển và phân công công việc
 
-Nhóm chia công việc thành các phiên, bắt đầu từ phân tích yêu cầu và kiến trúc, kiểm tra dữ liệu, huấn luyện baseline rồi đánh giá mô hình. Các phiên tiếp theo xây dựng bộ tích hợp suy luận và ba luồng giao diện, sau đó kiểm thử tích hợp, đo hiệu năng, kiểm thử hồi quy và hoàn thiện tài liệu. Mỗi phiên có đầu ra, pull request (PR) và ghi chú bàn giao. Trạng thái hoàn thành được xác định theo điều kiện kết thúc và bằng chứng thực hiện, không theo ngày dự kiến trong kế hoạch. [4]
+Nhóm thực hiện đồ án theo từng phiên, bắt đầu từ phân tích yêu cầu, thiết kế kiến trúc, kiểm tra dữ liệu rồi huấn luyện và đánh giá baseline. Sau đó, nhóm tích hợp suy luận với ba luồng giao diện, kiểm thử tích hợp và hồi quy, đo hiệu năng, rồi hoàn thiện tài liệu. Mỗi phiên có đầu ra, pull request (PR) và ghi chú bàn giao. Nhóm đối chiếu công việc đã làm với điều kiện hoàn thành và bằng chứng kiểm thử; ngày dự kiến trong kế hoạch chỉ dùng để theo dõi tiến độ. [4]
 
-| Vai trò theo kế hoạch nhóm | Thành viên | Công việc được phân công |
+| Vai trò | Thành viên | Công việc được phân công |
 | --- | --- | --- |
-| ML và inference | Nguyễn Đình Luân Kiệt, Bùi Nguyên Hải | Kiệt chuẩn bị, kiểm tra và chia dữ liệu; Hải cấu hình huấn luyện, đánh giá baseline và tích hợp suy luận. Hai bạn cùng rà kết quả và model card. |
-| Web | Phùng Đức Anh, Bùi Ngọc Minh Hoàng | Anh xây dựng giao diện ảnh và kết nối API; Hoàng phụ trách video, webcam và bộ lấy mẫu khung hình. Hai bạn phối hợp xử lý lỗi và kiểm thử giao diện. |
-| Điều phối QA và triển khai | Bùi Ngọc Minh Hoàng | Tổng hợp kiểm thử, CI, Docker và benchmark; theo dõi lỗi môi trường và ghi điều kiện nghiệm thu còn thiếu. |
-| Tài liệu và nghiệm thu | Cả nhóm | Anh tổng hợp báo cáo, slide và hồ sơ tuần; Kiệt, Hải rà dữ liệu và số đo model; Hoàng rà số liệu kiểm thử, hướng dẫn chạy và kịch bản demo. |
+| FE | Phùng Đức Anh | Phụ trách giao diện ảnh, video, webcam, kết nối API, hiển thị kết quả và thống kê theo khung hình. Phối hợp với Hoàng theo các issue #11 đến #18. |
+| Phối hợp FE, kiểm thử và triển khai | Bùi Ngọc Minh Hoàng | Phối hợp FE theo các issue #11 đến #18; phụ trách kiểm thử, hiệu năng, Docker và CI theo các issue #19 đến #23. |
+| Dữ liệu, ML và inference | Nguyễn Đình Luân Kiệt, Bùi Nguyên Hải | Đồng phụ trách kiểm tra nguồn dữ liệu, chia tập, API contract, FastAPI, cấu hình mô hình, đánh giá và tích hợp trọng số theo phân công trên GitHub. |
+| Tài liệu và nghiệm thu | Cả nhóm | Cùng hoàn thiện báo cáo, slide, kiểm thử nghiệm thu và video demo. |
 
 ## 1.5 Kết luận chương 1
 
-Ứng dụng phục vụ một tác nhân với ba nguồn ảnh, video và webcam, không có tài khoản hoặc cơ sở dữ liệu. Bảng phân công mô tả trách nhiệm của từng thành viên theo kế hoạch nhóm; kết quả thực hiện được đối chiếu với tài liệu và bằng chứng ở các chương sau.
+Ứng dụng phục vụ một tác nhân với ba nguồn ảnh, video và webcam, không có tài khoản hoặc cơ sở dữ liệu. Bảng phân công mô tả trách nhiệm của từng thành viên theo phân công đã xác nhận; kết quả thực hiện được đối chiếu với tài liệu và bằng chứng ở các chương sau.
 
 # CHƯƠNG 2 PHÂN TÍCH VÀ ĐẶC TẢ YÊU CẦU PHẦN MỀM
 
@@ -100,9 +102,9 @@ Ba use case đầu vào mô tả cách người dùng phân tích ảnh, video v
 
 | ID | Yêu cầu | Bằng chứng và phần còn thiếu |
 | --- | --- | --- |
-| FR01–02 | Ảnh và overlay bbox | Fixture resize; đường model thật với media synthetic |
+| FR01–02 | Ảnh và overlay bbox | Dữ liệu kiểm thử có kiểm soát resize; đường model thật với media tổng hợp |
 | FR03 | Video local, pause/seek | Unit, E2E và regression race P11 |
-| FR04 | Webcam chủ động, cleanup | Fixture permission/track; camera thật chưa đo |
+| FR04 | Webcam chủ động, cleanup | Đã kiểm tra quyền, track và camera thật trên localhost |
 | FR05 | Không backlog, bỏ response cũ | Sampler tests và browser delayed response |
 | FR06 | Lỗi, loading, empty, retry | Unit/E2E và native 503 smoke |
 | FR07 | Count, FPS và latency | Benchmark 60 giây; không phải số người duy nhất |
@@ -114,13 +116,13 @@ Ba use case đầu vào mô tả cách người dùng phân tích ảnh, video v
 | --- | --- | --- |
 | NFR01 | Không lưu lịch sử media; ghi rõ nguồn/quyền dùng | Kiến trúc stateless; quyền từng ảnh chưa xác minh |
 | NFR02 | Giới hạn payload, decode, bbox hữu hạn và CORS | Adapter/client tests; MIME khai báo chưa đối chiếu hoàn toàn định dạng decode |
-| NFR03 | Warm p95 ≤ 1 s, cold ready ≤ 30 s, lỗi ≤ 1% | P11 đạt trên workload local synthetic |
-| NFR04 | Control có nhãn và thông báo lỗi bằng chữ | Unit/browser fixtures; chưa audit độc lập |
-| NFR05 | Split, seed, config và checksum tái lập | Hash/technical audit đạt; scene independence chưa chốt |
-| NFR06 | CI, readiness và hướng dẫn cài đặt | CI đạt; setup máy sạch chưa nghiệm thu |
-| NFR07 | Webcam trong secure context và demo dự phòng | Localhost/synthetic; HTTPS công khai và camera thật chưa kiểm chứng |
+| NFR03 | Warm p95 ≤ 1 s, cold ready ≤ 30 s, lỗi ≤ 1% | P11 đạt trên workload local tổng hợp |
+| NFR04 | Điều khiển có nhãn và thông báo lỗi bằng chữ | Unit/browser dùng dữ liệu kiểm thử có kiểm soát; chưa audit độc lập |
+| NFR05 | Split, seed, config và checksum tái lập | Kiểm tra hash và kỹ thuật đạt; scene independence chưa xác minh |
+| NFR06 | CI, readiness và hướng dẫn cài đặt | CI đạt; cài đặt trên máy sạch chưa nghiệm thu |
+| NFR07 | Webcam trong secure context và demo dự phòng | Localhost với camera thật đã kiểm tra; HTTPS công khai chưa kiểm chứng |
 
-Mỗi yêu cầu được đối chiếu với bằng chứng phù hợp trong bảng. Khi kiểm thử mới bao phủ một phần, nhóm vẫn ghi rõ phần còn thiếu và giữ trạng thái chưa hoàn tất.
+Các yêu cầu mới được kiểm thử một phần vẫn được giữ ở trạng thái chưa hoàn tất, kèm phần việc còn thiếu trong bảng.
 
 ## 2.4 UC01 Phân tích ảnh
 
@@ -151,7 +153,7 @@ Mục đích: xem detection của các frame được xử lý trong video local
 | 4 | Gửi frame qua detect API, chờ xong trước khi xét frame kế tiếp; không queue. |
 | 5 | Chỉ nhận kết quả còn đúng session; hiển thị frame đã phân tích cùng overlay. |
 | 6 | Cập nhật thống kê của frame và processed FPS/latency; lặp khi còn phát. |
-| 7 | Pause/seek/end/đổi mode/file: dừng lịch, vô hiệu hóa kết quả cũ, cleanup. |
+| 7 | Pause/end giữ snapshot cuối; tua hoặc đổi nguồn xóa snapshot. Mọi thao tác đều dừng lịch và loại response muộn. |
 
 Không vẽ bbox của frame cũ như thể đúng trên frame live mới: dùng vùng kết quả là snapshot đã phân tích, tách khỏi video preview đang chạy và ghi timestamp của nó. FPS xử lý không phải FPS video. Không cộng detection thành tổng người duy nhất.
 
@@ -169,7 +171,7 @@ Mục đích: xem detection theo frame từ camera do người dùng chủ độ
 | 2 | Nếu được cấp quyền, gắn MediaStream và phát preview. |
 | 3 | Dùng cùng sampler và cách hiển thị snapshot đã phân tích của UC02. |
 | 4 | Hiển thị detections, số lượng theo lớp ở frame hiện tại, FPS xử lý và latency. |
-| 5 | Người dùng dừng/đổi mode hoặc rời trang: stop mọi track, timer và request. |
+| 5 | Dừng mọi track, timer và request. Dừng giữ snapshot cuối; đổi mode hoặc rời trang xóa snapshot. |
 
 Ngoại lệ: từ chối quyền/không camera/camera bận → thông báo riêng, không vòng retry vô hạn; track kết thúc → dừng sampling và báo ngắt; yêu cầu quyền trả về sau khi người dùng đã rời mode → stop ngay stream đến muộn. API lỗi giống UC02; thao tác dừng phải luôn dùng được ngay cả khi request pending.
 
@@ -177,13 +179,13 @@ Hậu điều kiện: đèn camera tắt, không còn stream hoạt động và 
 
 ## 2.7 Kết luận chương 2
 
-Ba use case dùng chung detect API, có ngoại lệ/cancel/cleanup riêng. Fixture kiểm tra logic; model, camera và môi trường đích cần evidence phù hợp.
+Ba use case đều gọi API phát hiện ảnh, nhưng xử lý lỗi, hủy yêu cầu và giải phóng tài nguyên theo từng nguồn. Dữ liệu kiểm thử có kiểm soát được dùng để kiểm tra logic; mô hình, camera và môi trường sử dụng cần được kiểm chứng bằng các lượt chạy tương ứng.
 
 # CHƯƠNG 3 MÔ HÌNH HÓA DỮ LIỆU
 
 ## 3.1 Nguồn dữ liệu annotation và quyền sử dụng
 
-Nguồn dữ liệu là Face Mask Detection của uploader andrewmvd/Larxel trên Kaggle, version 1. Bản gốc có 853 PNG và 853 Pascal VOC XML, tổng 4.072 bbox. Uploader công bố Public Domain/CC0; audit đã tìm lại trang MakeML lưu trữ có dẫn dữ liệu. Tuy nhiên, metadata không cung cấp mapping tác giả hoặc consent từng ảnh; một số hình có watermark stock. Không coi license metadata của uploader là xác minh quyền mọi ảnh. [1]
+Đồ án dùng bộ Face Mask Detection phiên bản 1 do andrewmvd/Larxel đăng trên Kaggle. Bản gốc có 853 PNG và 853 Pascal VOC XML, tổng cộng 4.072 bbox. Người đăng công bố Public Domain/CC0; khi rà soát, nhóm tìm được trang MakeML lưu trữ có dẫn bộ dữ liệu này. Tuy nhiên, thông tin đi kèm chưa xác định tác giả và sự đồng ý cho từng ảnh; một số ảnh có watermark của kho ảnh thương mại. Vì vậy, khai báo giấy phép của người đăng chưa đủ để xác minh quyền sử dụng toàn bộ ảnh. [1]
 
 | Phiên bản | Ảnh | Bbox | Vai trò |
 | --- | --- | --- | --- |
@@ -241,7 +243,7 @@ Endpoint `POST /api/v1/detect` nhận multipart field `image`. `schema_version` 
 | FrameStatistics | processed, skipped, fps, latencyMs | Thống kê trong vòng lấy mẫu |
 | Checkpoint | config, metadata, model tensors và checksum | Nạp khi process inference khởi động |
 
-Các cấu trúc trên mô tả dữ liệu trao đổi và trạng thái trong bộ nhớ. Hệ thống không có cơ sở dữ liệu, bước chuyển đổi lược đồ (migration) hay ERD, vì vậy không cần cài MySQL. Ảnh được giải mã tạm thời để xử lý và không lưu thành lịch sử. Các bảng trong phần này chỉ giải thích cấu trúc đang dùng, không bổ sung API công khai hoặc kiểu dữ liệu mới. [5]
+Hệ thống xử lý dữ liệu trao đổi và trạng thái phiên trong bộ nhớ. Ảnh được giải mã tạm thời để phân tích, không lưu thành lịch sử. Do ứng dụng không dùng cơ sở dữ liệu nên không cần cài MySQL, thiết kế ERD hay chuyển đổi lược đồ (migration). Các cấu trúc được liệt kê ở trên là cấu trúc đang dùng, không phải API công khai hoặc kiểu dữ liệu mới. [5]
 
 ## 3.5 Biểu đồ trình tự và quản lý dữ liệu frame
 
@@ -253,13 +255,13 @@ Hình 3.2 Trình tự một frame và nhánh loại response cũ. Sơ đồ mô 
 
 ## 3.6 Kết luận chương 3
 
-Dataset, checkpoint và payload tạm có vòng đời khác nhau. Hash định danh artifact, không xác minh quyền ảnh hoặc scene independence.
+Dataset và checkpoint được lưu để tái lập thí nghiệm, còn dữ liệu ảnh gửi lên chỉ tồn tại tạm thời trong quá trình xử lý. Mã hash dùng để định danh từng tệp; quyền sử dụng ảnh và scene independence vẫn cần được xác minh riêng.
 
 # CHƯƠNG 4 PHÁT TRIỂN HỆ THỐNG
 
 ## 4.1 Kiến trúc các thành phần
 
-Browser đảm nhận đọc file local, cấp quyền webcam, capture frame, kiểm tra response và render snapshot. Next.js phục vụ ứng dụng web; browser gọi trực tiếp API theo URL cấu hình lúc build. Không có database, hàng đợi media hoặc dịch vụ nhận dạng danh tính. Phần suy luận nằm trong process FastAPI và nạp checkpoint một lần theo vòng đời dịch vụ. [5]
+Trình duyệt đọc tệp local, xin quyền webcam, trích khung hình và hiển thị kết quả sau khi kiểm tra phản hồi. Next.js phục vụ giao diện; trình duyệt gọi API trực tiếp theo URL được cấu hình lúc build. FastAPI thực hiện suy luận và nạp checkpoint một lần khi dịch vụ khởi động. Hệ thống không có cơ sở dữ liệu, hàng đợi media hoặc dịch vụ nhận dạng danh tính. [5]
 
 {{architecture}}
 
@@ -267,7 +269,7 @@ Hình 3.1 Kiến trúc local được đối chiếu từ source P11. HTTP local
 
 ## 4.2 Cơ sở detector và biểu diễn kết quả
 
-Object detection đồng thời dự đoán loại đối tượng và vùng bao trên ảnh. SSD dùng các hộp tham chiếu ở nhiều tỉ lệ để dự đoán điểm lớp và hiệu chỉnh vị trí trong một mạng. Đồ án dùng biến thể SSDLite có sẵn trong TorchVision thay vì triển khai lại thuật toán detector. Không dùng số FPS hoặc mAP công bố của mô hình gốc để thay kết quả đo của checkpoint đồ án. [6]
+Object detection xác định loại đối tượng và vùng bao của đối tượng trên ảnh. SSD dùng các hộp tham chiếu ở nhiều tỉ lệ để dự đoán điểm lớp và hiệu chỉnh vị trí trong cùng một mạng. Đồ án dùng SSDLite có sẵn trong TorchVision; nhóm không triển khai lại thuật toán detector. FPS và mAP của checkpoint đồ án được đo riêng, không lấy từ kết quả công bố của mô hình gốc. [6]
 
 | Thành phần | Ý nghĩa trong đồ án |
 | --- | --- |
@@ -279,7 +281,7 @@ Object detection đồng thời dự đoán loại đối tượng và vùng bao
 
 ## 4.3 Huấn luyện baseline và adapter suy luận
 
-Baseline dùng TorchVision SSDLite320 MobileNetV3 Large, khởi tạo từ đầu với cả `weights=None` và `weights_backbone=None`. Model có bốn class ID gồm background; ba ID nghiệp vụ là 1, 2 và 3. Không tải pretrained weights hoặc dùng metric COCO của thư viện làm kết quả đồ án. Checkpoint giữ epoch 30, không gọi là epoch tốt nhất được chọn từ một cuộc so sánh nhiều checkpoint. [2,7]
+Baseline lịch sử P4 dùng TorchVision SSDLite320 MobileNetV3 Large, khởi tạo từ đầu với cả `weights=None` và `weights_backbone=None`. Mô hình có bốn class ID: background và ba lớp nghiệp vụ với ID 1, 2 và 3. Lượt này không tải trọng số pretrained hoặc dùng chỉ số COCO của thư viện làm kết quả đồ án. Nhóm giữ checkpoint epoch 30, chưa so sánh nhiều checkpoint để chọn epoch tốt nhất. [2,7]
 
 | Tham số | Giá trị đã dùng |
 | --- | --- |
@@ -301,7 +303,7 @@ Ba khu vực ảnh, video và webcam dùng lại các thành phần xem trước
 
 {{image}}
 
-Hình 4.1 Luồng ảnh với media synthetic không khuôn mặt và response fixture minh họa bbox. Ba nhãn trên hình là dữ liệu kiểm thử, không chứng minh khả năng nhận diện của checkpoint.
+Hình 4.1 Giao diện phân tích ảnh với dữ liệu tổng hợp không có khuôn mặt. Các bbox và nhãn lấy từ phản hồi kiểm thử có kiểm soát, dùng để minh họa giao diện và không đo chất lượng checkpoint.
 
 ## 4.5 Giao diện webcam và khả năng tiếp cận
 
@@ -309,37 +311,37 @@ Webcam chỉ gọi `getUserMedia` khi người dùng bấm bắt đầu. Trình 
 
 {{webcam}}
 
-Hình 3.3 Giao diện webcam với media không khuôn mặt và response fixture do P12 tạo để minh họa overlay. Đây là ảnh chụp giao diện, không phải kết quả model hoặc thử camera vật lý.
+Hình 3.3 Giao diện webcam với media không có khuôn mặt và phản hồi kiểm thử có kiểm soát. Ảnh minh họa cách vẽ bbox, không dùng để đánh giá mô hình hoặc camera vật lý.
 
 ## 4.6 Giao diện video và sử dụng chung sampler
 
 {{video}}
 
-Hình Giao diện frame video đã phân tích. Media không khuôn mặt và response fixture; ảnh phục vụ minh họa UI, tách khỏi benchmark checkpoint thật.
+Hình Giao diện khung hình video đã phân tích. Media không có khuôn mặt và phản hồi kiểm thử có kiểm soát được dùng để minh họa giao diện; hiệu năng checkpoint thật được đo ở lượt riêng.
 
-VideoWorkspace và WebcamWorkspace cùng xét lấy mẫu mỗi 200 ms. Nếu tác vụ trước chưa kết thúc, lượt lấy mẫu mới được bỏ qua. Khi tạm dừng, tua, dừng hoặc đổi nguồn, mã phiên xử lý được tăng để phản hồi muộn không ghi đè kết quả hiện tại. Ảnh chụp khung hình và object URL được giải phóng khi không còn sử dụng. [3,5]
+VideoWorkspace và WebcamWorkspace cùng xét lấy mẫu mỗi 200 ms. Nếu tác vụ trước chưa kết thúc, lượt lấy mẫu mới được bỏ qua. Khi tạm dừng, tua, dừng hoặc đổi nguồn, mã phiên xử lý được tăng để phản hồi muộn không ghi đè kết quả hiện tại. Khi dừng webcam, tạm dừng hoặc kết thúc video, giao diện giữ frame cuối đã phân tích cùng timestamp và thống kê. Bắt đầu phiên webcam mới, đổi nguồn, tua video hoặc rời thành phần sẽ xóa kết quả cũ và giải phóng object URL. Phản hồi đến muộn bị bỏ qua. [3,5]
 
 ## 4.7 Kết luận chương 4
 
-API thật kiểm checkpoint; ba workspace dùng chung contract/sampler. Ở snapshot PR #49 (chưa merge), confidence dưới 0,15 được giữ nguyên nhãn và điểm số, đồng thời đánh dấu “Chưa chắc chắn” và đếm riêng. Mốc 0,15 là ngưỡng trình bày; API vẫn nhận score từ 0,001 và không thêm lớp hay trường trạng thái vào contract. Đúng 0,15 được xem là đạt ngưỡng; so sánh trước khi làm tròn. [10]
+API kiểm tra checkpoint; ba luồng dùng chung định dạng dữ liệu và bộ lấy mẫu. Bản giao diện ngày 05/11 mặc định chỉ vẽ và liệt kê detection đạt mốc 0,15. Nhóm “Xem dự đoán chưa chắc chắn” cho phép xem các dự đoán yếu cùng box tương ứng; dữ liệu gốc được giữ trong bộ nhớ để đối chiếu. Mốc 0,15 là ngưỡng trình bày; API vẫn nhận score từ 0,001 và không thêm lớp hay trường trạng thái vào contract. Đúng 0,15 được xem là đạt ngưỡng; so sánh trước khi làm tròn. [10]
 
 # CHƯƠNG 5 TRIỂN KHAI VÀ KIỂM THỬ HỆ THỐNG
 
 ## 5.1 Môi trường và hướng dẫn triển khai local
 
-Môi trường được kiểm chứng là Windows 11, CPU i5-13500H, khoảng 16,8 GB RAM, Python 3.12.14, Node 24.19.0 và Chromium 156.0.8078.4. Inference dùng Torch 2.9.0+cpu/TorchVision 0.24.0+cpu, hai CPU threads. Đây là cấu hình đã chạy, không phải minimum hardware đã benchmark trên nhiều máy. CI dùng Node 22. [3]
+Môi trường được kiểm chứng là Windows 11, CPU i5-13500H, khoảng 16,8 GB RAM, Python 3.12.14, Node 24.19.0 và Chromium 156.0.8078.4. Phần suy luận dùng Torch 2.9.0+cpu/TorchVision 0.24.0+cpu với hai luồng CPU. Nhóm chưa đo trên nhiều máy để xác định cấu hình tối thiểu. CI dùng Node 22. [3]
 
 ## 5.2 Kiểm thử phần mềm và CI
 
-Nhóm kiểm tra phần mềm bằng kiểm thử đơn vị và định dạng dữ liệu, fixture trên trình duyệt, kiểm tra khởi động native và đo hiệu năng với mô hình thật. Fixture giúp tạo có chủ đích các tình huống lỗi hoặc phản hồi muộn. Những lần chạy checkpoint thật dùng để kiểm tra bộ tích hợp suy luận trên tải thử cụ thể. Kết quả fixture không được dùng để kết luận độ chính xác của mô hình hay khả năng hoạt động của camera vật lý. [3]
+Nhóm kiểm tra từng phần bằng kiểm thử đơn vị, kiểm tra định dạng dữ liệu và kiểm thử trình duyệt với dữ liệu có kiểm soát. Cách này giúp chủ động tạo lỗi và phản hồi muộn. Nhóm cũng kiểm tra khởi động local và đo hiệu năng với checkpoint thật trên tải thử cụ thể. Độ chính xác của mô hình và hoạt động của camera vật lý được kiểm tra riêng, vì dữ liệu có kiểm soát chỉ phản ánh logic phần mềm. [3]
 
 | Suite P11 | Kết quả | Phạm vi |
 | --- | --- | --- |
 | Frontend unit | 81 tests, 6 files | UI, client, sampler và race video |
-| Backend | 24 tests | API/loader/contract, weights synthetic |
+| Backend | 24 tests | API/loader/contract, weights tổng hợp |
 | ML | 37 tests | Chuẩn bị dữ liệu, evaluator, trainer self-check |
 | Benchmark unit | 3 tests | Percentile, readiness, denominator/memory |
-| Browser fixture | 4 tests | Chromium desktop/mobile, ba luồng |
+| Browser dữ liệu kiểm thử có kiểm soát | 4 tests | Chromium desktop/mobile, ba luồng |
 | Native no-model smoke | 1 test | Web/health 200, ready/detect 503 và CORS |
 
 ## 5.3 Phương pháp đánh giá chất lượng
@@ -357,7 +359,7 @@ Precision = TP/(TP+FP), recall = TP/(TP+FN), F1 = 2PR/(P+R). Macro lấy trung b
 
 AP nội suy 101 điểm recall; AP50 dùng IoU 0,5, mAP50:95 trung bình IoU 0,50–0,95 bước 0,05 và các lớp. AP tính trước ngưỡng vận hành 0,15. Evaluator nội bộ chưa gồm area/crowd rules và không tương đương hoàn toàn official COCO evaluator. Chưa có khoảng tin cậy hoặc domain-shift test. [2]
 
-## 5.4 Kết quả đánh giá mô hình
+## 5.4 Kết quả đánh giá baseline lịch sử P4
 
 Validation gồm 98 ảnh và 565 bbox. Grid confidence từ 0,05 đến 0,95, bước 0,05, chọn macro F1 lớn nhất; nếu hòa chọn ngưỡng cao hơn. Ngưỡng 0,15 được khóa trước khi đánh giá test 75 ảnh/360 bbox. P11 không đo lại test, thay split hoặc điều chỉnh threshold; P12 trích đúng kết quả P4. [2]
 
@@ -380,9 +382,42 @@ Theo phép đo ghép cùng lớp, mô hình chỉ phát hiện đúng 2/49 bbox 
 | without_mask | 0,0190 | 0,0086 |
 | mask_worn_incorrectly | 0,0936 | 0,0340 |
 
-API vẫn dùng score floor 0,001 và trả confidence; UI dùng mốc 0,15 để đánh dấu, không loại detection thấp. [10] Do đó ảnh giao diện hoặc số detection API không thể đọc trực tiếp như kết quả PR/F1 tại ngưỡng vận hành. Muốn so sánh cần dùng đúng hậu xử lý và định nghĩa phép đo, đồng thời không tuning dựa trên test đã mở. [2,5]
+API vẫn dùng score floor 0,001 và trả confidence; UI dùng mốc 0,15 để đánh dấu, mặc định ẩn detection thấp, cho phép mở nhóm chưa chắc chắn. [10] Do đó ảnh giao diện hoặc số detection API không thể đọc trực tiếp như kết quả PR/F1 tại ngưỡng vận hành. Muốn so sánh cần dùng đúng hậu xử lý và định nghĩa phép đo, đồng thời không tuning dựa trên test đã mở. [2,5]
 
-## 5.5 Phân tích lỗi và hồi quy video
+## 5.5 Thí nghiệm fine-tune từ pretrained COCO ngày 05/11
+
+Thí nghiệm bổ sung dùng SSDLite320 MobileNetV3 Large COCO_V1 chính thức của TorchVision 0.24.0. Mô hình bốn lớp được dựng trước, sau đó nạp 428 tensor backbone và hồi quy vị trí từ weights COCO. Toàn bộ 48 tensor đầu phân loại được khởi tạo mới cho background và ba trạng thái khẩu trang. SHA-256 của weights được kiểm tra và lưu cùng cấu hình. Việc dùng weights pretrained được tách rõ khỏi baseline khởi tạo ngẫu nhiên P4. [12]
+
+Dữ liệu curated và split 670/98/75 được giữ nguyên. Cấu hình dùng CPU hai luồng, batch 2, seed 42, SGD với learning rate 0,001, momentum 0,9, weight decay 0,0005. Learning rate giảm còn 0,0001 sau epoch 20. Đã chạy đủ 30 epoch và chọn checkpoint theo validation mAP50:95 từng epoch; checkpoint tốt nhất là epoch 10. Tổng thời gian ghi nhận trong lịch sử epoch là 12.813,99 giây, bao gồm một lần máy ngủ trong epoch 13. Trung vị thời gian mỗi epoch là 399,69 giây; tổng thời gian cần được xem cùng tình trạng máy trong lúc huấn luyện.
+
+Ngưỡng đánh giá 0,25 được chọn bằng macro F1 trên validation theo cùng grid của P4 rồi khóa trước lượt test của thí nghiệm. Ngưỡng trình bày giao diện vẫn là 0,15. Tập test đã từng được đánh giá ở P4, nên đây là phép so sánh trên tập đã sử dụng; kết quả chưa phải đánh giá trên một tập giữ kín mới. Mô hình không được điều chỉnh theo kết quả test của lượt này.
+
+| Split và mô hình | Macro precision | Macro recall | Macro F1 | AP50 | mAP50:95 |
+| --- | --- | --- | --- | --- | --- |
+| Validation P4 | 0,3182 | 0,1560 | 0,1771 | 0,1153 | 0,0495 |
+| Validation fine-tune | 0,5742 | 0,2586 | 0,3351 | 0,3047 | 0,1460 |
+| Test P4 | 0,2393 | 0,1975 | 0,2061 | 0,1792 | 0,0820 |
+| Test fine-tune | 0,5159 | 0,2696 | 0,3240 | 0,2684 | 0,1333 |
+
+| Lớp test | Support | Precision | Recall | F1 |
+| --- | --- | --- | --- | --- |
+| with_mask | 299 | 0,5978 | 0,5418 | 0,5684 |
+| without_mask | 49 | 0,4500 | 0,1837 | 0,2609 |
+| mask_worn_incorrectly | 12 | 0,5000 | 0,0833 | 0,1429 |
+
+| Lớp | AP50 P4 | AP50 fine-tune | AP50:95 P4 | AP50:95 fine-tune |
+| --- | --- | --- | --- | --- |
+| with_mask | 0,4251 | 0,5514 | 0,2034 | 0,2931 |
+| without_mask | 0,0190 | 0,2016 | 0,0086 | 0,0941 |
+| mask_worn_incorrectly | 0,0936 | 0,0520 | 0,0340 | 0,0127 |
+
+Ở ngưỡng 0,25, lớp with_mask có TP/FP/FN là 162/109/137; without_mask là 9/11/40; mask_worn_incorrectly là 1/1/11. Đây là phép ghép cùng lớp để tính precision/recall/F1, khác quy tắc phân tích lỗi bên dưới.
+
+Macro F1 và AP tăng so với baseline, nhưng AP của lớp đeo sai giảm. Mục tiêu validation macro F1 và precision/recall từng lớp đạt 0,80 vẫn chưa đạt. Lớp đeo sai chỉ phát hiện đúng 1/14 bbox validation và 1/12 bbox test. Confidence hiển thị 100% là điểm dự đoán sau làm tròn, chưa chứng minh xác suất dự đoán đúng 100% trong thực tế.
+
+Phân tích lỗi test của bản fine-tune ghi 185 đối tượng bị bỏ sót, 4 nhầm lớp, 57 dự đoán sai vị trí và 61 dự đoán dư. Các nhóm dùng quy tắc ghép riêng trong bộ đánh giá và có thể chồng lấn. Báo cáo giữ cả kết quả theo lớp và số lượng mẫu để thể hiện hạn chế của hai lớp ít mẫu. [12]
+
+## 5.6 Phân tích lỗi baseline và hồi quy video
 
 Ma trận nhầm lẫn dưới đây có hàng là nhãn thực tế, cột là nhãn dự đoán; background biểu diễn đối tượng không ghép được. Để phân tích lỗi, phép ghép trong ma trận chỉ yêu cầu IoU ít nhất 0,5 và không xét lớp. Cách ghép này khác bảng PR/F1, nơi nhãn phải cùng lớp, nên tổng đường chéo của ma trận có thể khác số TP trong bảng đó. [2]
 
@@ -395,11 +430,11 @@ Ma trận nhầm lẫn dưới đây có hàng là nhãn thực tế, cột là 
 
 Phân tích trên tập test ghi nhận 215 đối tượng thực bị bỏ sót, 5 trường hợp nhầm lớp, 94 dự đoán sai vị trí và 106 dự đoán dư. Các nhóm này có thể chồng lấn nên không cộng thành tổng số lỗi độc lập. Nhóm chưa rà soát đủ ảnh để kết luận lỗi do ánh sáng hay góc mặt. [2]
 
-Regression P11: run 1 video dừng counter ở 40 frame dù báo complete. Guard 5 giây không có display mới giúp run 2 phát hiện race media unready trước seeking. Fix dừng generation/giải phóng snapshot và chờ playing/seeked; test fail trước sửa rồi pass. Run 3 stream trên 60 giây đạt; fault injection pause làm guard fail như mong đợi. Giữ raw failed runs riêng. [3]
+Khi kiểm thử hồi quy P11, lượt chạy 1 báo hoàn tất dù bộ đếm video dừng ở 40 frame. Nhóm bổ sung kiểm tra khoảng 5 giây không có khung hình mới; nhờ đó, lượt chạy 2 phát hiện lỗi lấy mẫu khi media chưa sẵn sàng trước thao tác tua. Nhóm sửa bằng cách kết thúc phiên xử lý cũ, giải phóng snapshot và chờ sự kiện playing/seeked. Bài kiểm thử tái hiện lỗi thất bại trước khi sửa và đạt sau khi sửa. Ở lượt chạy 3, luồng chạy trên 60 giây đạt; khi chủ động gây lỗi bằng thao tác pause, bước kiểm tra phát hiện thất bại như dự kiến. Log của các lượt thất bại được lưu riêng. [3]
 
-## 5.6 Phương pháp đo hiệu năng
+## 5.7 Phương pháp đo hiệu năng
 
-Ứng dụng dùng HTTP multipart cho ảnh và từng frame video/webcam. Browser giữ nguồn media và quyết định khi nào capture; server chỉ xử lý ảnh độc lập. Cách này tái sử dụng cùng endpoint, giảm trạng thái server và phù hợp demo CPU. Đồ án chưa có phép so sánh thực nghiệm với WebSocket hoặc giao thức streaming khác nên không tuyên bố HTTP tối ưu cho mọi tải. [4,5]
+Ứng dụng gửi ảnh và từng khung hình video/webcam qua HTTP multipart. Trình duyệt giữ nguồn media và quyết định thời điểm trích ảnh; máy chủ xử lý từng ảnh độc lập. Cách làm này dùng lại cùng endpoint và giảm trạng thái phải quản lý trên máy chủ, phù hợp với bản demo chạy CPU. Nhóm chưa so sánh thực nghiệm với WebSocket hay giao thức streaming khác, nên chưa kết luận cách nào tối ưu cho các mức tải khác nhau. [4,5]
 
 | Lựa chọn | Lý do trong đồ án | Điều chưa kết luận |
 | --- | --- | --- |
@@ -408,9 +443,9 @@ Regression P11: run 1 video dừng counter ở 40 frame dù báo complete. Guard
 | Snapshot đã phân tích | Overlay gắn đúng frame được gửi | Không phải overlay đồng bộ frame live |
 | CPU hai luồng | Môi trường baseline có thể mô tả rõ | Chưa đại diện mọi máy người dùng |
 
-## 5.7 Kết quả hiệu năng local
+## 5.8 Kết quả hiệu năng local
 
-Run 3 P11 chạy Windows 11, Intel Core i5-13500H, RAM khoảng 16,8 GB; Python 3.12.14, Node 24.19.0 và Chromium 156.0.8078.4. Inference dùng CPU hai luồng. CI dùng Node 22 nên không gọi môi trường local giống hệt CI. Media là PNG 320×240 và video/webcam synthetic không khuôn mặt; API nạp checkpoint thật đã pin. [3]
+Run 3 P11 chạy Windows 11, Intel Core i5-13500H, RAM khoảng 16,8 GB; Python 3.12.14, Node 24.19.0 và Chromium 156.0.8078.4. Phần suy luận chạy trên CPU hai luồng. CI dùng Node 22, khác phiên bản Node trên máy local. Đầu vào gồm PNG 320×240 và video/webcam tổng hợp không có khuôn mặt; API dùng checkpoint thật đã được cố định phiên bản. [3]
 
 | Phép đo | Mẫu thành công | p50 ms | p95 ms |
 | --- | --- | --- | --- |
@@ -423,35 +458,50 @@ Run 3 P11 chạy Windows 11, Intel Core i5-13500H, RAM khoảng 16,8 GB; Python 
 | Luồng | Thời lượng s | Snapshot hiển thị | FPS hiển thị | Capture-to-display p95 ms |
 | --- | --- | --- | --- | --- |
 | Video | 60,31 | 296 | 4,91 | 89,50 |
-| Webcam synthetic | 60,37 | 301 | 4,99 | 86,00 |
+| Webcam tổng hợp | 60,37 | 301 | 4,99 | 86,00 |
 
-Webcam có 302 response nhưng chỉ 301 snapshot trong mẫu hiển thị khi phase kết thúc. Báo cáo dùng đúng denominator và không đồng nhất HTTP throughput với displayed FPS. Video có một stop abort được ghi riêng; không có unexpected request failure, UI alert hoặc page error trong run cuối. Một mẫu ảnh chỉ là smoke, không đủ để diễn giải p95 thành một phân bố ổn định.
+Luồng webcam nhận 302 phản hồi, trong đó 301 snapshot được hiển thị khi giai đoạn đo kết thúc. Số phản hồi HTTP và số khung hình hiển thị được dùng với mẫu số tương ứng khi tính tốc độ. Luồng video có một yêu cầu chủ động hủy khi dừng, được ghi riêng; lượt chạy cuối không có yêu cầu thất bại ngoài dự kiến, thông báo lỗi giao diện hoặc lỗi trang. Phép đo ảnh chỉ có một mẫu thử nhanh, chưa đủ để xem p95 là kết quả ổn định.
 
-Peak sampled process-tree working set là 356,83 MiB cho API và 102,09 MiB cho web; page JS heap 7,96 MiB. Working set có thể đếm trùng shared pages; JS heap không phải tổng bộ nhớ Chromium. Poll mỗi giây có thể bỏ lỡ peak ngắn và chưa có memory budget pass/fail. Những số này hỗ trợ mô tả môi trường thử, không dự báo bộ nhớ mọi host.
+Giá trị working set cao nhất ghi nhận trên cây tiến trình là 356,83 MiB cho API và 102,09 MiB cho web; JS heap của trang là 7,96 MiB. Working set có thể tính trùng vùng nhớ dùng chung, còn JS heap chỉ phản ánh một phần bộ nhớ Chromium. Việc lấy mẫu mỗi giây có thể bỏ qua đỉnh ngắn, và nhóm chưa đặt ngưỡng đạt/không đạt cho bộ nhớ. Các số đo này chỉ mô tả máy thử nghiệm, chưa dùng để dự báo trên máy khác.
 
-## 5.8 Đối chiếu nghiệm thu và hạn chế
+## 5.9 Đối chiếu nghiệm thu và hạn chế
 
-Trong thử nghiệm local, ba luồng ảnh, video và webcam đã kết nối đến bộ tích hợp suy luận thật với media tổng hợp. Kiểm thử tự động bao phủ xử lý lỗi, lớp vẽ kết quả và vòng đời tác vụ; baseline cũng đã được đánh giá trên tập test sau khi khóa ngưỡng. Chất lượng mô hình và điều kiện sử dụng dữ liệu vẫn chưa đáp ứng việc triển khai công khai. Bảng dưới đây tổng hợp kết quả và phần còn thiếu của từng hạng mục. [1–4]
+Ở mốc P11, ba luồng ảnh, video và webcam đã kết nối đến bộ tích hợp suy luận thật với media tổng hợp. Kiểm thử tự động bao phủ xử lý lỗi, lớp vẽ kết quả và vòng đời tác vụ; baseline cũng đã được đánh giá trên tập test sau khi khóa ngưỡng. Chất lượng mô hình và điều kiện sử dụng dữ liệu vẫn chưa đáp ứng việc triển khai công khai. Bảng dưới đây tổng hợp kết quả và phần còn thiếu của từng hạng mục. [1–4]
 
 | Hạng mục | Kết luận có căn cứ | Phần cần làm tiếp |
 | --- | --- | --- |
-| Ba luồng web | Fixture và model local synthetic có evidence | Camera vật lý, browser khác |
-| Model | Test macro F1 0,2061, minority recall thấp | Dữ liệu và baseline tốt hơn theo quy trình mới |
+| Ba luồng web | Kiểm thử có kiểm soát và camera laptop thật trên local | Nghiệm thu đầy đủ trên các trình duyệt đích |
+| Model | Fine-tune test macro F1 0,3240; P4 lịch sử 0,2061 | Chất lượng theo lớp và dữ liệu đại diện |
 | Dữ liệu | Audit kỹ thuật curated đạt | Quyền từng ảnh, scene independence |
-| Hiệu năng | Budget local đạt trên workload synthetic | Tải đại diện và môi trường đích |
+| Hiệu năng | Đạt mục tiêu hiệu năng local trên tải thử tổng hợp | Tải đại diện và môi trường đích |
 | Container | CI no-model Compose đạt | Local runtime/checkpoint và setup độc lập |
 | Hosted preview | Chưa kiểm chứng | HTTPS, camera, rollback |
-| Tài liệu P12 | Bộ đồng bộ để review, có nguồn | Thông tin nhóm và review bản mới/slide |
+| Tài liệu P12 | Đã đồng bộ tài liệu và ghi nguồn tham khảo | Thông tin nhóm và duyệt báo cáo, slide bản cuối |
 
-## 5.9 Kết luận chương 5
+## 5.10 Kiểm chứng bản giao diện ngày 05/11
 
-Kiểm thử phần mềm và latency local không khắc phục minority recall thấp. Gate đóng; quyền ảnh, setup độc lập, camera và HTTPS chưa đủ nghiệm thu.
+Bản cập nhật ngày 05/11 đạt 87 kiểm thử đơn vị frontend và 8 kiểm thử trình duyệt trên desktop/mobile; typecheck, lint và build production đều đạt. Hộp chọn tệp được kiểm tra bằng click, Enter và Space tại cả vùng giữa màn hình lẫn nút phía dưới. Với 100 detection gồm 2 đạt ngưỡng và 98 dự đoán yếu, giao diện mặc định có 2 dòng kết quả cùng bbox. Khi mở nhóm yếu, số lượng hiển thị tăng lên 100; đóng lại còn 2. Nhóm cũng kiểm tra việc giữ kết quả sau pause/ended và dừng webcam, bỏ phản hồi muộn, tua, đổi nguồn và giải phóng tài nguyên. [13]
+
+| Luồng local với checkpoint fine-tune | Khoảng chạy | Request thành công trong phase | HTTP p95 |
+| --- | --- | --- | --- |
+| Video dữ liệu kiểm thử | Trên 60 giây | 299 | 175,68 ms |
+| Webcam laptop thật | Trên 60 giây | 220, gồm bật lại | 204,48 ms |
+
+Camera USB2.0 HD UVC WebCam trả hình 640×480 với cấu hình nguồn 30 FPS. Các bước từ chối/cấp lại quyền, dừng, bật lại và đổi chế độ đạt kiểm tra trạng thái track; snapshot cuối còn hiển thị sau Dừng. Người vận hành xác nhận đèn camera tắt sau lượt thử. Chưa kiểm tra rút thiết bị camera tích hợp hoặc đủ các tổ hợp đeo đúng, không đeo và đeo sai theo ánh sáng/khoảng cách. Không lưu media khuôn mặt. Các request chủ động bị hủy trong thao tác điều khiển được ghi riêng trong log.
+
+Các số đo này thuộc lượt chạy local ngày 05/11. Kết quả P11 trước đó được đo trên media tổng hợp. Do tải thử và thời điểm đo khác nhau, nhóm chưa thể quy toàn bộ chênh lệch độ trễ cho việc dùng trọng số pretrained. Ảnh giao diện trong báo cáo dùng dữ liệu kiểm thử có kiểm soát; camera vật lý được kiểm tra ở lượt riêng.
+
+## 5.11 Kết luận chương 5
+
+Recall ở hai lớp ít mẫu vẫn thấp dù phần mềm đã được kiểm thử và có số đo độ trễ local. Nhóm còn cần xác minh quyền ảnh, scene independence, cài đặt trên máy mới và HTTPS. Camera laptop đã chạy thử local; việc đánh giá chất lượng theo lớp trong các điều kiện ánh sáng và khoảng cách khác nhau vẫn chưa hoàn tất.
 
 # KẾT LUẬN
 
-Đồ án đã xây dựng được ứng dụng web có ba đầu vào dùng chung contract ảnh, adapter SSDLite thật, kiểm tra checkpoint và các cơ chế quản lý tác vụ bất đồng bộ. Các lớp giao diện, API và ML có kiểm thử riêng; benchmark với checkpoint thật đã phát hiện một race video mà test fixture trước đó chưa bộc lộ. Việc tái hiện, sửa và kiểm chứng lại cho thấy cần kết hợp kiểm thử có kiểm soát với chạy stream dài. [3,5]
+Nhóm đã xây dựng ứng dụng web nhận ảnh, video và webcam qua cùng định dạng dữ liệu ảnh, với bộ tích hợp SSDLite, kiểm tra checkpoint và quản lý tác vụ bất đồng bộ. Giao diện, API và ML có các bài kiểm thử riêng. Khi đo hiệu năng bằng checkpoint thật, nhóm phát hiện thêm lỗi lấy mẫu video mà dữ liệu kiểm thử có kiểm soát chưa bộc lộ. Nhóm đã tái hiện, sửa và chạy lại luồng dài để kiểm tra lỗi này. [3,5]
 
-Kết quả chất lượng là hạn chế lớn nhất của baseline. Test macro F1 0,2061 và mAP50:95 0,0820 đi cùng recall rất thấp ở hai lớp ít mẫu. Đây là kết quả lịch sử của checkpoint và split P4, không phải đánh giá lại sau thay đổi UI. Do đó ứng dụng hiện chỉ phù hợp trình diễn kỹ thuật nội bộ trong phạm vi được cho phép. Không có cơ sở đưa vào cảnh báo tự động hoặc quyết định về con người. Confidence chưa được calibration; nhãn “Chưa chắc chắn” chỉ hỗ trợ trình bày, không khẳng định xác suất đúng. [2,10]
+Chất lượng nhận diện còn là hạn chế lớn nhất của baseline lịch sử P4: test macro F1 đạt 0,2061 và mAP50:95 đạt 0,0820, với recall rất thấp ở hai lớp ít mẫu. Các số đo thuộc checkpoint và tập dữ liệu P4, chưa được đo lại khi thay đổi giao diện. Ứng dụng hiện phù hợp để trình diễn kỹ thuật nội bộ trong phạm vi được phép, chưa đủ cơ sở dùng cho cảnh báo tự động hoặc quyết định về con người. Confidence chưa được hiệu chuẩn thành xác suất đúng trong thực tế; nhãn “Chưa chắc chắn” dùng để giúp người xem đọc kết quả. [2,10]
+
+Sau khi fine-tune từ COCO, test macro F1 tăng lên 0,3240 và mAP50:95 tăng lên 0,1333. Nhóm đã thử camera laptop trên môi trường local và bổ sung việc giữ kết quả cuối khi dừng. Tuy vậy, chất lượng theo lớp chưa đạt mục tiêu, nên phạm vi sử dụng vẫn giới hạn ở trình diễn kỹ thuật local.
 
 # TÀI LIỆU THAM KHẢO
 
@@ -467,7 +517,7 @@ Kết quả chất lượng là hạn chế lớn nhất của baseline. Test ma
 
 [6] Liu, W. và cộng sự. SSD Single Shot MultiBox Detector. ECCV 2016, arXiv:1512.02325. https://arxiv.org/abs/1512.02325. Truy cập 20/10/2026. Dùng làm cơ sở detection, không trích metric bài báo thành metric đồ án.
 
-[7] TorchVision. ssdlite320_mobilenet_v3_large. https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html. Truy cập 20/10/2026. Trang stable hiện là bản 0.29; thực nghiệm đồ án dùng 0.24.0, cấu hình trong repo là nguồn cho tham số đã chạy.
+[7] TorchVision. ssdlite320_mobilenet_v3_large. https://docs.pytorch.org/vision/0.24/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html. Truy cập 20/10/2026. Thực nghiệm đồ án dùng 0.24.0; cấu hình trong repo là nguồn cho tham số đã chạy.
 
 [8] Howard, A. và cộng sự. Searching for MobileNetV3. ICCV 2019, arXiv:1905.02244. https://arxiv.org/abs/1905.02244. Truy cập 20/10/2026. Cơ sở backbone, chưa có so sánh hiệu năng backbone trong đồ án.
 
@@ -477,11 +527,15 @@ Kết quả chất lượng là hạn chế lớn nhất của baseline. Test ma
 
 [11] PlantUML. Use case Diagram syntax and features. https://plantuml.com/use-case-diagram. Truy cập 01/11/2026.
 
-Nguồn ảnh giao diện: script capture-fixtures.mjs của P12 chạy trên snapshot PR #49 ngày 24/10/2026, media synthetic không khuôn mặt và response fixture. Nguồn sơ đồ: source P11, P12 biên tập. Không sử dụng ảnh dataset hoặc hình minh họa nhận diện người thật.
+Nguồn ảnh giao diện: dữ liệu kiểm thử có kiểm soát và media tổng hợp không khuôn mặt, chụp trên phiên bản frontend 84758d8 ngày 06/11/2026 để minh họa hành vi ngày 05/11. Ảnh chỉ minh họa giao diện, không phải phép đo chất lượng model hoặc camera vật lý. Nguồn sơ đồ: mã nguồn P11 và sơ đồ đã biên tập của nhóm. Không sử dụng ảnh dataset hoặc hình nhận diện người thật.
 
-# PHỤ LỤC A TÁI LẬP VÀ DANH MỤC EVIDENCE
+[12] Nhóm đồ án. Thí nghiệm SSDLite COCO fine-tune ngày 05/11/2026. https://github.com/anhpd-glinteco/face-mask-detection/pull/54. Model card ghi checkpoint, cấu hình và kết quả validation/test.
 
-Tái lập bằng môi trường đã pin và checkpoint đúng checksum, output mới; không chạy benchmark đồng thời suite/build khác. Full command, --checkpoint/--sha256/--output và quy tắc cleanup ở regression report [3]. Chưa nghiệm thu setup máy sạch.
+[13] Nhóm đồ án. Bản giao diện lọc detection và giữ snapshot ngày 05/11/2026. https://github.com/anhpd-glinteco/face-mask-detection/pull/55. Phiên bản mã nguồn được định danh trong file hướng dẫn chương trình.
+
+# PHỤ LỤC A TÁI LẬP VÀ DANH MỤC MINH CHỨNG
+
+Để tái lập, dùng môi trường đã cố định phiên bản, checkpoint đúng checksum và thư mục kết quả mới. Khi đo hiệu năng, không chạy đồng thời bộ kiểm thử hoặc build khác. Các lệnh đầy đủ, tham số --checkpoint/--sha256/--output và cách giải phóng tài nguyên được ghi trong regression report [3]. Nhóm chưa nghiệm thu cài đặt trên máy sạch.
 
 | Thư mục và môi trường | Lệnh kiểm tra |
 | --- | --- |
@@ -499,30 +553,30 @@ Tái lập bằng môi trường đã pin và checkpoint đúng checksum, output
 | E04 | P11 run 3 browser-summary.json | Counts, duration, HTTP/display FPS |
 | E05 | P11 memory.json, environment.json | Môi trường và sampled memory |
 | E06 | P11 release logs và PR #39 CI | Kiểm thử phần mềm lịch sử |
-| E07 | P12 fixture screenshots | Minh họa giao diện, không đo model |
+| E07 | P12 dữ liệu kiểm thử có kiểm soát screenshots | Minh họa giao diện, không đo model |
 
 Để chỉnh sơ đồ use case, mở tệp `docs/report/diagrams/system.puml` bằng trình soạn thảo văn bản và sửa khối từ `@startuml use-cases` đến `@enduml`. Các từ khóa `actor`, `usecase` và `rectangle` lần lượt mô tả tác nhân, chức năng và biên hệ thống. Từ thư mục gốc dự án, chạy lệnh sau bằng Java và PlantUML JAR đã cài:
 
 ```powershell
-java -Xmx256m -Djava.awt.headless=true -jar D:\Codex\downloads\face-mask-detection\tools\plantuml.jar -charset UTF-8 -tsvg docs/report/diagrams/system.puml
+java -Xmx256m -Djava.awt.headless=true -jar tools/plantuml.jar -charset UTF-8 -tsvg docs/report/diagrams/system.puml
 ```
 
 Lệnh xuất các sơ đồ trong tệp thành SVG. Sơ đồ use case nằm trong `docs/report/diagrams/use-cases.svg`; bản PNG dùng chèn báo cáo nằm trong `docs/report/p12-template/assets/usecases.png`. Khi sửa nguồn, cần xuất lại SVG và PNG trước khi tạo lại báo cáo.
 
 # PHỤ LỤC B THÔNG TIN CẦN BỔ SUNG
 
-Kịch bản kiểm thử trước đây dùng ảnh synthetic, video local pause/seek và webcam giả lập start/stop. Ngày 02/11/2026, nhóm bổ sung chạy camera tích hợp laptop USB2.0 HD UVC WebCam với checkpoint thật trên phiên bản PR #49. Camera trả hình 640×480, cấu hình nguồn 30 FPS, chạy liên tục 60,39 giây. Các bước từ chối rồi cấp lại quyền, dừng, bật lại và đổi chế độ đều đạt kiểm tra trạng thái track; chưa quan sát đèn camera hoặc thử ngắt thiết bị vật lý.
+Kịch bản kiểm thử trước đây dùng ảnh tổng hợp, video local pause/seek và webcam giả lập start/stop. Ngày 02/11/2026, nhóm bổ sung chạy camera tích hợp laptop USB2.0 HD UVC WebCam với checkpoint thật trên phiên bản PR #49. Camera trả hình 640×480, cấu hình nguồn 30 FPS, chạy liên tục 60,39 giây. Các bước từ chối rồi cấp lại quyền, dừng, bật lại và đổi chế độ đều đạt kiểm tra trạng thái track; chưa quan sát đèn camera hoặc thử ngắt thiết bị vật lý.
 
 Lượt chạy bổ sung có 63 request webcam thành công, gồm cả thao tác bật lại sau khoảng đo liên tục. HTTP p50 là 258,96 ms, p95 là 1.390,75 ms; video smoke có p95 1.266,98 ms trên 5 request thành công. Cả hai p95 vượt mục tiêu 1.000 ms, nên kết quả nghiệm thu mới chỉ đạt một phần. Camera FPS là cấu hình nguồn, không phải FPS xử lý. Các request bị hủy khi dừng được giữ trong log, không loại khỏi hồ sơ để làm đẹp kết quả. Không có ảnh hoặc video camera được lưu; các số đo P4/P11 trong chương 5 vẫn là kết quả lịch sử, không được thay bằng lượt đo này.
 
-Ảnh và video tổng hợp đã kiểm tra đường browser đến checkpoint thật; video có lượt chạy riêng ít nhất 60 giây, cùng kiểm tra tạm dừng, tua và phát tiếp. Hồ sơ mới được lưu tại `D:/Codex/outputs/face-mask-detection/submission-2026-11-02/verification`, gồm raw logs, acceptance-summary.json và kết quả từng lượt thất bại. P13 chưa có video demo được ghi hình; phạm vi sử dụng checkpoint vẫn là trình diễn nội bộ với giới hạn chất lượng đã nêu.
+Ảnh và video tổng hợp đã kiểm tra đường browser đến checkpoint thật; video có lượt chạy riêng ít nhất 60 giây, cùng kiểm tra tạm dừng, tua và phát tiếp. Hồ sơ mới được lưu tại thư mục minh chứng local của lượt chạy ngày 02/11, gồm raw logs, acceptance-summary.json và kết quả từng lượt thất bại. P13 chưa có video demo được ghi hình; phạm vi sử dụng checkpoint vẫn là trình diễn nội bộ với giới hạn chất lượng đã nêu.
 
 | Mục trước khi nộp | Trạng thái |
 | --- | --- |
-| Thông tin nhóm | MSSV và lớp đã đối chiếu ảnh danh sách ngày 02/11/2026; khóa đào tạo chưa xác nhận. Phân công được tổng hợp theo kế hoạch nhóm. |
+| Thông tin nhóm | MSSV đã đối chiếu danh sách nhóm. Khóa K18, lớp học phần 20261IT6150003, nhóm 1 và vai trò FE của Phùng Đức Anh đã được xác nhận; các nhiệm vụ đồng phụ trách theo GitHub. |
 | Mẫu trình bày | Theo file tham chiếu được cung cấp; không coi là rubric học phần đã xác nhận |
-| Review độc lập | Agent đã review báo cáo theo mẫu 34 trang trên snapshot 21/10/2026; phạm vi không gồm slide hoặc nội dung cập nhật sau đó |
-| Camera vật lý, HTTPS và rollback hosted | Camera laptop đã chạy 60,39 giây; chức năng/track cleanup đạt, latency vượt mục tiêu. HTTPS và rollback hosted chưa kiểm chứng. |
+| Rà soát bản nộp | Đã đối chiếu số liệu và kiểm tra trình bày; nhóm cần duyệt nội dung và slide phiên bản cuối. |
+| Camera vật lý và môi trường đích | Camera laptop có lượt kiểm tra local ngày 05/11; dừng track và đèn camera đã kiểm tra. HTTPS, rollback và ma trận chất lượng theo điều kiện thực tế còn thiếu. |
 | Video demo và rehearsal P13 | Đã chạy thử ba luồng local; chưa ghi video demo, chưa xác nhận nghiệm thu đầy đủ. |
 
-Giữ issue #26 mở khi thông tin bắt buộc và review còn thiếu. Không thêm chữ ký hoặc nghiệm thu của giảng viên khi chưa có xác nhận.
+BM124 là tài liệu nộp riêng theo thông báo lớp, đặt tên DACN-1-BM124. Chưa có mẫu gốc để điền biểu mẫu. Video demo hoàn chỉnh còn cần nhóm tự ghi và kiểm tra. Bản báo cáo dành chỗ để nhóm và giảng viên xác nhận theo quy định học phần.

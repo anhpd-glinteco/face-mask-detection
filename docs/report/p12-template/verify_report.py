@@ -46,11 +46,11 @@ def verify(reference,output,work,evidence):
     for p in d.paragraphs:
         if p.text.startswith('[7] TorchVision.'):
             assert any(r.font.size.pt==8 and r.text.startswith('https://docs.pytorch.org/') for r in p.runs)
-            assert compact('https://docs.pytorch.org/vision/stable/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html') in all_text
+            assert compact('https://docs.pytorch.org/vision/0.24/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html') in all_text
     for bad in ['UniLend','Uni-Lend','Nguyễn Xuân Hoàng','Phạm Văn Hà','Dư Quốc An','20261IT6040001']:
         assert compact(bad) not in all_text,bad
     assert 'LỜI CẢM ƠN' not in texts[0] and 'LỜI CẢM ƠN' in texts[1]
-    for value in ['ThS. Vũ Thị Dương','DACN_20261IT6150003','Phùng Đức Anh','2023607426','Nguyễn Đình Luân Kiệt','2024605040','Bùi Nguyên Hải','2022603861','Bùi Ngọc Minh Hoàng','2022604035']:assert compact(value) in compact(texts[0])
+    for value in ['ThS. Vũ Thị Dương','20261IT6150003','K18','Phùng Đức Anh','2023607426','Nguyễn Đình Luân Kiệt','2024605040','Bùi Nguyên Hải','2022603861','Bùi Ngọc Minh Hoàng','2022604035']:assert compact(value) in compact(texts[0])
     toc=[p.text for p in d.paragraphs if p.style.name.lower().startswith('toc')]
     chapter_entries=[e for e in receipt['entries'] if e['style']=='Heading 1' and e['text'].startswith('CHƯƠNG ')]
     assert len(chapter_entries)==5
@@ -69,13 +69,25 @@ def verify(reference,output,work,evidence):
         if stage=='test':
             for values in report['operating']['per_class'].values():
                 for key in ['precision','recall','f1']:assert compact(vi(values[key],4)) in all_text
+    for stage in ['test','validation']:
+        report=load(evidence/f'pretrained-2026-11-05/{stage}/report.json')
+        for metric in report['operating']['macro'].values():assert compact(vi(metric,4)) in all_text
+        for key in ['ap50','map50_95']:assert compact(vi(report['ap'][key],4)) in all_text
+        assert report['selected_epoch']==10 and report['threshold']==0.25
+        if stage=='test':
+            for values in report['operating']['per_class'].values():
+                for key in ['precision','recall','f1']:assert compact(vi(values[key],4)) in all_text
+            for values in report['ap']['per_class'].values():
+                for key in ['ap50','map50_95']:assert compact(vi(values[key],4)) in all_text
+    references=[re.match(r'^\[(\d+)\]',p).group(1) for p in paragraphs if re.match(r'^\[\d+\]',p)]
+    assert references==[str(n) for n in range(1,14)],references
     api=load(evidence/'p11-internal-regression/real-model-run-3/api-summary.json')
     browser=load(evidence/'p11-internal-regression/real-model-run-3/browser-summary.json')
     for kind in ['cold','warm']:
         for key in ['p50_ms','p95_ms']:assert compact(vi(api[kind][key],2)) in all_text
     for kind in ['video','webcam']:
         for key in ['displayed_frames_per_s','duration_s','p95_ms']:assert compact(vi(browser[kind][key],2)) in all_text
-    for important in ['0,001','0,15','uncertain','CLOSED','562','356,83','102,09','7,96','2/49','1/12']:
+    for important in ['0,001','0,15','uncertain','điều kiện triển khai công khai chưa đạt','562','356,83','102,09','7,96','2/49','1/12']:
         assert compact(important) in all_text,important
     ns={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
     with ZipFile(output/'bao-cao-do-an.docx') as z:
@@ -84,7 +96,7 @@ def verify(reference,output,work,evidence):
         root=E.fromstring(z.read('word/document.xml'))
         instructions=root.xpath('//*[local-name()="instrText"]/text()')
         assert sum(t.strip().startswith('TOC ') for t in instructions)==3
-        assert sum(t.strip().startswith('SEQ ') for t in instructions)==33
+        assert sum(t.strip().startswith('SEQ ') for t in instructions)==len(authored['figures'])+len(authored['tables'])
         for n in names:
             if n.endswith('.rels'):
                 for rel in E.fromstring(z.read(n)):
@@ -95,15 +107,15 @@ def verify(reference,output,work,evidence):
     old_manifest=load(evidence/'p12-report-slides/evidence-manifest.json')
     for item in old_manifest['records']:
         if 'deliverable' in item:assert digest(evidence/'p12-report-slides'/item['deliverable'])==item['sha256']
-    assert len([e for e in receipt['entries'] if e['style']=='FigureCaption'])==6
-    assert len([e for e in receipt['entries'] if e['style']=='TableCaption'])==27
-    result={'status':'PASS','pages':len(pdf.pages),'figures':6,'tables':27,'toc_entries_checked':len(matched),
+    assert len([e for e in receipt['entries'] if e['style']=='FigureCaption'])==len(authored['figures'])
+    assert len([e for e in receipt['entries'] if e['style']=='TableCaption'])==len(authored['tables'])
+    result={'status':'PASS','pages':len(pdf.pages),'figures':len(authored['figures']),'tables':len(authored['tables']),'toc_entries_checked':len(matched),
         'word_version':receipt['word_version'],'reference_sha256':REFERENCE_SHA,
         'preserved_parts_checked':len(authored['preserved_parts']),'old_p12_unchanged':True,
         'independent_review':False,'deployment_gate':'CLOSED','entries':matched,
         'deliverables':[{'name':name,'sha256':digest(output/name),'bytes':(output/name).stat().st_size} for name in ['bao-cao-do-an.docx','bao-cao-do-an.pdf']]}
     (output/'manifest.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(f'PASS: {len(pdf.pages)} pages, 6 figures, 27 tables, {len(matched)} refreshed list entries, original metrics and P12 hashes.')
+    print(f'PASS: {len(pdf.pages)} pages, {len(authored['figures'])} figures, {len(authored['tables'])} tables, {len(matched)} refreshed list entries, original metrics and P12 hashes.')
 
 
 if __name__=='__main__':
