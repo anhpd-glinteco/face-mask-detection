@@ -1,4 +1,4 @@
-"""Adapt the supplied DOCX package, preserving its cover frame and opaque parts."""
+"""Adapt the supplied DOCX package, replacing its cover and preserving unrelated opaque parts."""
 import argparse
 import copy
 import hashlib
@@ -43,7 +43,7 @@ def section_geometry(section, start, number_format=None):
     refs=len(section.findall(qn('w:headerReference')))+len(section.findall(qn('w:footerReference')))
     section.insert(refs,xml('type',val='nextPage'))
     mar=section.find(qn('w:pgMar'))
-    for key,value in {'top':1701,'left':1440,'right':1440,'bottom':1440}.items():mar.set(qn('w:'+key),str(value))
+    for key,value in {'top':1134,'left':1984,'right':1134,'bottom':1134}.items():mar.set(qn('w:'+key),str(value))
     num=section.find(qn('w:pgNumType'))
     if num is None:num=xml('pgNumType');section.append(num)
     num.set(qn('w:start'),str(start))
@@ -70,13 +70,13 @@ def build(reference,source,output,work):
             for a in list(f.attrib):
                 if a.endswith('Theme'):del f.attrib[a]
         s.paragraph_format.widow_control=True
-    normal=d.styles['normal'];normal.font.size=Pt(13)
+    normal=d.styles['normal'];normal.font.size=Pt(14)
     normal.paragraph_format.line_spacing=1.5
     normal.paragraph_format.first_line_indent=Cm(1)
     normal.paragraph_format.space_after=Pt(4)
     normal.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.JUSTIFY
     for name in ['Heading 1','Heading 2','Heading 3']:
-        s=d.styles[name];s.font.size=Pt(14);s.font.bold=True
+        s=d.styles[name];s.font.size=Pt(16 if name=='Heading 1' else 14);s.font.bold=True
         s.paragraph_format.line_spacing=1.0;s.paragraph_format.space_before=Pt(6);s.paragraph_format.space_after=Pt(6)
         s.paragraph_format.left_indent=Cm(0);s.paragraph_format.first_line_indent=Cm(0)
         s.paragraph_format.keep_with_next=True
@@ -85,7 +85,7 @@ def build(reference,source,output,work):
     for name in ['FrontHeading','ListTitle','FigureCaption','TableCaption']:
         if name not in d.styles:d.styles.add_style(name,WD_STYLE_TYPE.PARAGRAPH)
         s=d.styles[name];s.base_style=normal;s.font.name='Times New Roman'
-        s.font.size=Pt(14 if 'Heading' in name or name=='ListTitle' else 11)
+        s.font.size=Pt(14 if 'Heading' in name or name=='ListTitle' else 12)
         s.font.bold=name in ['FrontHeading','ListTitle'];s.font.italic='Caption' in name
         s.paragraph_format.first_line_indent=Cm(0);s.paragraph_format.line_spacing=1.15
         s.paragraph_format.alignment=WD_ALIGN_PARAGRAPH.CENTER
@@ -98,26 +98,36 @@ def build(reference,source,output,work):
         s.element.find(qn('w:name')).set(qn('w:val'),f'toc {i}')
         s.paragraph_format.line_spacing=1;s.paragraph_format.space_after=Pt(3)
         s.paragraph_format.first_line_indent=Cm(0);s.paragraph_format.left_indent=Cm((i-1)*.5)
-    replacements={8:'BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH',9:'KỸ THUẬT PHẦN MỀM',
-      11:'XÂY DỰNG ỨNG DỤNG WEB PHÁT HIỆN TRẠNG THÁI ĐEO KHẨU TRANG',
-      12:'GVHD: ThS. Vũ Thị Dương',13:'Nhóm: 01',14:'Phùng Đức Anh — MSSV: 2023607426',
-      15:'Nguyễn Đình Luân Kiệt — MSSV: 2024605040',16:'Bùi Nguyên Hải — MSSV: 2022603861',
-      17:'Bùi Ngọc Minh Hoàng — MSSV: 2022604035',19:'Lớp: DACN_20261IT6150003    Khóa: Cần bổ sung',21:'Hà Nội, năm 2026'}
     from docx.text.paragraph import Paragraph
-    for i,node in enumerate(cover):
-        if i==18:continue
-        b.insert(len(b)-1,node)
-        p=Paragraph(node,d._body)
-        if i in replacements:
-            p.text=replacements[i];p.paragraph_format.left_indent=Cm(0);p.paragraph_format.right_indent=Cm(0)
-            p.paragraph_format.first_line_indent=Cm(0);p.alignment=WD_ALIGN_PARAGRAPH.CENTER
-            for r in p.runs:
-                r.font.name='Times New Roman';r.font.size=Pt(22 if i==11 else 16 if i in [8,9] else 13)
-                r.bold=i in [8,9,11];r.font.color.rgb=RGBColor.from_string('002060' if i in [11,21] else '000000')
-        if 3<=i<=7:p.paragraph_format.line_spacing=1;p.paragraph_format.space_after=Pt(0);p.paragraph_format.space_before=Pt(0)
     cover_section=sections[0]
-    for element in list(cover_section):
-        if element.tag in [qn('w:footerReference'),qn('w:pgNumType')]:cover_section.remove(element)
+    for old in list(cover_section):
+        if old.tag in [qn('w:footerReference'),qn('w:pgNumType')]:cover_section.remove(old)
+    mar=cover_section.find(qn('w:pgMar'))
+    for key,value in {'top':1701,'bottom':1701,'left':1984,'right':1134}.items():mar.set(qn('w:'+key),str(value))
+    borders=xml('pgBorders',offsetFrom='text')
+    for edge,space in [('top',71),('bottom',71),('left',85),('right',43)]:borders.append(xml(edge,val='single',sz=8,space=12,color='000000'))
+    cover_section.append(borders)
+    def coverline(text,size=14,bold=False):
+        p=d.add_paragraph();p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+        p.paragraph_format.first_line_indent=Cm(0);p.paragraph_format.line_spacing=1.15;p.paragraph_format.space_after=Pt(12)
+        r=p.add_run(text);r.font.name='Times New Roman';r.font.size=Pt(size);r.bold=bold
+        return p
+    coverline('TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP HÀ NỘI',14,True)
+    coverline('TRƯỜNG CÔNG NGHỆ THÔNG TIN VÀ TRUYỀN THÔNG',14,True)
+    p=coverline('');p.add_run().add_picture(str(source.parent/'assets/haui-logo.png'),height=Cm(3))
+    coverline('BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH',16,True)
+    coverline('KỸ THUẬT PHẦN MỀM',14,True)
+    coverline('XÂY DỰNG ỨNG DỤNG WEB PHÁT HIỆN TRẠNG THÁI ĐEO KHẨU TRANG',16,True)
+    t=d.add_table(rows=0,cols=2);t.alignment=WD_TABLE_ALIGNMENT.CENTER;t.autofit=False
+    for column,width in zip(t.columns,[2.5,9]):column.width=Cm(width)
+    table_width=t._tbl.tblPr.find(qn('w:tblW'));table_width.set(qn('w:type'),'dxa');table_width.set(qn('w:w'),str(Cm(11.5).twips))
+    for label,value in [('GVHD:','ThS. Vũ Thị Dương'),('Nhóm:','01'),('Sinh viên:','Phùng Đức Anh  2023607426'),('','Nguyễn Đình Luân Kiệt  2024605040'),('','Bùi Nguyên Hải  2022603861'),('','Bùi Ngọc Minh Hoàng  2022604035'),('Lớp:','20261IT6150003'),('Khóa:','K18')]:
+        cells=t.add_row().cells
+        cells[0].width=Cm(2.5);cells[1].width=Cm(9)
+        for cell,text in zip(cells,[label,value]):
+            p=cell.paragraphs[0];p.paragraph_format.first_line_indent=Cm(0);p.paragraph_format.line_spacing=1.15;p.paragraph_format.space_after=Pt(8)
+            r=p.add_run(text);r.font.size=Pt(14);r.font.name='Times New Roman'
+    coverline('Hà Nội, năm 2026')
     def section_break(s):
         p=d.add_paragraph();p.paragraph_format.space_after=Pt(0);p.paragraph_format.space_before=Pt(0)
         p.paragraph_format.line_spacing=Pt(1);p.add_run().font.size=Pt(1)
@@ -130,6 +140,7 @@ def build(reference,source,output,work):
             pxml=xml('p');footer.append(pxml);p=Paragraph(pxml,d._body)
             p.alignment=WD_ALIGN_PARAGRAPH.CENTER;p.paragraph_format.first_line_indent=Cm(0)
             field(p,'PAGE','1')
+    table_description=None
     chapter='0';counts=defaultdict(int);figures=[];tables=[];front=True;first_heading=True;references=False;subheading=''
     lines=source.read_text(encoding='utf-8').splitlines();i=0
     assets=source.parent.parent/'p12/assets'
@@ -152,8 +163,12 @@ def build(reference,source,output,work):
             style=('ListTitle' if title=='MỤC LỤC' else 'FrontHeading') if front else 'Heading 1'
             p=d.add_paragraph(title,style);p.paragraph_format.page_break_before=not first_heading;first_heading=False
             p._p.get_or_add_pPr().append(xml('numPr'));p._p.get_or_add_pPr().find(qn('w:numPr')).append(xml('numId',val=0))
+        elif line.startswith('<!-- table: '):
+            table_description=line[len('<!-- table: '):-4].strip()
         elif line.startswith('## '):
             subheading=line[3:]
+            if 'Kết luận chương' in line:
+                i+=1;continue
             p=d.add_paragraph(line[3:],'Heading 2')
         elif line in ['{{toc}}','{{figures}}','{{tables}}']:
             instruction={'{{toc}}':'TOC \\o "1-2" \\h \\z \\t "FrontHeading,1"',
@@ -167,7 +182,7 @@ def build(reference,source,output,work):
             description=re.sub(r'^Hình (?:[\dA-Z]+\.\d+ )?','',description)
             p=d.add_paragraph();p.alignment=WD_ALIGN_PARAGRAPH.CENTER;p.paragraph_format.first_line_indent=Cm(0)
             p.paragraph_format.line_spacing=1;p.paragraph_format.keep_with_next=True
-            width=11 if name in ['video','webcam'] else 15.5
+            width=10 if name in ['video','webcam'] else 15.5
             image_path=source.parent/'assets/usecases.png' if name=='usecases' else assets/f'{name}.png'
             p.add_run().add_picture(str(image_path),width=Cm(width));caption('Hình',description)
             if j<len(lines) and lines[j].startswith('Hình '):i=j
@@ -185,22 +200,25 @@ def build(reference,source,output,work):
                   'Phép đo':'Kết quả HTTP và cold readiness','Luồng':'Kết quả hiển thị và độ trễ streaming',
                   'Suite P11':'Kết quả kiểm thử phần mềm P11','Evidence ID':'Danh mục evidence nội bộ'}.get(rows[0][0],rows[0][0]+' và '+rows[0][-1])
                 if rows[0][0]=='Bước':desc='Luồng chính '+subheading.split(' ',1)[1]
-                caption('Bảng',desc)
+                assert table_description, 'table caption required'
+                caption('Bảng',table_description)
+                table_description=None
             t=d.add_table(rows=0,cols=len(rows[0]));t.alignment=WD_TABLE_ALIGNMENT.CENTER;t.autofit=False
             t._tbl.replace(t._tbl.tblPr,copy.deepcopy(table_properties))
             widths=[1/len(rows[0])]*len(rows[0])
             if rows[0][0] in ['ID','Bước']:widths=[.14]+[.86/(len(rows[0])-1)]*(len(rows[0])-1)
             if rows[0][0]=='Lớp test':widths=[.32,.12,.19,.19,.18]
             if rows[0][0]=='Split' and len(rows[0])==6:widths=[.18,.18,.17,.17,.15,.15]
-            for c,w in zip(t.columns,widths):c.width=Cm(15.92*w)
+            for c,w in zip(t.columns,widths):c.width=Cm(15.5*w)
             for ri,row in enumerate(rows):
                 cells=t.add_row().cells
+                t.rows[-1]._tr.get_or_add_trPr().append(xml('cantSplit'))
                 for ci,value in enumerate(row):
-                    cell=cells[ci];cell.width=Cm(15.92*widths[ci]);cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
+                    cell=cells[ci];cell.width=Cm(15.5*widths[ci]);cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
                     p=cell.paragraphs[0];p.paragraph_format.first_line_indent=Cm(0);p.paragraph_format.line_spacing=1.1
-                    p.paragraph_format.space_before=Pt(3);p.paragraph_format.space_after=Pt(3)
+                    p.paragraph_format.space_before=Pt(0 if rows[0][0]=='Evidence ID' else 3);p.paragraph_format.space_after=Pt(0 if rows[0][0]=='Evidence ID' else 3)
                     p.alignment=WD_ALIGN_PARAGRAPH.LEFT;inline(p,value)
-                    for r in p.runs:r.font.name='Times New Roman';r.font.size=Pt(11);r.bold=ri==0
+                    for r in p.runs:r.font.name='Times New Roman';r.font.size=Pt(12);r.bold=ri==0
                     props=cell._tc.get_or_add_tcPr();props.append(xml('shd',fill='E7E6E6' if ri==0 else 'FFFFFF'))
                     borders=xml('tcBorders')
                     for edge in ['top','left','bottom','right']:borders.append(xml(edge,val='single',sz=4,color='808080'))
@@ -218,7 +236,7 @@ def build(reference,source,output,work):
             if references:
                 for value in re.split(r'(https?://\S+)',line):
                     r=p.add_run(value)
-                    r.font.size=Pt(8 if len(value)>100 and value.startswith('https://') else 11)
+                    r.font.size=Pt(8 if len(value)>100 and value.startswith('https://') else 12)
             else:inline(p,line)
             if 'SHA-256:' in line or line.startswith('['):p.alignment=WD_ALIGN_PARAGRAPH.LEFT;p.paragraph_format.first_line_indent=Cm(0)
             if references:

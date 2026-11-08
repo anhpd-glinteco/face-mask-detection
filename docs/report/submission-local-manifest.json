@@ -1,0 +1,71 @@
+{
+  "version": "local-final-2026-11-08-v2",
+  "results_date": "2026-11-05",
+  "export_date": "2026-11-08",
+  "frontend_commit": "84758d86d9fc7046abf17708e551242e33f1e723",
+  "files": [
+    {
+      "file": "DACN_1_BaoCao_v1.docx",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 3771593,
+      "sha256": "acca33350fb2f638a741a8b54b08789c70f8343736208972003f9b2fa0c558c1"
+    },
+    {
+      "file": "DACN_1_BaoCao_v1.pdf",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 913752,
+      "sha256": "d320198db14a9c65e704992ed287ec8a091f21ed5ce0f33c3f85b11494b15777"
+    },
+    {
+      "file": "DACN_1_ThuyetTrinh.pptx",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 254316,
+      "sha256": "a2b84dff4b6ada233aafe78a77a1e0fe88d70ba1e349d9ad21de4771f4fc4bcc"
+    },
+    {
+      "file": "DACN_1_ThuyetTrinh.pdf",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 379260,
+      "sha256": "1551ae86c82720c7e41a7ab0007c397154d869bafd3f5efc8575eeecff4b6e54"
+    },
+    {
+      "file": "DACN_1_ChuongTrinh.docx",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 26842,
+      "sha256": "6dd8907948c2effa779edff0935ae4ec90e5ec38c8beb19ad1046c16176be126"
+    },
+    {
+      "file": "DACN_1_ChuongTrinh.pdf",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 270311,
+      "sha256": "a01e1cf34621b73893202cc5c026a9f2a5d111bcac3ef31b42d1a89d53596288"
+    },
+    {
+      "file": "DACN_1_ChuongTrinh.txt",
+      "version": "local-final-2026-11-08-v2",
+      "bytes": 4775,
+      "sha256": "8cab4f48c2b568b671154cfabc2047458b4346a9cb3da8893f2149b68c460f10"
+    }
+  ],
+  "pdf_checks": {
+    "DACN_1_BaoCao_v1.pdf": {
+      "pages": 41,
+      "links": 81
+    },
+    "DACN_1_ThuyetTrinh.pdf": {
+      "pages": 14,
+      "links": 0
+    },
+    "DACN_1_ChuongTrinh.pdf": {
+      "pages": 2,
+      "links": 5
+    }
+  },
+  "reused_from": {
+    "DACN_1_ThuyetTrinh.pptx": "local-final-2026-11-07",
+    "DACN_1_ThuyetTrinh.pdf": "local-final-2026-11-07",
+    "DACN_1_ChuongTrinh.docx": "local-final-2026-11-07",
+    "DACN_1_ChuongTrinh.pdf": "local-final-2026-11-07",
+    "DACN_1_ChuongTrinh.txt": "local-final-2026-11-07"
+  }
+}
