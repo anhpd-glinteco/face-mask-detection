@@ -9,3 +9,9 @@ QA: PDF Word được raster bằng pypdfium2 thành 41 PNG, xem bố cục toà
 Frontend 84758d86d9fc7046abf17708e551242e33f1e723, checkpoint 7f96ce3ad9dc4a312134a6e011310e79699bb042b5237f5517e5282ec5c8504e không đổi. Không chạy lại model/camera, không sửa slide, không merge/deploy/nộp cổng lớp. BM124 còn thiếu mẫu gốc; video chưa hoàn tất; #26/#27 giữ mở. Mẫu PDF là tham khảo, không xác nhận quy định chính thức. Không có review độc lập.
 
 Remote/PR/CI/issue và working tree sau push ghi tại final-state.json trong hồ sơ work; PR/comment ghi kết quả CI thực tế trên commit bàn giao.
+
+## Sửa bìa và ngày truy cập, bản v2
+
+Theo phản hồi người dùng: thu bảng thông tin bìa còn 11,5 cm, cột 2,5/9 cm, tắt autofit và căn giữa bảng trong khung. Validator kiểm tra căn giữa và kích thước cột sau Word. Loại năm câu ngày truy cập tài liệu; giữ ngày thực nghiệm và năm xuất bản. Validator chặn ngày truy cập còn sót trong toàn PDF.
+
+Bộ mới D:/Codex/outputs/face-mask-detection/submission-local-final-2026-11-08-v2. Vẫn 41 trang, 81 mục danh mục; verifier và finalize PASS. Đã render và xem riêng bìa, trang tham khảo 38–39. Text các trang khác không đổi so với bản trước (bìa đổi vị trí, text giữ nguyên). Không chạy lại model/camera. Slides/hướng dẫn dùng lại nguyên byte từ 07/11; bản 08/11 trước được giữ nguyên. ZIP SHA-256 626cdc6952456d8a27a38393fbf79d96b66114d5a130a00e51c12bae9a1b4911. Trạng thái remote/CI/issue sau push lưu ở final-state.json trong work/final-2026-11-08-v2; PR tiếp tục draft, issue #26 mở.

@@ -35,6 +35,9 @@ def verify(reference,output,work,evidence):
     for section in d.sections[1:]:
         assert abs(section.top_margin.cm-2)<.02
         for name,value in [('bottom_margin',2),('left_margin',3.5),('right_margin',2)]:assert abs(getattr(section,name).cm-value)<.02
+    info=d.tables[0]
+    assert info.alignment==1 and not info.autofit
+    assert abs(info.columns[0].width.cm-2.5)<.02 and abs(info.columns[1].width.cm-9)<.02
     cover=d.sections[0]
     for name,value in [('top_margin',3),('bottom_margin',3),('left_margin',3.5),('right_margin',2)]:assert abs(getattr(cover,name).cm-value)<.02
     border=cover._sectPr.find(qn('w:pgBorders'))
@@ -49,6 +52,7 @@ def verify(reference,output,work,evidence):
     assert (normal.font.size.pt if normal.font.size else int(defaults.xpath('.//*[local-name()="sz"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'))/2)==14
     assert (normal.paragraph_format.line_spacing or int(defaults.xpath('.//*[local-name()="spacing"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}line'))/240)==1.5
     texts=[p.extract_text() for p in pdf.pages];all_text=compact('\n'.join(texts))
+    assert not re.search(r'truy\s+cập\s+(?:ngày\s+)?\d{1,2}/\d{1,2}/\d{4}', '\n'.join(texts), re.I)
     paragraphs=[p.text for p in d.paragraphs]
     for phrase in ['Ngoại lệ: loại/dung lượng sai', 'Không vẽ bbox của frame cũ', 'Ngoại lệ: API chậm', 'Ngoại lệ: từ chối quyền']:
         assert any(p.startswith(phrase) and p.rstrip().endswith('.') for p in paragraphs),('fragmented paragraph',phrase)

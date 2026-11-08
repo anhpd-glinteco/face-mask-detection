@@ -559,17 +559,17 @@ Hướng tiếp theo là rà soát các trường hợp bỏ sót và nhầm l�
 
 [5] Nhóm đồ án. Source web, inference và HTTP frame sampling ADR. https://github.com/anhpd-glinteco/face-mask-detection/tree/88687c9. Mã nguồn và quyết định kiến trúc của hệ thống.
 
-[6] Liu, W. và cộng sự. SSD Single Shot MultiBox Detector. ECCV 2016, arXiv:1512.02325. https://arxiv.org/abs/1512.02325. Truy cập 20/10/2026. Dùng làm cơ sở detection, cơ sở phương pháp phát hiện đối tượng.
+[6] Liu, W. và cộng sự. SSD Single Shot MultiBox Detector. ECCV 2016, arXiv:1512.02325. https://arxiv.org/abs/1512.02325. Dùng làm cơ sở detection, cơ sở phương pháp phát hiện đối tượng.
 
-[7] TorchVision. ssdlite320_mobilenet_v3_large. https://docs.pytorch.org/vision/0.24/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html. Truy cập 20/10/2026. Thực nghiệm đồ án dùng 0.24.0; cấu hình trong repo là nguồn cho tham số đã chạy.
+[7] TorchVision. ssdlite320_mobilenet_v3_large. https://docs.pytorch.org/vision/0.24/models/generated/torchvision.models.detection.ssdlite320_mobilenet_v3_large.html. Thực nghiệm đồ án dùng 0.24.0; cấu hình trong repo là nguồn cho tham số đã chạy.
 
-[8] Howard, A. và cộng sự. Searching for MobileNetV3. ICCV 2019, arXiv:1905.02244. https://arxiv.org/abs/1905.02244. Truy cập 20/10/2026. Cơ sở backbone, chưa có so sánh hiệu năng backbone trong đồ án.
+[8] Howard, A. và cộng sự. Searching for MobileNetV3. ICCV 2019, arXiv:1905.02244. https://arxiv.org/abs/1905.02244. Cơ sở backbone, chưa có so sánh hiệu năng backbone trong đồ án.
 
-[9] MDN Web Docs. MediaDevices getUserMedia. https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia. Truy cập 20/10/2026. Tham khảo quyền camera và secure context.
+[9] MDN Web Docs. MediaDevices getUserMedia. https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia. Tham khảo quyền camera và secure context.
 
 [10] Nhóm đồ án. UI uncertainty presentation, PR #49, HEAD `a341b6bdc101b09d89fddb713d1158bdf28ab32f`; CI 5/5 SUCCESS. https://github.com/anhpd-glinteco/face-mask-detection/pull/49. Snapshot 21/10/2026. Ngưỡng 0,15 áp dụng ở lớp trình bày; API floor 0,001 và schema không đổi.
 
-[11] PlantUML. Use case Diagram syntax and features. https://plantuml.com/use-case-diagram. Truy cập 01/11/2026.
+[11] PlantUML. Use case Diagram syntax and features. https://plantuml.com/use-case-diagram.
 
 Nguồn ảnh giao diện: dữ liệu kiểm thử có kiểm soát và media tổng hợp không khuôn mặt, chụp trên phiên bản frontend 84758d8 ngày 06/11/2026 để minh họa hành vi ngày 05/11. Ảnh chỉ minh họa giao diện, không phải phép đo chất lượng model hoặc camera vật lý. Nguồn sơ đồ: mã nguồn kiểm thử tích hợp và sơ đồ đã biên tập của nhóm. Không sử dụng ảnh dataset hoặc hình nhận diện người thật.
 

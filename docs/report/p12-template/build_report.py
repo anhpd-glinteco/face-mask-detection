@@ -118,10 +118,12 @@ def build(reference,source,output,work):
     coverline('BÁO CÁO ĐỒ ÁN CHUYÊN NGÀNH',16,True)
     coverline('KỸ THUẬT PHẦN MỀM',14,True)
     coverline('XÂY DỰNG ỨNG DỤNG WEB PHÁT HIỆN TRẠNG THÁI ĐEO KHẨU TRANG',16,True)
-    t=d.add_table(rows=0,cols=2);t.alignment=WD_TABLE_ALIGNMENT.CENTER
+    t=d.add_table(rows=0,cols=2);t.alignment=WD_TABLE_ALIGNMENT.CENTER;t.autofit=False
+    for column,width in zip(t.columns,[2.5,9]):column.width=Cm(width)
+    table_width=t._tbl.tblPr.find(qn('w:tblW'));table_width.set(qn('w:type'),'dxa');table_width.set(qn('w:w'),str(Cm(11.5).twips))
     for label,value in [('GVHD:','ThS. Vũ Thị Dương'),('Nhóm:','01'),('Sinh viên:','Phùng Đức Anh  2023607426'),('','Nguyễn Đình Luân Kiệt  2024605040'),('','Bùi Nguyên Hải  2022603861'),('','Bùi Ngọc Minh Hoàng  2022604035'),('Lớp:','20261IT6150003'),('Khóa:','K18')]:
         cells=t.add_row().cells
-        cells[0].width=Cm(3);cells[1].width=Cm(12)
+        cells[0].width=Cm(2.5);cells[1].width=Cm(9)
         for cell,text in zip(cells,[label,value]):
             p=cell.paragraphs[0];p.paragraph_format.first_line_indent=Cm(0);p.paragraph_format.line_spacing=1.15;p.paragraph_format.space_after=Pt(8)
             r=p.add_run(text);r.font.size=Pt(14);r.font.name='Times New Roman'

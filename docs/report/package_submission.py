@@ -12,7 +12,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from pypdf import PdfReader, PdfWriter
 
 FORBIDDEN = re.compile(r'codex|chatgpt|openai|\b[A-Za-z]:[/\\]|file:///', re.I)
-VERSION = 'local-final-2026-11-08'
+VERSION = 'local-final-2026-11-08-v2'
 FILES = ['DACN_1_BaoCao_v1.docx', 'DACN_1_BaoCao_v1.pdf',
          'DACN_1_ThuyetTrinh.pptx', 'DACN_1_ThuyetTrinh.pdf',
          'DACN_1_ChuongTrinh.docx', 'DACN_1_ChuongTrinh.pdf', 'DACN_1_ChuongTrinh.txt']

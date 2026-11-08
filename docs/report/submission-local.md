@@ -1,3 +1,5 @@
+Bản mới nhất: local-final-2026-11-08-v2, sửa căn giữa bảng thông tin bìa và bỏ ngày truy cập tài liệu theo phản hồi. Báo cáo vẫn 41 trang; các bản cũ giữ nguyên.
+
 # Bộ xuất ngày 08/11/2026
 
 Bản mới giữ năm chương, thay bìa có logo và thông tin hai cột, dùng TNR14 và lề mới theo kế hoạch người dùng. Số trang lấy từ receipt Word, kiểm tra với PDF thay vì cố định 42. Slide 14 trang và hướng dẫn chương trình 2 trang được dùng lại từ bộ 07/11; giữ nguyên commit và checkpoint. Truyền --reuse-from trỏ đến bộ 07/11 cho cả prepare và finalize để giữ nguyên byte của năm tệp slide/hướng dẫn. Finalize kiểm tra lại tính đồng nhất. Manifest ghi rõ các tệp dùng lại.
