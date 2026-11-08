@@ -9,6 +9,8 @@ try {
   $word.AutomationSecurity=3
   $document=$word.Documents.Open([System.IO.Path]::GetFullPath($Docx),$false,[bool]$ReadOnlyVerify)
   if (!$ReadOnlyVerify) {
+  $document.Sections.Item(1).Borders.SurroundHeader=$false
+  $document.Sections.Item(1).Borders.SurroundFooter=$false
   $null=$document.Fields.Update()
   foreach ($toc in $document.TablesOfContents) {$toc.Update()}
   # Word creates its built-in TOC styles when fields first expand.

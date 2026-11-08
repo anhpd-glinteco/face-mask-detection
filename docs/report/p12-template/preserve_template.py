@@ -18,14 +18,6 @@ def restore(reference,docx,receipt):
         for record in preserved:parts[record['part']]=original.read(record['part'])
         ns={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
         document=E.fromstring(parts['word/document.xml']);body=document.find('w:body',ns)
-        cover=copy.deepcopy(E.fromstring(original.read('word/document.xml')).find('w:body/w:p',ns))
-        for node in cover.xpath('.//*[@r:embed]',namespaces=ns):node.set('{'+ns['r']+'}embed','rIdTemplateCover')
-        body.replace(body[0],cover)
-        parts['word/document.xml']=E.tostring(document,xml_declaration=True,encoding='UTF-8',standalone=True)
-        rels=E.fromstring(parts['word/_rels/document.xml.rels']);rel_ns='http://schemas.openxmlformats.org/package/2006/relationships'
-        if not any(r.get('Id')=='rIdTemplateCover' for r in rels):
-            E.SubElement(rels,'{'+rel_ns+'}Relationship',Id='rIdTemplateCover',Type=ns['r']+'/image',Target='media/image18.png')
-        parts['word/_rels/document.xml.rels']=E.tostring(rels,xml_declaration=True,encoding='UTF-8',standalone=True)
         types=E.fromstring(parts['[Content_Types].xml'])
         for element in E.fromstring(original.read('[Content_Types].xml')):
             key='Extension' if E.QName(element).localname=='Default' else 'PartName'
@@ -40,7 +32,7 @@ def restore(reference,docx,receipt):
     temp.replace(docx)
     with ZipFile(docx) as archive:
         assert all(hashlib.sha256(archive.read(r['part'])).hexdigest()==r['sha256'] for r in preserved)
-    print(f'Restored and checked {len(preserved)} preserve-only parts, including original cover frame.')
+    print(f'Restored and checked {len(preserved)} preserve-only parts, excluding the replaced cover.')
 
 
 if __name__=='__main__':

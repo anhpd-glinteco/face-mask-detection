@@ -1,3 +1,18 @@
+# Cập nhật trình bày 08/11/2026
+
+Nguồn bìa tham khảo: trang 2 PDF báo cáo website bán hàng do người dùng cung cấp. Asset haui-logo.png chỉ trích vùng logo, không chứa watermark hoặc thông tin nhóm mẫu. Bìa dùng khung đen mới; bước preserve không phục hồi hình bìa cũ. Giữ checksum mẫu gốc và các package parts còn bảo toàn. Thân bài TNR14, giãn dòng 1,5; lề trái 3,5 cm, phải/trên/dưới 2 cm. Bìa có vùng chữ trái 3,5 cm, phải 2 cm, trên/dưới 3 cm; khung cách vùng chữ 12 pt, đạt vị trí xấp xỉ trái 3 cm, phải 1,5 cm, trên/dưới 2,5 cm. Word bỏ bao quanh header/footer.
+
+Tên bảng được khai báo bằng <!-- table: ... --> ngay trước bảng; chú thích hình chỉ gồm tên ngắn. Validator kiểm tra font/lề/bìa, metadata và số liệu theo evidence. Word/PDF quyết định số trang thực tế, không cố định 42 trang.
+
+Để chỉnh sơ đồ use case, mở tệp `docs/report/diagrams/system.puml` bằng trình soạn thảo văn bản và sửa khối từ `@startuml use-cases` đến `@enduml`. Các từ khóa `actor`, `usecase` và `rectangle` lần lượt mô tả tác nhân, chức năng và biên hệ thống. Từ thư mục gốc dự án, chạy lệnh sau bằng Java và PlantUML JAR đã cài:
+
+```powershell
+java -Xmx256m -Djava.awt.headless=true -jar tools/plantuml.jar -charset UTF-8 -tsvg docs/report/diagrams/system.puml
+```
+
+Lệnh xuất các sơ đồ trong tệp thành SVG. Sơ đồ use case nằm trong `docs/report/diagrams/use-cases.svg`; bản PNG dùng chèn báo cáo nằm trong `docs/report/p12-template/assets/usecases.png`. Khi sửa nguồn, cần xuất lại SVG và PNG trước khi tạo lại báo cáo.
+
+
 # P12 — báo cáo theo mẫu người dùng
 
 ## Bản chỉnh văn phong và thông tin nhóm 02/11/2026

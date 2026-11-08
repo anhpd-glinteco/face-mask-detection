@@ -9,6 +9,7 @@ from pathlib import Path
 from zipfile import ZipFile
 from lxml import etree as E
 from docx import Document
+from docx.oxml.ns import qn
 from pypdf import PdfReader
 from build_report import REFERENCE_SHA
 
@@ -32,12 +33,20 @@ def verify(reference,output,work,evidence):
     assert len(pdf.pages)==receipt['pages'] and len(pdf.pages)>0
     assert len(d.sections)==3
     for section in d.sections[1:]:
-        assert abs(section.top_margin.cm-3)<.02
-        for name in ['bottom_margin','left_margin','right_margin']:assert abs(getattr(section,name).cm-2.54)<.02
+        assert abs(section.top_margin.cm-2)<.02
+        for name,value in [('bottom_margin',2),('left_margin',3.5),('right_margin',2)]:assert abs(getattr(section,name).cm-value)<.02
+    cover=d.sections[0]
+    for name,value in [('top_margin',3),('bottom_margin',3),('left_margin',3.5),('right_margin',2)]:assert abs(getattr(cover,name).cm-value)<.02
+    border=cover._sectPr.find(qn('w:pgBorders'))
+    assert border is not None and border.get(qn('w:offsetFrom'),'text')=='text'
+    assert len(d.inline_shapes)==7  # logo and six diagrams/screenshots
+    for style in ['FigureCaption','TableCaption']:assert d.styles[style].font.size.pt==12
+    assert all(len(item['description'])<130 for item in authored['figures'])
+    assert all(item['description'] and ' và và ' not in item['description'] for item in authored['tables'])
     normal=d.styles['Normal']
     defaults=d.styles.element.xpath('./w:docDefaults')[0]
     assert (normal.font.name or defaults.xpath('.//*[local-name()="rFonts"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}ascii'))=='Times New Roman'
-    assert (normal.font.size.pt if normal.font.size else int(defaults.xpath('.//*[local-name()="sz"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'))/2)==13
+    assert (normal.font.size.pt if normal.font.size else int(defaults.xpath('.//*[local-name()="sz"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}val'))/2)==14
     assert (normal.paragraph_format.line_spacing or int(defaults.xpath('.//*[local-name()="spacing"]')[0].get('{http://schemas.openxmlformats.org/wordprocessingml/2006/main}line'))/240)==1.5
     texts=[p.extract_text() for p in pdf.pages];all_text=compact('\n'.join(texts))
     paragraphs=[p.text for p in d.paragraphs]
@@ -87,7 +96,7 @@ def verify(reference,output,work,evidence):
         for key in ['p50_ms','p95_ms']:assert compact(vi(api[kind][key],2)) in all_text
     for kind in ['video','webcam']:
         for key in ['displayed_frames_per_s','duration_s','p95_ms']:assert compact(vi(browser[kind][key],2)) in all_text
-    for important in ['0,001','0,15','uncertain','điều kiện triển khai công khai chưa đạt','562','356,83','102,09','7,96','2/49','1/12']:
+    for important in ['0,001','0,15','uncertain','ứng dụng hiện giới hạn ở trình diễn kỹ thuật local','562','356,83','102,09','7,96','2/49','1/12']:
         assert compact(important) in all_text,important
     ns={'w':'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
     with ZipFile(output/'bao-cao-do-an.docx') as z:

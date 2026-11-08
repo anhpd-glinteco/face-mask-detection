@@ -1,3 +1,9 @@
+# Bộ xuất ngày 08/11/2026
+
+Bản mới giữ năm chương, thay bìa có logo và thông tin hai cột, dùng TNR14 và lề mới theo kế hoạch người dùng. Số trang lấy từ receipt Word, kiểm tra với PDF thay vì cố định 42. Slide 14 trang và hướng dẫn chương trình 2 trang được dùng lại từ bộ 07/11; giữ nguyên commit và checkpoint. Truyền --reuse-from trỏ đến bộ 07/11 cho cả prepare và finalize để giữ nguyên byte của năm tệp slide/hướng dẫn. Finalize kiểm tra lại tính đồng nhất. Manifest ghi rõ các tệp dùng lại.
+
+BM124 chưa có mẫu gốc; video demo chưa hoàn tất. Hai việc này theo dõi trong handoff nội bộ, không đưa checklist đang làm dở vào báo cáo. Chưa nộp lên cổng lớp.
+
 # Tạo lại bộ nộp local
 
 Nguồn báo cáo nằm ở `p12-template/bao-cao.md`, slide ở `p12/slides.json`, hướng dẫn chương trình ở `program-link.md`. Giữ mẫu báo cáo tham chiếu và bố cục 14 slide. Nội dung tổng hợp kết quả đến 05/11/2026; bản xuất này được tạo ngày 07/11/2026.
